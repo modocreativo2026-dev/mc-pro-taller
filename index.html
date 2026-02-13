@@ -30,6 +30,45 @@
     <!-- Lucide Icons (Versión Fija para estabilidad) -->
     <script src="https://unpkg.com/lucide@0.263.1"></script>
 
+    <!-- FIREBASE SDK (Módulo para persistencia en la nube) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración de Firebase (Se inyecta desde el entorno o usa valores por defecto)
+        // NOTA: Para que funcione en Vercel, asegúrate de configurar las variables de entorno o que el entorno las provea.
+        // Si __firebase_config no está definido, el código intentará ejecutarse pero no guardará en nube (fallback local).
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mc-pro-default';
+        const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        if (firebaseConfig) {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+
+            // Exponer módulos al ámbito global para que React pueda usarlos
+            window.firebaseModules = { auth, db, appId, doc, setDoc, onSnapshot, collection };
+
+            // Iniciar sesión (Prioridad: Token personalizado > Anónimo)
+            const initAuth = async () => {
+                try {
+                    if (initialToken) {
+                        await signInWithCustomToken(auth, initialToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Error de autenticación:", error);
+                }
+            };
+            initAuth();
+        } else {
+            console.warn("Firebase no configurado. Se usará almacenamiento local temporal.");
+        }
+    </script>
+
     <style>
         /* Fuente Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
@@ -64,26 +103,11 @@
         const { useState, useMemo, useEffect } = React;
 
         // --- ADAPTADOR DE ICONOS LUCIDE ROBUSTO ---
-        // Este componente espera a que window.lucide esté listo o maneja errores silenciosamente
         const LucideIcon = ({ name, className, ...props }) => {
-            // Intentamos obtener el icono. Si la librería no cargó aún, devuelve null.
             const iconData = window.lucide && window.lucide.icons ? window.lucide.icons[name] : null;
-
-            if (!iconData) {
-                // Fallback visual si el icono falla (un pequeño círculo)
-                return <span className={`inline-block w-4 h-4 bg-slate-200 rounded-full ${className}`}></span>;
-            }
-
-            return React.createElement(
-                'svg',
-                {
-                    ...iconData.attrs,
-                    ...props,
-                    className: `lucide lucide-${name.toLowerCase()} ${className || ''}`
-                },
-                iconData.children?.map((child, index) => 
-                    React.createElement(child.tag, { ...child.attrs, key: index })
-                )
+            if (!iconData) return <span className={`inline-block w-4 h-4 bg-slate-200 rounded-full ${className}`}></span>;
+            return React.createElement('svg', { ...iconData.attrs, ...props, className: `lucide lucide-${name.toLowerCase()} ${className || ''}` },
+                iconData.children?.map((child, index) => React.createElement(child.tag, { ...child.attrs, key: index }))
             );
         };
 
@@ -142,20 +166,81 @@
         const Key = (props) => <LucideIcon name="Key" {...props} />;
         const LogOut = (props) => <LucideIcon name="LogOut" {...props} />;
 
-        // --- HOOK PARA PERSISTENCIA ---
+        // --- HOOK PARA PERSISTENCIA EN LA NUBE (FIREBASE) ---
         const usePersistedState = (key, defaultValue) => {
-          const [state, setState] = useState(() => {
+          const [state, setState] = useState(defaultValue);
+          const [loaded, setLoaded] = useState(false);
+
+          // 1. Carga inicial desde LocalStorage para rapidez inmediata (mientras carga la nube)
+          useEffect(() => {
             try {
               const saved = localStorage.getItem(key);
-              return saved ? JSON.parse(saved) : defaultValue;
-            } catch (e) {
-              return defaultValue;
-            }
-          });
+              if (saved) setState(JSON.parse(saved));
+            } catch (e) {}
+          }, []);
 
+          // 2. Sincronización con Firebase (Nube)
           useEffect(() => {
+            if (!window.firebaseModules) {
+                // Fallback si no hay Firebase: usar solo localStorage
+                setLoaded(true);
+                return;
+            }
+            
+            const { auth, db, appId, onSnapshot, doc } = window.firebaseModules;
+            
+            const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+                if (!user) return;
+
+                // Ruta: artifacts/{appId}/users/{userId}/app_storage/{key}
+                const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'app_storage', key);
+
+                const unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data && data.content !== undefined) {
+                            setState(data.content);
+                            // También actualizamos localStorage para mantener la caché local
+                            localStorage.setItem(key, JSON.stringify(data.content));
+                        }
+                    }
+                    setLoaded(true);
+                }, (error) => {
+                    console.error("Error leyendo datos de la nube:", error);
+                    setLoaded(true);
+                });
+
+                return () => unsubscribeSnapshot();
+            });
+
+            return () => unsubscribeAuth();
+          }, [key]);
+
+          // 3. Guardado en la nube con Debounce (espera 1s antes de guardar para no saturar)
+          useEffect(() => {
+            if (!loaded) return; // No guardar hasta haber cargado lo existente
+            
+            // Guardar en localStorage siempre (backup inmediato)
             localStorage.setItem(key, JSON.stringify(state));
-          }, [key, state]);
+
+            if (!window.firebaseModules) return;
+            const { auth, db, appId, doc, setDoc } = window.firebaseModules;
+            const user = auth.currentUser;
+            
+            if (user) {
+                const saveData = async () => {
+                    try {
+                        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'app_storage', key);
+                        await setDoc(docRef, { content: state }, { merge: true });
+                    } catch (e) {
+                        console.error("Error guardando en la nube:", e);
+                    }
+                };
+                
+                const handler = setTimeout(saveData, 1500); // Guardar 1.5s después del último cambio
+                return () => clearTimeout(handler);
+            }
+          }, [state, loaded, key]);
 
           return [state, setState];
         };
@@ -177,7 +262,6 @@
           
           // --- CHECK DE CARGA DE ICONOS ---
           useEffect(() => {
-             // Pequeño hack para forzar re-render si los iconos tardan en cargar
              const checkIcons = setInterval(() => {
                  if (window.lucide && window.lucide.icons) {
                      setIconsLoaded(true);
@@ -191,7 +275,6 @@
           const [userCountry, setUserCountry] = usePersistedState('mc_country', 'UY');
           
           useEffect(() => {
-            // Detección automática basada en la zona horaria del navegador
             const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             if (timeZone.includes('Argentina')) setUserCountry('AR');
             else if (timeZone.includes('Santiago')) setUserCountry('CL');
@@ -223,7 +306,7 @@
           const [viewDate, setViewDate] = useState(new Date());
           const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
-          // Datos Persistentes
+          // Datos Persistentes (AHORA EN LA NUBE)
           const [inventory, setInventory] = usePersistedState('mc_inventory', []);
           const [tasks, setTasks] = usePersistedState('mc_tasks', []);
           const [clients, setClients] = usePersistedState('mc_clients', []); 
