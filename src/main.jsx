@@ -198,4 +198,216 @@ const App = () => {
               <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100 flex flex-col justify-between relative overflow-hidden">
                 <h3 className="text-[11px] font-black text-[#E11D48] uppercase tracking-widest mb-4 flex items-center gap-2"><DollarSign className="w-4 h-4"/> Caja Neta</h3>
                 <p className="text-6xl font-black text-slate-800 tracking-tighter">
-                  ${ventas.reduce((acc, c) => acc + (c.amount || 0), 0) - gastos.reduce((acc, e)
+                  ${ventas.reduce((acc, c) => acc + (c.amount || 0), 0) - gastos.reduce((acc, e) => acc + (e.amount || 0), 0)}
+                </p>
+                <div className="absolute bottom-6 right-8 text-rose-200"><TrendingUp className="w-12 h-12" /></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ENVÍOS (NUEVO MÓDULO) */}
+        {activeTab === 'envios' && (
+          <div className="max-w-4xl space-y-8 animate-in fade-in">
+             <div className={`p-10 rounded-[3rem] shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+               <h3 className="text-xl font-black mb-8 uppercase italic flex items-center gap-3"><Truck className="w-6 h-6 text-[#E11D48]"/> Nuevo Envío</h3>
+               <form onSubmit={(e) => saveEntity(e, setEnvios, "Envío")} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <input name="cliente" required placeholder="Nombre del Cliente" className={`p-4 rounded-2xl outline-none font-bold ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                  <select name="agencia" className={`p-4 rounded-2xl outline-none font-bold ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                    <option value="DAC">DAC</option>
+                    <option value="Mirtrans">Mirtrans</option>
+                    <option value="Correo">Correo Uruguayo</option>
+                    <option value="DePunta">DePunta</option>
+                  </select>
+                  <input name="tracking" placeholder="Número de Rastreo" className={`p-4 rounded-2xl outline-none font-bold ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                  <input name="costo" type="number" placeholder="Costo Envío $" className={`p-4 rounded-2xl outline-none font-bold ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                  <button type="submit" className="bg-[#E11D48] text-white rounded-2xl font-black uppercase py-4 shadow-lg md:col-span-2">Registrar Envío</button>
+               </form>
+             </div>
+             <div className="space-y-3">
+               {envios.map(e => (
+                 <div key={e.id} className={`p-6 rounded-3xl border flex justify-between items-center ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                   <div>
+                     <p className="font-black uppercase text-sm">{e.cliente}</p>
+                     <p className="text-xs font-bold text-slate-400 mt-1">{e.agencia} • {e.tracking || 'Sin rastreo'}</p>
+                   </div>
+                   <div className="text-right">
+                     <p className="font-black text-[#E11D48] text-lg">${e.costo}</p>
+                     <p className="text-[10px] uppercase font-bold text-slate-400">{e.date}</p>
+                   </div>
+                 </div>
+               ))}
+             </div>
+          </div>
+        )}
+
+        {/* VENTAS */}
+        {activeTab === 'ventas' && (
+          <div className="max-w-4xl space-y-8 animate-in fade-in">
+             <div className="grid md:grid-cols-2 gap-8">
+               <div className={`p-8 rounded-[2.5rem] shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                 <h3 className="text-sm font-black uppercase text-emerald-500 mb-4">Ingresos</h3>
+                 <form onSubmit={(e) => saveEntity(e, setVentas, "Venta")} className="flex flex-col gap-3">
+                    <input name="concepto" required placeholder="Producto" className={`p-4 rounded-xl outline-none font-bold text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                    <input name="amount" type="number" required placeholder="Monto $" className={`p-4 rounded-xl outline-none font-bold text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                    <button className="bg-emerald-500 text-white py-3 rounded-xl font-black uppercase text-[10px]">Registrar</button>
+                 </form>
+                 <div className="mt-4 max-h-60 overflow-y-auto space-y-2">
+                    {ventas.map(c => <div key={c.id} className="flex justify-between text-xs p-3 rounded-lg border border-slate-100 dark:border-slate-700"><span className="font-bold">{c.concepto}</span><span className="text-emerald-500">${c.amount}</span></div>)}
+                 </div>
+               </div>
+               <div className={`p-8 rounded-[2.5rem] shadow-sm border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                 <h3 className="text-sm font-black uppercase text-rose-500 mb-4">Gastos</h3>
+                 <form onSubmit={(e) => saveEntity(e, setGastos, "Gasto")} className="flex flex-col gap-3">
+                    <input name="concepto" required placeholder="Insumo / Luz" className={`p-4 rounded-xl outline-none font-bold text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                    <input name="amount" type="number" required placeholder="Monto $" className={`p-4 rounded-xl outline-none font-bold text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+                    <button className="bg-rose-500 text-white py-3 rounded-xl font-black uppercase text-[10px]">Registrar</button>
+                 </form>
+                 <div className="mt-4 max-h-60 overflow-y-auto space-y-2">
+                    {gastos.map(e => <div key={e.id} className="flex justify-between text-xs p-3 rounded-lg border border-slate-100 dark:border-slate-700"><span className="font-bold">{e.concepto}</span><span className="text-rose-500">-${e.amount}</span></div>)}
+                 </div>
+               </div>
+             </div>
+          </div>
+        )}
+
+        {/* CALENDARIO */}
+        {activeTab === 'calendario' && (
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-10 animate-in fade-in">
+            <div className={`xl:col-span-2 p-10 rounded-[3.5rem] shadow-xl border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+               <div className="flex justify-between items-center mb-8">
+                 <h3 className="text-3xl font-black uppercase italic tracking-tighter">{viewDate.toLocaleDateString('es-UY', { month: 'long', year: 'numeric' })}</h3>
+                 <div className="flex gap-2">
+                   <button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))} className={`p-3 rounded-xl ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`}><ChevronLeft/></button>
+                   <button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))} className={`p-3 rounded-xl ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`}><ChevronRight/></button>
+                 </div>
+               </div>
+               <div className="grid grid-cols-7 gap-2 text-center mb-4">
+                 {['L','M','M','J','V','S','D'].map(d => <span key={d} className="font-bold text-slate-400 text-xs">{d}</span>)}
+               </div>
+               <div className="grid grid-cols-7 gap-2">
+                 {calendarDays.map((d, i) => {
+                   const ev = d ? perpetualEvents.find(e => e.d === d && e.m === viewDate.getMonth()) : null;
+                   return (
+                     <div key={i} onClick={() => d && setSelectedDay(d)} className={`h-24 p-2 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${d === selectedDay ? 'bg-slate-900 text-white shadow-lg scale-105' : darkMode ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'bg-white border-slate-50 hover:bg-slate-50'}`}>
+                       {d && <span className="font-black text-lg">{d}</span>}
+                       {ev && <div className={`w-2 h-2 rounded-full self-end mb-1 ${ev.type === 'UY' ? 'bg-amber-400' : 'bg-rose-500'}`} />}
+                     </div>
+                   )
+                 })}
+               </div>
+            </div>
+            <div className={`p-10 rounded-[3.5rem] shadow-xl border flex flex-col ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+               <h4 className="text-4xl font-black uppercase italic tracking-tighter mb-6">{selectedDay} {viewDate.toLocaleDateString('es-UY', { month: 'short' })}</h4>
+               <div className="space-y-4 flex-1 overflow-y-auto">
+                 {perpetualEvents.filter(e => e.d === selectedDay && e.m === viewDate.getMonth()).map((ev, i) => (
+                   <div key={i} className={`p-6 rounded-[2rem] border ${ev.type === 'UY' ? 'bg-amber-50 border-amber-100 text-amber-900' : 'bg-rose-50 border-rose-100 text-rose-900'}`}>
+                     <p className="font-black uppercase text-sm">{ev.t}</p>
+                     <p className="text-xs font-bold mt-1 opacity-70">{ev.info}</p>
+                   </div>
+                 ))}
+                 {perpetualEvents.filter(e => e.d === selectedDay && e.m === viewDate.getMonth()).length === 0 && (
+                   <div className="p-6 rounded-[2rem] border border-dashed border-slate-200 text-center">
+                     <p className="text-slate-400 font-bold text-xs uppercase">Sin eventos especiales</p>
+                   </div>
+                 )}
+               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TALLER */}
+        {activeTab === 'taller' && (
+          <div className="max-w-3xl space-y-6 animate-in fade-in">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter">Producción</h2>
+            <form onSubmit={(e) => saveEntity(e, setTasks, "Tarea")} className={`p-6 rounded-[2.5rem] border flex gap-4 ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+              <input name="title" placeholder="¿Qué vamos a crear?" required className={`flex-1 p-4 rounded-xl font-bold outline-none text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+              <button className="bg-rose-500 text-white px-8 rounded-xl font-black uppercase text-[10px]">Play</button>
+            </form>
+            <div className="space-y-3">
+              {tasks.map(t => (
+                <div key={t.id} className={`p-6 rounded-[2rem] border flex justify-between items-center shadow-sm ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                  <div>
+                    <h4 className="font-black uppercase text-xs text-slate-400">{t.title}</h4>
+                    <p className={`text-4xl font-mono font-black mt-1 ${t.isRunning ? 'text-rose-500 animate-pulse' : ''}`}>{formatTime(t.tiempo)}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => setTasks(prev => prev.map(x => x.id === t.id ? {...x, isRunning: !x.isRunning} : x))} className={`p-4 rounded-xl transition-all ${t.isRunning ? 'bg-amber-400 text-white' : darkMode ? 'bg-slate-700' : 'bg-slate-100'}`}>{t.isRunning ? <Clock /> : <Play />}</button>
+                    <button onClick={() => setTasks(prev => prev.filter(x => x.id !== t.id))} className="p-4 bg-rose-50 text-rose-500 rounded-xl"><Trash2 size={18}/></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* INSUMOS */}
+        {activeTab === 'insumos' && (
+          <div className="max-w-4xl space-y-6 animate-in fade-in">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter">Inventario</h2>
+            <form onSubmit={(e) => saveEntity(e, setInventory, "Insumo")} className={`p-6 rounded-[2.5rem] border flex gap-4 shadow-sm ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+              <input name="name" placeholder="Material (Ej: Vinilo Mate)" required className={`flex-1 p-4 rounded-xl font-bold outline-none text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+              <input name="cant" type="number" placeholder="Cant." required className={`w-24 p-4 rounded-xl font-bold outline-none text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+              <button className="bg-slate-900 text-white px-8 rounded-xl font-black uppercase text-[10px]">Agregar</button>
+            </form>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {inventory.map(item => (
+                <div key={item.id} className={`p-5 rounded-3xl border flex justify-between items-center shadow-sm ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                  <span className="font-bold text-sm uppercase">{item.name}</span>
+                  <div className="flex items-center gap-3">
+                    <span className={`font-black ${item.cant <= 2 ? 'text-rose-500' : 'text-emerald-500'}`}>{item.cant}</span>
+                    <button onClick={() => setInventory(prev => prev.filter(i => i.id !== item.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={16}/></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* COTIZADOR */}
+        {activeTab === 'cotizador' && (
+          <div className="max-w-xl space-y-8 animate-in zoom-in-95">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter">Cotizador</h2>
+            <div className={`p-10 rounded-[3.5rem] border shadow-xl ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Costo Materiales</label>
+                <input type="number" value={cotizacion.costo} onChange={(e) => setCotizacion({...cotizacion, costo: e.target.value})} className={`w-full p-6 rounded-3xl text-4xl font-black outline-none border-2 border-transparent focus:border-rose-500 transition-all ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} placeholder="0" />
+              </div>
+              <div className="pt-8 border-t border-dashed border-slate-200 flex justify-between items-center">
+                <p className="text-[10px] font-black uppercase text-slate-400">Sugerido (x2)</p>
+                <p className="text-6xl font-black text-rose-500 tracking-tighter">${(Number(cotizacion.costo) * 2).toFixed(0)}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CLIENTES */}
+        {activeTab === 'clientes' && (
+          <div className="max-w-4xl space-y-6 animate-in fade-in">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter">Base de Clientes</h2>
+            <form onSubmit={(e) => saveEntity(e, setClients, "Cliente")} className={`p-6 rounded-[2.5rem] border flex gap-4 shadow-sm ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+              <input name="nombre" placeholder="Nombre del Cliente" required className={`flex-1 p-4 rounded-xl font-bold outline-none text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+              <input name="telefono" placeholder="Teléfono" className={`w-40 p-4 rounded-xl font-bold outline-none text-sm ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`} />
+              <button className="bg-indigo-500 text-white px-8 rounded-xl font-black uppercase text-[10px]">Guardar</button>
+            </form>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {clients.map(cli => (
+                <div key={cli.id} className={`p-5 rounded-3xl border flex justify-between items-center shadow-sm ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'}`}>
+                  <div>
+                    <span className="font-bold text-sm uppercase block">{cli.nombre}</span>
+                    <span className="text-xs text-slate-400">{cli.telefono}</span>
+                  </div>
+                  <button onClick={() => setClients(prev => prev.filter(c => c.id !== cli.id))} className="text-slate-300 hover:text-rose-500"><Trash2 size={16}/></button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
