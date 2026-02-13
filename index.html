@@ -27,7 +27,7 @@
     <!-- Babel para traducir JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Lucide Icons (Versión Fija para estabilidad) -->
+    <!-- Lucide Icons (Versión Fija para estabilidad visual) -->
     <script src="https://unpkg.com/lucide@0.263.1"></script>
 
     <!-- FIREBASE SDK (Módulo para persistencia en la nube) -->
@@ -36,9 +36,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuración de Firebase (Se inyecta desde el entorno o usa valores por defecto)
-        // NOTA: Para que funcione en Vercel, asegúrate de configurar las variables de entorno o que el entorno las provea.
-        // Si __firebase_config no está definido, el código intentará ejecutarse pero no guardará en nube (fallback local).
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'mc-pro-default';
         const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -47,49 +44,26 @@
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
             const db = getFirestore(app);
-
-            // Exponer módulos al ámbito global para que React pueda usarlos
             window.firebaseModules = { auth, db, appId, doc, setDoc, onSnapshot, collection };
-
-            // Iniciar sesión (Prioridad: Token personalizado > Anónimo)
             const initAuth = async () => {
                 try {
-                    if (initialToken) {
-                        await signInWithCustomToken(auth, initialToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (error) {
-                    console.error("Error de autenticación:", error);
-                }
+                    if (initialToken) await signInWithCustomToken(auth, initialToken);
+                    else await signInAnonymously(auth);
+                } catch (error) { console.error("Error Auth:", error); }
             };
             initAuth();
-        } else {
-            console.warn("Firebase no configurado. Se usará almacenamiento local temporal.");
         }
     </script>
 
     <style>
-        /* Fuente Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
-
-        /* Estilos base y animaciones */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #fcfcfc; 
-            -webkit-tap-highlight-color: transparent; /* Elimina flash gris en móviles */
-        }
-        
+        body { font-family: 'Inter', sans-serif; background-color: #fcfcfc; -webkit-tap-highlight-color: transparent; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .animate-in { animation: fadeIn 0.5s ease-out forwards; }
-        
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .slide-in-from-bottom-5 { animation: slideUp 0.5s ease-out forwards; }
-        
         @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .zoom-in { animation: zoomIn 0.3s ease-out forwards; }
-        
-        /* Scrollbar personalizada */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -102,76 +76,63 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // --- ADAPTADOR DE ICONOS LUCIDE ROBUSTO ---
+        // --- ADAPTADOR DE ICONOS LUCIDE (CORREGIDO PARA QUE NO DESAPAREZCAN) ---
         const LucideIcon = ({ name, className, ...props }) => {
             const iconData = window.lucide && window.lucide.icons ? window.lucide.icons[name] : null;
-            if (!iconData) return <span className={`inline-block w-4 h-4 bg-slate-200 rounded-full ${className}`}></span>;
+            if (!iconData) return <span className={`inline-block w-5 h-5 bg-slate-100 rounded-full animate-pulse ${className}`}></span>;
             return React.createElement('svg', { ...iconData.attrs, ...props, className: `lucide lucide-${name.toLowerCase()} ${className || ''}` },
                 iconData.children?.map((child, index) => React.createElement(child.tag, { ...child.attrs, key: index }))
             );
         };
 
-        // Mapeo explícito de iconos usados
-        const Calculator = (props) => <LucideIcon name="Calculator" {...props} />;
-        const Package = (props) => <LucideIcon name="Package" {...props} />;
-        const CalendarIcon = (props) => <LucideIcon name="Calendar" {...props} />;
-        const ClipboardList = (props) => <LucideIcon name="ClipboardList" {...props} />;
-        const Palette = (props) => <LucideIcon name="Palette" {...props} />;
-        const Plus = (props) => <LucideIcon name="Plus" {...props} />;
-        const Trash2 = (props) => <LucideIcon name="Trash2" {...props} />;
-        const Clock = (props) => <LucideIcon name="Clock" {...props} />;
-        const MapPin = (props) => <LucideIcon name="MapPin" {...props} />;
-        const BarChart3 = (props) => <LucideIcon name="BarChart3" {...props} />;
-        const BookOpen = (props) => <LucideIcon name="BookOpen" {...props} />;
-        const Users = (props) => <LucideIcon name="Users" {...props} />;
-        const DollarSign = (props) => <LucideIcon name="DollarSign" {...props} />;
-        const CheckCircle2 = (props) => <LucideIcon name="CheckCircle2" {...props} />;
-        const AlertCircle = (props) => <LucideIcon name="AlertCircle" {...props} />;
-        const Edit2 = (props) => <LucideIcon name="Edit2" {...props} />;
-        const X = (props) => <LucideIcon name="X" {...props} />;
-        const Star = (props) => <LucideIcon name="Star" {...props} />;
-        const Zap = (props) => <LucideIcon name="Zap" {...props} />;
-        const Instagram = (props) => <LucideIcon name="Instagram" {...props} />;
-        const MessageCircle = (props) => <LucideIcon name="MessageCircle" {...props} />;
-        const StickyNote = (props) => <LucideIcon name="StickyNote" {...props} />;
-        const UserCheck = (props) => <LucideIcon name="UserCheck" {...props} />;
-        const Layout = (props) => <LucideIcon name="Layout" {...props} />;
-        const Gift = (props) => <LucideIcon name="Gift" {...props} />;
-        const Sun = (props) => <LucideIcon name="Sun" {...props} />;
-        const ChevronLeft = (props) => <LucideIcon name="ChevronLeft" {...props} />;
-        const ChevronRight = (props) => <LucideIcon name="ChevronRight" {...props} />;
-        const Save = (props) => <LucideIcon name="Save" {...props} />;
-        const Menu = (props) => <LucideIcon name="Menu" {...props} />;
-        const TrendingUp = (props) => <LucideIcon name="TrendingUp" {...props} />;
-        const CloudSun = (props) => <LucideIcon name="CloudSun" {...props} />;
-        const Globe = (props) => <LucideIcon name="Globe" {...props} />;
-        const Truck = (props) => <LucideIcon name="Truck" {...props} />;
-        const Wallet = (props) => <LucideIcon name="Wallet" {...props} />;
-        const TrendingDown = (props) => <LucideIcon name="TrendingDown" {...props} />;
-        const CreditCard = (props) => <LucideIcon name="CreditCard" {...props} />;
-        const ArrowUpCircle = (props) => <LucideIcon name="ArrowUpCircle" {...props} />;
-        const ArrowDownCircle = (props) => <LucideIcon name="ArrowDownCircle" {...props} />;
-        const Lightbulb = (props) => <LucideIcon name="Lightbulb" {...props} />;
-        const Sparkles = (props) => <LucideIcon name="Sparkles" {...props} />;
-        const Box = (props) => <LucideIcon name="Box" {...props} />;
-        const Scissors = (props) => <LucideIcon name="Scissors" {...props} />;
-        const FileText = (props) => <LucideIcon name="FileText" {...props} />;
-        const Printer = (props) => <LucideIcon name="Printer" {...props} />;
-        const PlusCircle = (props) => <LucideIcon name="PlusCircle" {...props} />;
-        const MinusCircle = (props) => <LucideIcon name="MinusCircle" {...props} />;
-        const FileCheck = (props) => <LucideIcon name="FileCheck" {...props} />;
-        const Mail = (props) => <LucideIcon name="Mail" {...props} />;
-        const Download = (props) => <LucideIcon name="Download" {...props} />;
-        const Lock = (props) => <LucideIcon name="Lock" {...props} />;
-        const Key = (props) => <LucideIcon name="Key" {...props} />;
-        const LogOut = (props) => <LucideIcon name="LogOut" {...props} />;
+        // Iconos
+        const Calculator = (p) => <LucideIcon name="Calculator" {...p} />;
+        const Package = (p) => <LucideIcon name="Package" {...p} />;
+        const CalendarIcon = (p) => <LucideIcon name="Calendar" {...p} />;
+        const ClipboardList = (p) => <LucideIcon name="ClipboardList" {...p} />;
+        const Palette = (p) => <LucideIcon name="Palette" {...p} />;
+        const Plus = (p) => <LucideIcon name="Plus" {...p} />;
+        const Trash2 = (p) => <LucideIcon name="Trash2" {...p} />;
+        const BarChart3 = (p) => <LucideIcon name="BarChart3" {...p} />;
+        const DollarSign = (p) => <LucideIcon name="DollarSign" {...p} />;
+        const CheckCircle2 = (p) => <LucideIcon name="CheckCircle2" {...p} />;
+        const Edit2 = (p) => <LucideIcon name="Edit2" {...p} />;
+        const Star = (p) => <LucideIcon name="Star" {...p} />;
+        const Zap = (p) => <LucideIcon name="Zap" {...p} />;
+        const Instagram = (p) => <LucideIcon name="Instagram" {...p} />;
+        const MessageCircle = (p) => <LucideIcon name="MessageCircle" {...p} />;
+        const StickyNote = (p) => <LucideIcon name="StickyNote" {...p} />;
+        const UserCheck = (p) => <LucideIcon name="UserCheck" {...p} />;
+        const Layout = (p) => <LucideIcon name="Layout" {...p} />;
+        const Gift = (p) => <LucideIcon name="Gift" {...p} />;
+        const Sun = (p) => <LucideIcon name="Sun" {...p} />;
+        const ChevronLeft = (p) => <LucideIcon name="ChevronLeft" {...p} />;
+        const ChevronRight = (p) => <LucideIcon name="ChevronRight" {...p} />;
+        const Save = (p) => <LucideIcon name="Save" {...p} />;
+        const Menu = (p) => <LucideIcon name="Menu" {...p} />;
+        const CloudSun = (p) => <LucideIcon name="CloudSun" {...p} />;
+        const Globe = (p) => <LucideIcon name="Globe" {...p} />;
+        const Truck = (p) => <LucideIcon name="Truck" {...p} />;
+        const Wallet = (p) => <LucideIcon name="Wallet" {...p} />;
+        const ArrowUpCircle = (p) => <LucideIcon name="ArrowUpCircle" {...p} />;
+        const ArrowDownCircle = (p) => <LucideIcon name="ArrowDownCircle" {...p} />;
+        const Lightbulb = (p) => <LucideIcon name="Lightbulb" {...p} />;
+        const Sparkles = (p) => <LucideIcon name="Sparkles" {...p} />;
+        const Box = (p) => <LucideIcon name="Box" {...p} />;
+        const FileText = (p) => <LucideIcon name="FileText" {...p} />;
+        const PlusCircle = (p) => <LucideIcon name="PlusCircle" {...p} />;
+        const FileCheck = (p) => <LucideIcon name="FileCheck" {...p} />;
+        const Mail = (p) => <LucideIcon name="Mail" {...p} />;
+        const Download = (p) => <LucideIcon name="Download" {...p} />;
+        const Lock = (p) => <LucideIcon name="Lock" {...p} />;
+        const Key = (p) => <LucideIcon name="Key" {...p} />;
+        const LogOut = (p) => <LucideIcon name="LogOut" {...p} />;
 
-        // --- HOOK PARA PERSISTENCIA EN LA NUBE (FIREBASE) ---
+        // --- HOOK DE PERSISTENCIA ---
         const usePersistedState = (key, defaultValue) => {
           const [state, setState] = useState(defaultValue);
           const [loaded, setLoaded] = useState(false);
 
-          // 1. Carga inicial desde LocalStorage para rapidez inmediata (mientras carga la nube)
           useEffect(() => {
             try {
               const saved = localStorage.getItem(key);
@@ -179,65 +140,33 @@
             } catch (e) {}
           }, []);
 
-          // 2. Sincronización con Firebase (Nube)
           useEffect(() => {
-            if (!window.firebaseModules) {
-                // Fallback si no hay Firebase: usar solo localStorage
-                setLoaded(true);
-                return;
-            }
-            
+            if (!window.firebaseModules) { setLoaded(true); return; }
             const { auth, db, appId, onSnapshot, doc } = window.firebaseModules;
-            
             const unsubscribeAuth = auth.onAuthStateChanged((user) => {
                 if (!user) return;
-
-                // Ruta: artifacts/{appId}/users/{userId}/app_storage/{key}
                 const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'app_storage', key);
-
-                const unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        if (data && data.content !== undefined) {
-                            setState(data.content);
-                            // También actualizamos localStorage para mantener la caché local
-                            localStorage.setItem(key, JSON.stringify(data.content));
-                        }
+                const unsub = onSnapshot(docRef, (s) => {
+                    if (s.exists() && s.data().content !== undefined) {
+                        setState(s.data().content);
+                        localStorage.setItem(key, JSON.stringify(s.data().content));
                     }
                     setLoaded(true);
-                }, (error) => {
-                    console.error("Error leyendo datos de la nube:", error);
-                    setLoaded(true);
                 });
-
-                return () => unsubscribeSnapshot();
+                return () => unsub();
             });
-
             return () => unsubscribeAuth();
           }, [key]);
 
-          // 3. Guardado en la nube con Debounce (espera 1s antes de guardar para no saturar)
           useEffect(() => {
-            if (!loaded) return; // No guardar hasta haber cargado lo existente
-            
-            // Guardar en localStorage siempre (backup inmediato)
+            if (!loaded) return;
             localStorage.setItem(key, JSON.stringify(state));
-
             if (!window.firebaseModules) return;
             const { auth, db, appId, doc, setDoc } = window.firebaseModules;
-            const user = auth.currentUser;
-            
-            if (user) {
-                const saveData = async () => {
-                    try {
-                        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'app_storage', key);
-                        await setDoc(docRef, { content: state }, { merge: true });
-                    } catch (e) {
-                        console.error("Error guardando en la nube:", e);
-                    }
-                };
-                
-                const handler = setTimeout(saveData, 1500); // Guardar 1.5s después del último cambio
+            if (auth.currentUser) {
+                const handler = setTimeout(() => {
+                    setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'app_storage', key), { content: state }, { merge: true });
+                }, 1500);
                 return () => clearTimeout(handler);
             }
           }, [state, loaded, key]);
@@ -245,68 +174,26 @@
           return [state, setState];
         };
 
-        // --- APP COMPONENT ---
         const App = () => {
-          // --- ESTADOS DE AUTENTICACIÓN ---
+          // AUTH STATE
           const [isAuthenticated, setIsAuthenticated] = usePersistedState('mc_auth_session', false);
           const [licenseInput, setLicenseInput] = useState('');
+          const [emailInput, setEmailInput] = useState('');
           const [authError, setAuthError] = useState('');
+          
+          // CONFIG
+          const ALLOWED_EMAILS = []; // Lista blanca de correos (vacío = todos permitidos)
 
-          // --- ESTADOS ---
+          // APP STATE
           const [activeTab, setActiveTab] = useState('dashboard');
           const [showContactModal, setShowContactModal] = useState(false);
           const [notification, setNotification] = useState(null);
           const [currentTime, setCurrentTime] = useState(new Date());
           const [isSidebarOpen, setIsSidebarOpen] = useState(false);
           const [iconsLoaded, setIconsLoaded] = useState(false);
-          
-          // --- CHECK DE CARGA DE ICONOS ---
-          useEffect(() => {
-             const checkIcons = setInterval(() => {
-                 if (window.lucide && window.lucide.icons) {
-                     setIconsLoaded(true);
-                     clearInterval(checkIcons);
-                 }
-             }, 100);
-             return () => clearInterval(checkIcons);
-          }, []);
-          
-          // --- NUEVO: DETECCIÓN DE PAÍS ---
           const [userCountry, setUserCountry] = usePersistedState('mc_country', 'UY');
-          
-          useEffect(() => {
-            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            if (timeZone.includes('Argentina')) setUserCountry('AR');
-            else if (timeZone.includes('Santiago')) setUserCountry('CL');
-            else if (timeZone.includes('Mexico')) setUserCountry('MX');
-            else if (timeZone.includes('Bogota')) setUserCountry('CO');
-            else if (timeZone.includes('Madrid')) setUserCountry('ES');
-            else if (timeZone.includes('Montevideo')) setUserCountry('UY');
-          }, []);
 
-          const countryNames = {
-            'UY': 'Uruguay',
-            'AR': 'Argentina',
-            'CL': 'Chile',
-            'MX': 'México',
-            'CO': 'Colombia',
-            'ES': 'España',
-            'INT': 'Internacional'
-          };
-          
-          // Estados de edición simples
-          const [editingClient, setEditingClient] = useState(null);
-          const [editingTask, setEditingTask] = useState(null);
-          const [editingInv, setEditingInv] = useState(null);
-          const [editingShipment, setEditingShipment] = useState(null);
-          const [editingExpense, setEditingExpense] = useState(null);
-          const [editingIncome, setEditingIncome] = useState(null);
-          
-          // Calendario
-          const [viewDate, setViewDate] = useState(new Date());
-          const [selectedDay, setSelectedDay] = useState(new Date().getDate());
-
-          // Datos Persistentes (AHORA EN LA NUBE)
+          // DATA STATE
           const [inventory, setInventory] = usePersistedState('mc_inventory', []);
           const [tasks, setTasks] = usePersistedState('mc_tasks', []);
           const [clients, setClients] = usePersistedState('mc_clients', []); 
@@ -314,266 +201,119 @@
           const [expenses, setExpenses] = usePersistedState('mc_expenses', []); 
           const [extraIncomes, setExtraIncomes] = usePersistedState('mc_extra_incomes', []); 
           const [personalEvents, setPersonalEvents] = usePersistedState('mc_personal_events', {});
-          
-          // --- NUEVO: ESTADOS PARA PRESUPUESTOS ---
           const [presupuestos, setPresupuestos] = usePersistedState('mc_presupuestos', []);
+          const [calc, setCalc] = usePersistedState('mc_calc_pro', { materialCost: 0, wastePercent: 10, designHours: 0, productionHours: 0, hourlyRate: 0, margin: 50 });
+
+          // UI STATE
           const [isCreatingBudget, setIsCreatingBudget] = useState(false);
-          const [currentBudget, setCurrentBudget] = useState({
-            id: null,
-            client: '',
-            date: new Date().toISOString().split('T')[0],
-            items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }],
-            status: 'Pendiente', // Pendiente, Aprobado, Rechazado
-            notes: ''
-          });
+          const [currentBudget, setCurrentBudget] = useState({ id: null, client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
+          const [viewDate, setViewDate] = useState(new Date());
+          const [selectedDay, setSelectedDay] = useState(new Date().getDate());
 
-          // --- COTIZADOR PRO ---
-          const [calc, setCalc] = usePersistedState('mc_calc_pro', { 
-            materialCost: 0,
-            wastePercent: 10,
-            packagingCost: 0,
-            designHours: 0,
-            productionHours: 0,
-            hourlyRate: 0,
-            fixedCosts: 0,
-            margin: 50
-          });
-
-          // --- BASE DE DATOS DE FECHAS (Resumida para este archivo, expandible) ---
-          const perpetualEvents = useMemo(() => [
-            { d: 1, m: 0, t: 'Año Nuevo', type: 'INT', info: 'Inicio de año.' },
-            { d: 6, m: 0, t: 'Día de Reyes', type: 'INT', info: 'Tradición de regalos.' },
-            { d: 14, m: 1, t: 'San Valentín', type: 'INT', info: 'Campaña de amor.' },
-            { d: 8, m: 2, t: 'Día de la Mujer', type: 'INT', info: 'Fuerza y equidad.' },
-            { d: 1, m: 4, t: 'Día del Trabajador', type: 'INT', info: 'Feriado.' },
-            { d: 19, m: 5, t: 'Natalicio Artigas', type: 'UY', info: 'Prócer.' },
-            { d: 18, m: 6, t: 'Jura Constitución', type: 'UY', info: 'Feriado Patrio.' },
-            { d: 25, m: 7, t: 'Independencia UY', type: 'UY', info: 'Feriado Nacional.' },
-            { d: 24, m: 7, t: 'Noche Nostalgia', type: 'UY', info: 'Clásico UY.' },
-            { d: 25, m: 11, t: 'Navidad', type: 'INT', info: 'Celebración.' }
-          ], []);
-
-          // --- BASE DE DATOS DE IDEAS Y TENDENCIAS ---
-          const seasonalStrategies = useMemo(() => [
-            { m: 0, title: 'Vuelta a Clases', ideas: ['Etiquetas', 'Cuadernos', 'Planners'], trend: 'Colores primarios.' },
-            { m: 1, title: 'San Valentín', ideas: ['Boxes', 'Tarjetas', 'Packaging'], trend: 'Rojos y Rosas.' },
-            { m: 2, title: 'Mes de la Mujer', ideas: ['Agendas', 'Libretas', 'Regalos corp.'], trend: 'Lavanda.' }
-          ], []);
-
-          // --- LÓGICA DE TEMAS ---
-          const themeData = useMemo(() => {
-            const month = currentTime.getMonth();
-            const seasons = { Verano: [11, 0, 1], Otoño: [2, 3, 4], Invierno: [5, 6, 7], Primavera: [8, 9, 10] };
-            const season = Object.keys(seasons).find(key => seasons[key].includes(month)) || 'Verano';
-            const seasonalPalettes = {
-              'Verano': ['#FFD700', '#FF8C00', '#00BFFF', '#FFFFFF'],
-              'Otoño': ['#8B4513', '#D35400', '#CD853F', '#FAF3E0'],
-              'Invierno': ['#191970', '#4169E1', '#87CEEB', '#F0F8FF'],
-              'Primavera': ['#FF69B4', '#32CD32', '#BA68C8', '#FFF0F5']
-            };
-            const campaign = month === 1 ? 'San Valentín' : 'Campaña General';
-            return {
-              seasonName: season,
-              campaignName: campaign,
-              seasonalPalette: seasonalPalettes[season],
-              campaignPalette: ['#E11D48', '#FB7185', '#F43F5E', '#881337'],
-              primaryColor: '#E11D48',
-              strategies: seasonalStrategies.find(s => s.m === month) || { title: 'General', ideas: [], trend: 'Neutros' }
-            };
-          }, [currentTime, seasonalStrategies]);
-
-          // --- RELOJ ---
-          useEffect(() => {
-            const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-            return () => clearInterval(timer);
+          // EFFECTS
+          useEffect(() => { const t = setInterval(() => setCurrentTime(new Date()), 1000); return () => clearInterval(t); }, []);
+          useEffect(() => { 
+              const checkIcons = setInterval(() => { 
+                  if (window.lucide && window.lucide.icons) { setIconsLoaded(true); clearInterval(checkIcons); } 
+              }, 100); 
+              return () => clearInterval(checkIcons); 
           }, []);
 
-          const notify = (msg) => {
-            setNotification(msg);
-            setTimeout(() => setNotification(null), 2500);
+          // HELPERS
+          const notify = (msg) => { setNotification(msg); setTimeout(() => setNotification(null), 2500); };
+          const deleteItem = (id, setter, name) => { setter(p => p.filter(i => i.id !== id)); notify(`${name} eliminado`); };
+          const saveEntity = (e, setter, name) => {
+            e.preventDefault(); const d = Object.fromEntries(new FormData(e.target).entries());
+            if(d.amount) d.amount = Number(d.amount); if(d.qty) d.qty = Number(d.qty); if(d.price) d.price = Number(d.price);
+            const item = { id: Date.now(), ...d, date: new Date().toISOString().split('T')[0], completed: false };
+            setter(p => [...p, item]); e.target.reset(); notify(`${name} guardado`);
           };
-
-          const deleteItem = (id, setter, entityName) => {
-            setter(prev => prev.filter(item => item.id !== id));
-            notify(`${entityName} eliminado`);
-          };
-
-          const saveEntity = (e, entitySet, currentEntity, setter, entityName) => {
-            e.preventDefault();
-            const f = new FormData(e.target);
-            const data = Object.fromEntries(f.entries());
-            if (data.amount) data.amount = Number(data.amount);
-            if (data.qty) data.qty = Number(data.qty);
-            if (data.price) data.price = Number(data.price);
-            const newItem = { id: currentEntity?.id || Date.now(), ...data, date: currentEntity?.date || new Date().toISOString().split('T')[0], completed: currentEntity?.completed || false };
-            entitySet(prev => currentEntity ? prev.map(c => c.id === currentEntity.id ? newItem : c) : [...prev, newItem]);
-            setter(null); e.target.reset(); notify(`${entityName} guardado`);
-          };
-
-          // --- LOGICA EXPORTAR A CSV ---
           const exportToCSV = (data, filename) => {
-            if (!data || data.length === 0) {
-              notify("No hay datos para exportar");
-              return;
-            }
-            const headers = Object.keys(data[0]).join(",");
-            const rows = data.map(row => 
-              Object.values(row).map(val => {
-                if (typeof val === 'string') return `"${val.replace(/"/g, '""')}"`; 
-                return val;
-              }).join(",")
-            );
-            const csvContent = "\uFEFF" + [headers, ...rows].join("\n");
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+             if(!data.length) return notify("Sin datos");
+             const h = Object.keys(data[0]).join(",");
+             const r = data.map(o => Object.values(o).map(v => typeof v === 'string' ? `"${v.replace(/"/g, '""')}"` : v).join(","));
+             const b = new Blob(["\uFEFF" + [h, ...r].join("\n")], {type: 'text/csv;charset=utf-8;'});
+             const u = URL.createObjectURL(b); const l = document.createElement("a"); l.href = u; l.download = `${filename}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l);
           };
 
-          // --- LOGICA LOGIN ---
+          // AUTH
           const handleLogin = (e) => {
             e.preventDefault();
+            const email = emailInput.trim().toLowerCase();
+            if (!email) return setAuthError('Ingresa tu correo.');
+            if (ALLOWED_EMAILS.length > 0 && !ALLOWED_EMAILS.includes(email)) return setAuthError('Correo no autorizado.');
             if (licenseInput.trim().toUpperCase() === 'CREATIVO2026') {
+              localStorage.setItem('mc_current_user_email', email);
               setIsAuthenticated(true);
               setAuthError('');
-            } else {
-              setAuthError('Licencia inválida. Contacta a soporte.');
-            }
+            } else setAuthError('Licencia inválida.');
           };
 
-          // --- LOGICA PRESUPUESTOS ---
-          const handleBudgetChange = (field, value) => {
-            setCurrentBudget(prev => ({ ...prev, [field]: value }));
-          };
-          const addBudgetItem = () => {
-            setCurrentBudget(prev => ({ ...prev, items: [...prev.items, { id: Date.now(), desc: '', qty: 1, price: 0 }] }));
-          };
-          const removeBudgetItem = (itemId) => {
-            if (currentBudget.items.length === 1) return;
-            setCurrentBudget(prev => ({ ...prev, items: prev.items.filter(i => i.id !== itemId) }));
-          };
-          const updateBudgetItem = (itemId, field, value) => {
-            setCurrentBudget(prev => ({ ...prev, items: prev.items.map(i => i.id === itemId ? { ...i, [field]: value } : i) }));
-          };
-          const saveBudget = () => {
-            if (!currentBudget.client) { notify("Falta nombre del cliente"); return; }
-            if (currentBudget.id) {
-              setPresupuestos(prev => prev.map(b => b.id === currentBudget.id ? currentBudget : b));
-              notify("Presupuesto Actualizado");
-            } else {
-              setPresupuestos(prev => [...prev, { ...currentBudget, id: Date.now() }]);
-              notify("Presupuesto Creado");
-            }
-            setIsCreatingBudget(false);
-            resetBudgetForm();
-          };
-          const editBudget = (budget) => {
-            setCurrentBudget(budget);
-            setIsCreatingBudget(true);
-          };
-          const resetBudgetForm = () => {
-            setCurrentBudget({ id: null, client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
-          };
-          const calculateBudgetTotal = (items) => {
-            return items.reduce((acc, item) => acc + (Number(item.qty) * Number(item.price)), 0);
-          };
-
-          const totalIncomes = useMemo(() => clients.reduce((acc, c) => acc + (c.amount || 0), 0) + extraIncomes.reduce((acc, i) => acc + (i.amount || 0), 0), [clients, extraIncomes]);
-          const totalExpenses = useMemo(() => expenses.reduce((acc, e) => acc + (e.amount || 0), 0), [expenses]);
+          // CALCS
+          const totalIncomes = clients.reduce((a,c) => a+(c.amount||0),0) + extraIncomes.reduce((a,i) => a+(i.amount||0),0);
+          const totalExpenses = expenses.reduce((a,e) => a+(e.amount||0),0);
           const netBalance = totalIncomes - totalExpenses;
-
-          const calendarDays = useMemo(() => {
-            const y = viewDate.getFullYear(), m = viewDate.getMonth();
-            const dInM = new Date(y, m + 1, 0).getDate();
-            const firstDay = new Date(y, m, 1).getDay();
-            const offset = firstDay === 0 ? 6 : firstDay - 1;
-            const days = [];
-            for (let i = 0; i < offset; i++) days.push(null);
-            for (let i = 1; i <= dInM; i++) days.push(i);
-            return days;
-          }, [viewDate]);
-
-          const getDayKey = (d) => `${viewDate.getFullYear()}-${String(viewDate.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          
+          const themeData = useMemo(() => {
+             const m = currentTime.getMonth();
+             const s = { Verano: [11,0,1], Otoño: [2,3,4], Invierno: [5,6,7], Primavera: [8,9,10] };
+             const season = Object.keys(s).find(k => s[k].includes(m)) || 'Verano';
+             const colors = { Verano: ['#FFD700','#FF8C00'], Otoño: ['#D35400','#8B4513'], Invierno: ['#4169E1','#87CEEB'], Primavera: ['#FF69B4','#32CD32'] };
+             return { seasonName: season, seasonalPalette: colors[season], campaignName: m===1?'San Valentín':'Campaña General' };
+          }, [currentTime]);
 
           const NavItem = ({ id, label, icon: Icon }) => (
             <button onClick={() => { setActiveTab(id); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-[13px] uppercase tracking-tight ${activeTab === id ? 'bg-[#E11D48] text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}><Icon className="w-5 h-5" /> {label}</button>
           );
 
-          // --- LOGIN ---
-          if (!isAuthenticated) {
-            return (
+          if (!isAuthenticated) return (
               <div className="flex h-screen items-center justify-center bg-slate-50 p-6">
                  <div className="w-full max-w-md bg-white p-10 rounded-[3rem] shadow-2xl border border-slate-100 text-center animate-in zoom-in duration-300">
-                    <div className="p-4 rounded-3xl bg-[#E11D48] text-white shadow-xl inline-block mb-6 rotate-3">
-                       <Star className="w-8 h-8 fill-current" />
-                    </div>
+                    <div className="p-4 rounded-3xl bg-[#E11D48] text-white shadow-xl inline-block mb-6 rotate-3"><Star className="w-8 h-8 fill-current" /></div>
                     <h1 className="text-3xl font-black text-slate-800 uppercase italic tracking-tighter mb-2">MC Pro</h1>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10">Acceso a Miembros</p>
                     <form onSubmit={handleLogin} className="space-y-4">
-                       <div className="bg-slate-50 p-4 rounded-2xl flex items-center gap-3 border border-slate-100 focus-within:border-[#E11D48] transition-colors">
-                          <Key className="w-5 h-5 text-slate-400" />
-                          <input type="password" placeholder="Licencia de Membresía" className="bg-transparent outline-none w-full font-bold text-slate-700" value={licenseInput} onChange={(e) => setLicenseInput(e.target.value)} />
-                       </div>
+                       <div className="bg-slate-50 p-4 rounded-2xl flex items-center gap-3 border border-slate-100"><Mail className="w-5 h-5 text-slate-400" /><input type="email" required placeholder="Tu Correo" className="bg-transparent outline-none w-full font-bold text-slate-700" value={emailInput} onChange={e => setEmailInput(e.target.value)} /></div>
+                       <div className="bg-slate-50 p-4 rounded-2xl flex items-center gap-3 border border-slate-100"><Key className="w-5 h-5 text-slate-400" /><input type="password" placeholder="Licencia" className="bg-transparent outline-none w-full font-bold text-slate-700" value={licenseInput} onChange={e => setLicenseInput(e.target.value)} /></div>
                        {authError && <p className="text-xs font-bold text-red-500">{authError}</p>}
-                       <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg flex items-center justify-center gap-2">
-                          <Lock className="w-4 h-4" /> Ingresar
-                       </button>
+                       <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg flex gap-2 justify-center"><Lock className="w-4 h-4"/> Ingresar</button>
                     </form>
-                    <p className="mt-8 text-[10px] text-slate-300 font-bold uppercase tracking-widest">Powered by Modo Creativo</p>
                  </div>
               </div>
-            );
-          }
+          );
 
-          // --- APP UI ---
           return (
             <div className="flex h-screen overflow-hidden bg-[#fcfcfc] text-slate-800 font-sans">
-              
-              {/* SIDEBAR */}
               <aside className={`fixed lg:static inset-y-0 left-0 w-72 bg-white border-r border-slate-100 flex flex-col shrink-0 shadow-2xl z-50 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-                <div className="p-8 text-center relative flex flex-col items-center">
-                  <div className="p-3 rounded-2xl text-white shadow-xl rotate-3 mb-3 inline-block bg-[#E11D48]"><Star className="w-6 h-6 fill-current" /></div>
-                  <h1 className="font-black text-2xl tracking-tighter uppercase italic text-slate-800">MC Pro</h1>
-                  <p className="text-[10px] font-bold text-[#E11D48] uppercase tracking-[0.4em] mt-1">Modo Creativo</p>
-                </div>
+                <div className="p-8 text-center"><div className="p-3 rounded-2xl text-white shadow-xl rotate-3 mb-3 inline-block bg-[#E11D48]"><Star className="w-6 h-6 fill-current" /></div><h1 className="font-black text-2xl uppercase italic text-slate-800">MC Pro</h1><p className="text-[10px] font-bold text-[#E11D48] uppercase tracking-[0.4em] mt-1">Modo Creativo</p></div>
                 <nav className="flex-1 p-6 space-y-1 overflow-y-auto">
                   <NavItem id="dashboard" label="Escritorio" icon={Layout} />
-                  <NavItem id="strategies" label="Sugerencias & Ideas" icon={Lightbulb} />
+                  <NavItem id="strategies" label="Sugerencias" icon={Lightbulb} />
                   <NavItem id="finances" label="Finanzas" icon={Wallet} />
-                  <NavItem id="clients" label="Ventas & Cobros" icon={DollarSign} />
+                  <NavItem id="clients" label="Ventas" icon={DollarSign} />
                   <NavItem id="presupuestos" label="Presupuestos" icon={FileText} />
-                  <NavItem id="shipping" label="Envíos UY" icon={Truck} />
+                  <NavItem id="shipping" label="Envíos" icon={Truck} />
                   <NavItem id="planner" label="Calendario" icon={CalendarIcon} />
                   <NavItem id="inventory" label="Inventario" icon={Package} />
                   <NavItem id="checklist" label="Taller" icon={ClipboardList} />
-                  <NavItem id="calculator" label="Cotizador Pro" icon={Calculator} />
+                  <NavItem id="calculator" label="Cotizador" icon={Calculator} />
                 </nav>
                 <div className="p-6 border-t border-slate-50 space-y-2">
-                  <button onClick={() => setShowContactModal(true)} className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-black transition-all"><MessageCircle className="w-4 h-4" /> Soporte</button>
-                  <button onClick={() => setIsAuthenticated(false)} className="w-full flex items-center justify-center gap-2 py-4 text-slate-400 hover:text-[#E11D48] rounded-2xl font-bold text-[11px] uppercase tracking-widest transition-all"><LogOut className="w-4 h-4" /> Salir</button>
+                  <button onClick={() => setShowContactModal(true)} className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-2xl font-bold text-[11px] uppercase tracking-widest hover:bg-black"><MessageCircle className="w-4 h-4" /> Soporte</button>
+                  <button onClick={() => setIsAuthenticated(false)} className="w-full flex items-center justify-center gap-2 py-4 text-slate-400 hover:text-[#E11D48] rounded-2xl font-bold text-[11px] uppercase tracking-widest"><LogOut className="w-4 h-4" /> Salir</button>
                 </div>
               </aside>
 
-              {/* MAIN CONTENT */}
               <main className="flex-1 overflow-y-auto p-4 md:p-10 relative">
                 {notification && <div className="fixed top-10 right-10 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-[12px] uppercase shadow-2xl z-[100] animate-in slide-in-from-top-4">{notification}</div>}
-
+                
                 <header className="flex justify-between items-center mb-8 md:mb-12">
                   <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-3 bg-white shadow-sm border border-slate-100 rounded-xl text-[#E11D48]"><Menu className="w-6 h-6" /></button>
-                  <h2 className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic text-slate-800">
-                    {activeTab === 'presupuestos' ? 'Presupuestos' : activeTab.replace('dashboard','Escritorio').replace('planner','Calendario').replace('checklist','Taller').replace('finances', 'Finanzas').replace('shipping', 'Envíos').replace('calculator', 'Cotizador').replace('strategies', 'Estrategias')}
-                  </h2>
+                  <h2 className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic text-slate-800">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
                   <div className="hidden md:flex items-center gap-4 bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="flex items-center gap-2 px-3 border-r border-slate-100">
-                       <Globe className="w-4 h-4 text-slate-400" />
-                       <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{userCountry}</span>
-                    </div>
+                    <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Globe className="w-4 h-4 text-slate-400" /><span className="text-xs font-bold text-slate-500 uppercase">{userCountry}</span></div>
                     <div className="bg-amber-50 p-3 rounded-xl text-amber-500"><Sun className="w-5 h-5" /></div>
-                    <p className="text-lg font-black text-slate-800">{currentTime.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className="text-lg font-black text-slate-800">{currentTime.toLocaleTimeString('es-UY', {hour:'2-digit',minute:'2-digit'})}</p>
                   </div>
                 </header>
 
@@ -581,92 +321,215 @@
                   <div className="space-y-10 animate-in fade-in duration-500">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><CloudSun className="w-4 h-4 text-amber-500"/> Tendencia Estacional ({themeData.seasonName})</h3>
-                        <div className="flex h-16 rounded-3xl overflow-hidden border border-slate-50 shadow-inner mb-4">
-                          {themeData.seasonalPalette.map((c, i) => <div key={i} className="flex-1 hover:scale-110 transition-transform" style={{ backgroundColor: c }} />)}
-                        </div>
+                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><CloudSun className="w-4 h-4 text-amber-500"/> Tendencia ({themeData.seasonName})</h3>
+                        <div className="flex h-16 rounded-3xl overflow-hidden border border-slate-50 shadow-inner">{themeData.seasonalPalette.map((c,i)=><div key={i} className="flex-1" style={{backgroundColor:c}}/>)}</div>
                       </div>
                       <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Palette className="w-4 h-4 text-[#E11D48]"/> Paleta ({themeData.campaignName})</h3>
-                        <div className="flex h-16 rounded-3xl overflow-hidden border border-slate-50 shadow-inner mb-4">
-                          {themeData.campaignPalette.map((c, i) => <div key={i} className="flex-1 hover:scale-110 transition-transform" style={{ backgroundColor: c }} />)}
-                        </div>
+                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Palette className="w-4 h-4 text-[#E11D48]"/> Campaña</h3>
+                        <div className="flex h-16 rounded-3xl overflow-hidden border border-slate-50 shadow-inner"><div className="flex-1 bg-rose-500"></div><div className="flex-1 bg-rose-400"></div><div className="flex-1 bg-rose-300"></div></div>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-8 opacity-10"><BarChart3 className="w-24 h-24" /></div>
-                        <h3 className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-4">Balance Neto</h3>
+                        <h3 className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-4">Balance</h3>
                         <p className="text-4xl font-black italic tracking-tighter">${netBalance}</p>
                       </div>
-                      <div className="bg-emerald-50 p-8 rounded-[2.5rem] border border-emerald-100 flex flex-col justify-between">
-                        <h3 className="text-[11px] font-black text-emerald-600 uppercase tracking-widest mb-4">Ingresos Totales</h3>
-                        <p className="text-4xl font-black text-emerald-800 tracking-tighter">${totalIncomes}</p>
-                      </div>
-                      <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100 flex flex-col justify-between">
-                        <h3 className="text-[11px] font-black text-rose-600 uppercase tracking-widest mb-4">Gastos Totales</h3>
-                        <p className="text-4xl font-black text-rose-800 tracking-tighter">${totalExpenses}</p>
-                      </div>
+                      <div className="bg-emerald-50 p-8 rounded-[2.5rem] border border-emerald-100"><h3 className="text-[11px] font-black text-emerald-600 uppercase tracking-widest mb-4">Ingresos</h3><p className="text-4xl font-black text-emerald-800 tracking-tighter">${totalIncomes}</p></div>
+                      <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100"><h3 className="text-[11px] font-black text-rose-600 uppercase tracking-widest mb-4">Gastos</h3><p className="text-4xl font-black text-rose-800 tracking-tighter">${totalExpenses}</p></div>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <a href="https://web.whatsapp.com/" target="_blank" rel="noreferrer" className="bg-[#25D366] p-8 rounded-[2.5rem] text-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-5 group cursor-pointer border border-[#20b858]">
-                        <div className="p-4 bg-white/20 rounded-2xl group-hover:rotate-6 transition-transform">
-                             <MessageCircle className="w-8 h-8 text-white" />
-                        </div>
-                        <div><p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Abrir Chat</p><h3 className="text-2xl font-black italic tracking-tight">WhatsApp</h3></div>
-                      </a>
-                      
-                      <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 p-8 rounded-[2.5rem] text-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-5 group cursor-pointer border border-transparent">
-                        <div className="p-4 bg-white/20 rounded-2xl group-hover:rotate-6 transition-transform"><Instagram className="w-8 h-8 text-white" /></div>
-                        <div><p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Mi Feed</p><h3 className="text-2xl font-black italic tracking-tight">Instagram</h3></div>
-                      </a>
-
-                      <a href="https://mail.google.com/" target="_blank" rel="noreferrer" className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-5 group cursor-pointer border border-slate-800">
-                        <div className="p-4 bg-white/20 rounded-2xl group-hover:rotate-6 transition-transform"><Mail className="w-8 h-8 text-white" /></div>
-                        <div><p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Bandeja</p><h3 className="text-2xl font-black italic tracking-tight">Gmail</h3></div>
-                      </a>
+                      <a href="https://web.whatsapp.com/" target="_blank" className="bg-[#25D366] p-8 rounded-[2.5rem] text-white shadow-sm flex items-center gap-5"><MessageCircle className="w-8 h-8" /><div><p className="text-[10px] font-black uppercase opacity-80">Chat</p><h3 className="text-2xl font-black italic">WhatsApp</h3></div></a>
+                      <a href="https://instagram.com/" target="_blank" className="bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 p-8 rounded-[2.5rem] text-white shadow-sm flex items-center gap-5"><Instagram className="w-8 h-8" /><div><p className="text-[10px] font-black uppercase opacity-80">Feed</p><h3 className="text-2xl font-black italic">Instagram</h3></div></a>
+                      <a href="https://mail.google.com/" target="_blank" className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-sm flex items-center gap-5"><Mail className="w-8 h-8" /><div><p className="text-[10px] font-black uppercase opacity-80">Bandeja</p><h3 className="text-2xl font-black italic">Gmail</h3></div></a>
                     </div>
                   </div>
                 )}
 
-                {/* Otros componentes se renderizan aquí según activeTab... */}
-                {/* Por brevedad, mantengo la estructura del dashboard. El resto de tabs funcionan igual con los iconos corregidos. */}
                 {activeTab === 'finances' && (
                   <div className="space-y-10 animate-in slide-in-from-bottom-5">
-                     <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                        <h3 className="text-xl font-black mb-6 uppercase italic flex items-center gap-3 text-emerald-600"><ArrowUpCircle className="w-7 h-7"/> Nuevo Ingreso</h3>
-                        <form onSubmit={(e) => saveEntity(e, setExtraIncomes, editingIncome, setEditingIncome, "Ingreso")} className="space-y-4">
-                          <input name="name" required placeholder="Concepto" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
-                          <div className="flex gap-4"><input name="amount" type="number" required placeholder="Monto $" className="flex-1 p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button type="submit" className="px-10 bg-emerald-500 text-white rounded-2xl font-black uppercase shadow-lg">Añadir</button></div>
-                        </form>
-                     </div>
-                     <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
-                        <h3 className="text-xl font-black mb-6 uppercase italic flex items-center gap-3 text-rose-600"><ArrowDownCircle className="w-7 h-7"/> Registrar Gasto</h3>
-                        <form onSubmit={(e) => saveEntity(e, setExpenses, editingExpense, setEditingExpense, "Gasto")} className="space-y-4">
-                          <input name="name" required placeholder="Concepto" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
-                          <div className="flex gap-4"><input name="amount" type="number" required placeholder="Monto $" className="flex-1 p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button type="submit" className="px-10 bg-rose-500 text-white rounded-2xl font-black uppercase shadow-lg">Añadir</button></div>
-                        </form>
+                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                       <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                          <h3 className="text-xl font-black mb-6 uppercase italic flex items-center gap-3 text-emerald-600"><ArrowUpCircle className="w-7 h-7"/> Ingreso</h3>
+                          <form onSubmit={(e) => saveEntity(e, setExtraIncomes, "Ingreso")} className="space-y-4">
+                            <input name="name" required placeholder="Concepto" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
+                            <div className="flex gap-4"><input name="amount" type="number" required placeholder="Monto $" className="flex-1 p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button className="px-10 bg-emerald-500 text-white rounded-2xl font-black uppercase shadow-lg">Añadir</button></div>
+                          </form>
+                       </div>
+                       <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                          <h3 className="text-xl font-black mb-6 uppercase italic flex items-center gap-3 text-rose-600"><ArrowDownCircle className="w-7 h-7"/> Gasto</h3>
+                          <form onSubmit={(e) => saveEntity(e, setExpenses, "Gasto")} className="space-y-4">
+                            <input name="name" required placeholder="Concepto" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
+                            <div className="flex gap-4"><input name="amount" type="number" required placeholder="Monto $" className="flex-1 p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button className="px-10 bg-rose-500 text-white rounded-2xl font-black uppercase shadow-lg">Añadir</button></div>
+                          </form>
+                       </div>
                      </div>
                   </div>
                 )}
-                
-                {/* ... Resto de tabs (Inventory, Checklist, Planner, Calculator, Shipping, Clients, etc.) ... */}
-                {/* Los omito en este bloque pero el código completo original los tiene. 
-                    Al usar este index.html, asegúrate de que el bloque <script> contenga TODA la lógica del App component original si necesitas todas las tabs.
-                    Aquí he incluido Dashboard y Finances como ejemplo crítico de los iconos. */}
+
+                {activeTab === 'inventory' && (
+                  <div className="space-y-10 animate-in slide-in-from-bottom-5">
+                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                       <div className="flex justify-between items-start mb-8"><h3 className="text-xl font-black uppercase italic flex items-center gap-3 text-[#E11D48]"><Package className="w-7 h-7"/> Insumos</h3><button onClick={() => exportToCSV(inventory, 'Inventario')} className="text-slate-400 hover:text-[#E11D48]"><Download className="w-6 h-6"/></button></div>
+                       <form onSubmit={(e) => saveEntity(e, setInventory, "Insumo")} className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                          <input name="name" required placeholder="Item" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><input name="qty" type="number" placeholder="Stock" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><input name="price" type="number" placeholder="Costo" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button className="bg-[#E11D48] text-white rounded-2xl font-black uppercase py-4 shadow-xl">Añadir</button>
+                       </form>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {inventory.map(item => (
+                        <div key={item.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between hover:border-rose-100 transition-all">
+                          <div className="flex justify-between items-start mb-4"><div className="p-3 bg-rose-50 rounded-xl text-[#E11D48]"><Box className="w-6 h-6" /></div><button onClick={() => deleteItem(item.id, setInventory, "Insumo")} className="text-slate-200 hover:text-rose-500"><Trash2 className="w-5 h-5"/></button></div>
+                          <h4 className="font-black text-slate-800 uppercase text-lg leading-tight mb-2">{item.name}</h4>
+                          <div className="flex justify-between items-end border-t border-slate-50 pt-4 mt-4"><div><p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Stock</p><p className="text-3xl font-black text-slate-800 italic">{item.qty}</p></div><div className="text-right"><p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Costo</p><p className="text-xl font-black text-emerald-500 italic">${item.price}</p></div></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'checklist' && (
+                  <div className="space-y-10 animate-in slide-in-from-bottom-5">
+                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                       <h3 className="text-xl font-black uppercase italic flex items-center gap-3 text-slate-800 mb-8"><ClipboardList className="w-7 h-7 text-[#E11D48]"/> Nuevo Proyecto</h3>
+                       <form onSubmit={(e) => saveEntity(e, setTasks, "Tarea")} className="space-y-6">
+                          <input name="title" required placeholder="Nombre del Trabajo" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold text-lg" />
+                          <textarea name="details" placeholder="Detalles..." className="w-full p-6 bg-slate-50 rounded-2xl outline-none font-medium h-32" />
+                          <button className="w-full bg-slate-900 text-white rounded-2xl font-black uppercase py-5 shadow-xl hover:bg-black">Crear Ficha</button>
+                       </form>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {tasks.map(t => (
+                        <div key={t.id} className={`bg-white p-8 rounded-[2.5rem] border flex items-center justify-between transition-all ${t.completed ? 'opacity-40 grayscale' : 'shadow-sm border-slate-100 hover:border-rose-100'}`}>
+                          <div className="flex items-center gap-6"><button onClick={() => setTasks(tasks.map(x => x.id === t.id ? {...x, completed: !x.completed} : x))} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${t.completed ? 'bg-emerald-500 text-white' : 'bg-slate-50 text-slate-200 border-2 border-slate-100'}`}><CheckCircle2 className="w-8 h-8"/></button><div><h4 className="font-black text-slate-800 uppercase tracking-tight text-lg">{t.title}</h4><p className="text-xs text-slate-400 font-medium normal-case mt-1">{t.details}</p></div></div>
+                          <button onClick={() => deleteItem(t.id, setTasks, "Tarea")} className="text-slate-200 hover:text-rose-500 transition-colors"><Trash2 className="w-5 h-5"/></button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'clients' && (
+                  <div className="space-y-8 animate-in slide-in-from-bottom-5">
+                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                       <div className="flex justify-between items-start mb-8"><h3 className="text-xl font-black uppercase italic flex items-center gap-3"><Plus className="w-6 h-6 text-[#E11D48]"/> Nueva Venta</h3><button onClick={() => exportToCSV(clients, 'Ventas')} className="text-slate-400 hover:text-[#E11D48]"><Download className="w-6 h-6"/></button></div>
+                       <form onSubmit={(e) => saveEntity(e, setClients, "Venta")} className="grid grid-cols-1 md:grid-cols-3 gap-6"><input name="name" required placeholder="Cliente" className="p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><input name="amount" type="number" required placeholder="Monto" className="p-4 bg-slate-50 rounded-2xl outline-none font-bold" /><button className="bg-[#E11D48] text-white rounded-2xl font-black uppercase py-4 shadow-lg">Guardar</button></form>
+                    </div>
+                    <div className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
+                      <table className="w-full text-left">
+                        <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] uppercase tracking-widest border-b border-slate-100"><tr><th className="px-10 py-6">Cliente</th><th className="px-10 py-6">Monto</th><th className="px-10 py-6 text-center">Acciones</th></tr></thead>
+                        <tbody className="divide-y divide-slate-50">{clients.map(c => (<tr key={c.id} className="hover:bg-rose-50/20 transition-all group"><td className="px-10 py-6 font-black uppercase text-slate-700">{c.name}</td><td className="px-10 py-6 font-black text-[#E11D48] italic tracking-tighter text-lg">${c.amount}</td><td className="px-10 py-6 text-center"><button onClick={() => deleteItem(c.id, setClients, "Venta")} className="text-slate-200 hover:text-red-500"><Trash2 className="w-5 h-5"/></button></td></tr>))}</tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'shipping' && (
+                  <div className="space-y-8 animate-in slide-in-from-bottom-5">
+                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                       <h3 className="text-xl font-black uppercase italic flex items-center gap-3 text-indigo-500 mb-8"><Truck className="w-7 h-7"/> Despachos</h3>
+                       <form onSubmit={(e) => saveEntity(e, setShipping, "Envío")} className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                          <input name="client" required placeholder="Cliente" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
+                          <select name="agency" required className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold"><option value="DAC">DAC</option><option value="UES">UES</option><option value="De Punta">De Punta</option></select>
+                          <input name="tracking" placeholder="Tracking" className="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold" />
+                          <button className="bg-indigo-600 text-white rounded-2xl font-black uppercase py-4 shadow-xl">Despachar</button>
+                       </form>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {shipping.map(s => (
+                        <div key={s.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                          <div className={`absolute top-0 right-0 w-2 h-full ${s.agency === 'DAC' ? 'bg-red-600' : 'bg-blue-600'}`}></div>
+                          <h4 className="font-black text-slate-800 uppercase text-lg mb-1">{s.client}</h4>
+                          <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-slate-900 text-white">{s.agency}</span>
+                          <div className="mt-4 p-3 bg-slate-50 rounded-xl flex items-center gap-3"><Zap className="w-4 h-4 text-indigo-500" /><p className="text-[12px] font-bold text-slate-700">{s.tracking || 'S/N'}</p></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'planner' && (
+                  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-in fade-in duration-500">
+                    <div className="xl:col-span-2 bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100">
+                       <div className="flex justify-between items-center mb-6">
+                          <h3 className="text-xl font-black text-slate-800 uppercase italic tracking-tighter">{viewDate.toLocaleDateString('es-UY', { month: 'long', year: 'numeric' })}</h3>
+                          <div className="flex gap-2"><button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))} className="p-2 bg-slate-50 rounded-xl"><ChevronLeft className="w-4 h-4" /></button><button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))} className="p-2 bg-slate-50 rounded-xl"><ChevronRight className="w-4 h-4" /></button></div>
+                       </div>
+                       <div className="grid grid-cols-7 gap-1.5">
+                         {['L','M','M','J','V','S','D'].map(d => <div key={d} className="text-center font-black text-slate-900 pb-2">{d}</div>)}
+                         {Array.from({length: new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay()===0?6:new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay()-1}).map((_,i) => <div key={'e'+i}></div>)}
+                         {Array.from({length: new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 0).getDate()}).map((_, i) => {
+                           const d = i+1; const isToday = d === new Date().getDate() && viewDate.getMonth() === new Date().getMonth();
+                           return <div key={d} onClick={() => setSelectedDay(d)} className={`h-16 p-2 rounded-xl border cursor-pointer flex flex-col justify-between ${selectedDay===d?'bg-slate-900 text-white':isToday?'border-[#E11D48] text-[#E11D48] font-bold':'bg-white border-slate-100'}`}><span className="text-sm font-bold">{d}</span></div>
+                         })}
+                       </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-[2rem] shadow-xl border border-slate-100">
+                       <h4 className="text-2xl font-black text-slate-800 uppercase italic mb-4">{selectedDay} {viewDate.toLocaleDateString('es-UY', { month: 'short' })}</h4>
+                       <div className="space-y-2">
+                          <form onSubmit={(e) => {e.preventDefault(); const n = e.target.n.value; if(!n)return; setPersonalEvents({...personalEvents, [`${viewDate.getFullYear()}-${viewDate.getMonth()}-${selectedDay}`]: n}); e.target.reset();}} className="flex gap-2"><input name="n" placeholder="Nota..." className="flex-1 p-2 bg-slate-50 rounded-lg outline-none" /><button className="p-2 bg-black text-white rounded-lg"><Save className="w-4 h-4"/></button></form>
+                          {personalEvents[`${viewDate.getFullYear()}-${viewDate.getMonth()}-${selectedDay}`] && <div className="p-3 bg-indigo-50 rounded-lg text-indigo-800 font-bold text-sm">{personalEvents[`${viewDate.getFullYear()}-${viewDate.getMonth()}-${selectedDay}`]}</div>}
+                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'strategies' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in duration-500">
+                     <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm">
+                        <h4 className="text-lg font-black text-slate-800 uppercase italic mb-4">Ideas del Mes</h4>
+                        <div className="grid grid-cols-1 gap-4">{themeData.strategies.ideas.map((idea,i) => <div key={i} className="p-4 bg-slate-50 rounded-2xl font-bold text-slate-700">#{i+1} {idea}</div>)}</div>
+                     </div>
+                     <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm"><h4 className="text-lg font-black text-slate-800 uppercase italic mb-4">Tendencia</h4><p className="text-xl font-bold text-slate-600">{themeData.strategies.trend}</p></div>
+                  </div>
+                )}
+
+                {activeTab === 'calculator' && (
+                  <div className="bg-white p-10 rounded-[3.5rem] shadow-sm border border-slate-100 animate-in zoom-in">
+                    <h3 className="text-xl font-black uppercase italic text-slate-800 mb-6">Cotizador</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      <div className="space-y-4">
+                        <label className="block text-xs font-bold text-slate-400 uppercase">Costo Materiales</label><input type="number" className="w-full p-4 bg-slate-50 rounded-2xl font-black text-xl" value={calc.materialCost} onChange={e=>setCalc({...calc, materialCost:Number(e.target.value)})}/>
+                        <label className="block text-xs font-bold text-slate-400 uppercase">% Desperdicio</label><input type="number" className="w-full p-4 bg-slate-50 rounded-2xl font-black text-xl" value={calc.wastePercent} onChange={e=>setCalc({...calc, wastePercent:Number(e.target.value)})}/>
+                      </div>
+                      <div className="space-y-4">
+                        <label className="block text-xs font-bold text-slate-400 uppercase">Horas Trabajo</label><input type="number" className="w-full p-4 bg-slate-50 rounded-2xl font-black text-xl" value={calc.productionHours} onChange={e=>setCalc({...calc, productionHours:Number(e.target.value)})}/>
+                        <label className="block text-xs font-bold text-slate-400 uppercase">Precio Hora</label><input type="number" className="w-full p-4 bg-slate-50 rounded-2xl font-black text-xl" value={calc.hourlyRate} onChange={e=>setCalc({...calc, hourlyRate:Number(e.target.value)})}/>
+                      </div>
+                    </div>
+                    <div className="bg-[#E11D48] p-8 rounded-[2.5rem] text-white text-center"><p className="text-xs font-bold opacity-60 uppercase mb-2">Precio Final Sugerido</p><h4 className="text-6xl font-black tracking-tighter">${(((calc.materialCost*(1+calc.wastePercent/100))+(calc.productionHours*calc.hourlyRate))*(1+calc.margin/100)).toFixed(0)}</h4></div>
+                  </div>
+                )}
+
+                {activeTab === 'presupuestos' && (
+                  <div className="space-y-8 animate-in slide-in-from-bottom-5">
+                    {!isCreatingBudget ? (
+                      <div>
+                        <div className="flex justify-end gap-3 mb-6"><button onClick={() => setIsCreatingBudget(true)} className="flex items-center gap-3 bg-[#E11D48] text-white px-8 py-4 rounded-2xl font-black uppercase shadow-xl"><PlusCircle className="w-5 h-5"/> Nuevo</button></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">{presupuestos.map(b => <div key={b.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm"><div className="flex justify-between"><h4 className="font-black text-xl uppercase">{b.client}</h4><button onClick={()=>deleteItem(b.id, setPresupuestos, "Presupuesto")}><Trash2/></button></div><p className="text-slate-400 font-bold mb-4">{b.status}</p><p className="text-2xl font-black">${calculateBudgetTotal(b.items)}</p></div>)}</div>
+                      </div>
+                    ) : (
+                      <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                         <div className="flex justify-between mb-6"><h3 className="text-2xl font-black uppercase">Nuevo Presupuesto</h3><div className="flex gap-2"><button onClick={()=>setIsCreatingBudget(false)} className="px-6 py-2 rounded-xl bg-slate-100 font-bold">Cancelar</button><button onClick={saveBudget} className="px-6 py-2 rounded-xl bg-black text-white font-bold">Guardar</button></div></div>
+                         <div className="grid grid-cols-2 gap-4 mb-6"><input value={currentBudget.client} onChange={e=>setCurrentBudget({...currentBudget, client:e.target.value})} placeholder="Cliente" className="p-4 bg-slate-50 rounded-2xl font-bold" /><select value={currentBudget.status} onChange={e=>setCurrentBudget({...currentBudget, status:e.target.value})} className="p-4 bg-slate-50 rounded-2xl font-bold"><option>Pendiente</option><option>Aprobado</option></select></div>
+                         <div className="space-y-2 mb-4">{currentBudget.items.map(i=><div key={i.id} className="flex gap-2"><input placeholder="Item" value={i.desc} onChange={e=>updateBudgetItem(i.id,'desc',e.target.value)} className="flex-1 p-3 bg-slate-50 rounded-xl" /><input type="number" placeholder="$" value={i.price} onChange={e=>updateBudgetItem(i.id,'price',e.target.value)} className="w-24 p-3 bg-slate-50 rounded-xl" /></div>)}<button onClick={addBudgetItem} className="text-[#E11D48] font-black text-sm uppercase">+ Item</button></div>
+                         <div className="text-right text-4xl font-black">${calculateBudgetTotal(currentBudget.items)}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
               </main>
 
-              {/* MODAL SOPORTE */}
               {showContactModal && (
                 <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[200] flex items-center justify-center p-6 animate-in zoom-in duration-300">
                    <div className="bg-white max-w-lg w-full rounded-[4rem] p-12 text-center shadow-2xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-2 bg-[#E11D48]"></div>
                       <div className="w-24 h-24 bg-rose-50 text-[#E11D48] rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner"><UserCheck className="w-12 h-12" /></div>
                       <h3 className="text-3xl font-black text-slate-800 uppercase italic mb-4 tracking-tighter">Soporte MC Pro</h3>
-                      <p className="text-slate-500 mb-10 text-lg italic font-medium">¿Necesitas ayuda con la App?</p>
-                      <button onClick={() => setShowContactModal(false)} className="block w-full py-4 text-slate-300 font-bold uppercase text-[10px] tracking-widest hover:text-[#E11D48] transition-colors">Cerrar</button>
+                      <div className="space-y-4">
+                        <a href="https://wa.me/59892617525" target="_blank" className="flex items-center justify-center gap-3 w-full py-5 bg-[#25D366] text-white rounded-3xl font-black uppercase text-[12px] tracking-widest shadow-xl"><MessageCircle className="w-5 h-5" /> WhatsApp</a>
+                        <button onClick={() => setShowContactModal(false)} className="block w-full py-4 text-slate-300 font-bold uppercase text-[10px] tracking-widest hover:text-[#E11D48]">Cerrar</button>
+                      </div>
                    </div>
                 </div>
               )}
@@ -674,7 +537,6 @@
           );
         };
 
-        // Esperar a que el DOM esté listo
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
