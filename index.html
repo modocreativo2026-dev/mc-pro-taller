@@ -374,7 +374,7 @@
           return (
             <div className="flex h-screen overflow-hidden bg-[#fcfcfc] text-slate-800 font-sans">
               <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-100 flex flex-col shrink-0 shadow-2xl z-50 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-                <div className="p-6 text-center"><div className="inline-block p-3 rounded-2xl text-white shadow-xl rotate-3 mb-3 bg-brand"><Icons.Star className="w-6 h-6 fill-current" /></div><h1 className="font-black text-xl uppercase italic text-slate-800">MC Pro</h1><p className="text-[9px] font-bold text-brand uppercase tracking-[0.4em] mt-1">Modo Creativo</p></div>
+                <div className="p-6 text-center"><div className="inline-block p-3 rounded-2xl text-white shadow-xl rotate-3 mb-3 bg-brand"><Icons.Star className="w-6 h-6 fill-current" /></div><h1 className="font-black text-xl uppercase text-slate-800">MC Pro</h1><p className="text-[9px] font-bold text-brand uppercase tracking-[0.4em] mt-1">Modo Creativo</p></div>
                 <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                   <NavItem id="dashboard" label={t.nav_dashboard} icon={Icons.Layout} />
                   <NavItem id="strategies" label={t.nav_strategies} icon={Icons.Lightbulb} />
@@ -402,7 +402,7 @@
                 
                 <header className="flex justify-between items-center mb-6">
                   <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-brand"><Icons.Menu className="w-6 h-6" /></button>
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase italic text-slate-800">{activeTab === 'access_control' ? t.acc_title : activeTab === 'dashboard' ? t.nav_dashboard : activeTab === 'strategies' ? t.nav_strategies : activeTab === 'finances' ? t.nav_finances : activeTab === 'clients' ? t.nav_clients : activeTab === 'presupuestos' ? t.nav_budgets : activeTab === 'shipping' ? t.nav_shipping : activeTab === 'planner' ? t.nav_planner : activeTab === 'inventory' ? t.nav_inventory : activeTab === 'checklist' ? t.nav_workshop : t.nav_calculator}</h2>
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800">{activeTab === 'access_control' ? t.acc_title : activeTab === 'dashboard' ? t.nav_dashboard : activeTab === 'strategies' ? t.nav_strategies : activeTab === 'finances' ? t.nav_finances : activeTab === 'clients' ? t.nav_clients : activeTab === 'presupuestos' ? t.nav_budgets : activeTab === 'shipping' ? t.nav_shipping : activeTab === 'planner' ? t.nav_planner : activeTab === 'inventory' ? t.nav_inventory : activeTab === 'checklist' ? t.nav_workshop : t.nav_calculator}</h2>
                   <div className="hidden md:flex items-center gap-3 bg-white p-2 pr-4 rounded-xl border border-slate-100 shadow-sm">
                     <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Icons.Globe className="w-4 h-4 text-slate-400" /><span className="text-xs font-bold text-slate-500 uppercase">{userCountry}</span></div>
                     <div className="bg-amber-100 p-1.5 rounded-lg text-amber-500"><Icons.Sun className="w-4 h-4" /></div>
@@ -426,13 +426,13 @@
                     
                     {/* Widgets Nuevos */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+                       <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
                            <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Lightbulb className="w-24 h-24" /></div>
                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Icons.Lightbulb className="w-4 h-4 text-brand"/> {t.nav_strategies}</h3>
                            <p className="text-xl font-black text-slate-800 mb-1 leading-tight">{themeData.strategies.title}</p>
                            <p className="text-xs text-slate-500 italic truncate border-l-2 border-brand pl-2">"{themeData.strategies.trend}"</p>
                        </div>
-                       <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
+                       <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
                            <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Truck className="w-24 h-24" /></div>
                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Icons.Truck className="w-4 h-4 text-indigo-500"/> {t.nav_shipping}</h3>
                            <p className="text-3xl font-black text-slate-800 mb-2">{shipping.length}</p>
