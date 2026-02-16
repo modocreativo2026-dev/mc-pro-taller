@@ -208,20 +208,32 @@
             return [state, update];
         };
 
-        // --- FECHAS COMPLETAS (Uruguay Actualizadas) ---
+        // --- FECHAS COMPLETAS (Uruguay Actualizadas con TODAS las celebraciones) ---
         const FULL_EVENTS = [
-            {d:1,m:0,t:'Año Nuevo',type:'INT'},{d:6,m:0,t:'Día de los Niños (UY)',type:'UY'},{d:24,m:0,t:'Periodista',type:'CM'},{d:25,m:0,t:'Publicidad',type:'CM'},
-            {d:4,m:1,t:'Cáncer',type:'INT'},{d:14,m:1,t:'San Valentín',type:'INT'},{d:20,m:1,t:'Gato',type:'INT'},{d:24,m:1,t:'CM Day',type:'CM'},{d:28,m:1,t:'Grito Asencio (UY)',type:'UY'},
-            {d:8,m:2,t:'Mujer',type:'INT'},{d:15,m:2,t:'Consumidor',type:'CM'},{d:17,m:2,t:'San Patricio',type:'INT'},{d:19,m:2,t:'José P. Varela (UY)',type:'UY'},{d:21,m:2,t:'Poesía',type:'CM'},
-            {d:7,m:3,t:'Salud',type:'INT'},{d:15,m:3,t:'Arte',type:'INT'},{d:19,m:3,t:'Desembarco 33 (UY)',type:'UY'},{d:22,m:3,t:'Tierra',type:'INT'},{d:23,m:3,t:'Libro',type:'INT'},{d:27,m:3,t:'Diseño',type:'CM'},
-            {d:1,m:4,t:'Trabajador',type:'INT'},{d:2,m:4,t:'Bullying',type:'INT'},{d:4,m:4,t:'Star Wars',type:'CM'},{d:15,m:4,t:'Familia',type:'INT'},{d:17,m:4,t:'Internet',type:'CM'},{d:18,m:4,t:'Batalla Piedras (UY)',type:'UY'},{d:26,m:4,t:'Día Libro (UY)',type:'UY'},
-            {d:5,m:5,t:'Medio Amb.',type:'INT'},{d:8,m:5,t:'Océanos',type:'INT'},{d:19,m:5,t:'Natalicio Artigas (UY)',type:'UY'},{d:20,m:5,t:'Yellow Day',type:'CM'},{d:28,m:5,t:'Orgullo',type:'INT'},{d:30,m:5,t:'Social Media',type:'CM'},
-            {d:4,m:6,t:'Indep. USA',type:'INT'},{d:17,m:6,t:'Emoji',type:'CM'},{d:18,m:6,t:'Jura Constitución (UY)',type:'UY'},{d:20,m:6,t:'Amigo',type:'INT'},{d:26,m:6,t:'Abuelos',type:'INT'},
-            {d:1,m:7,t:'Alegría',type:'CM'},{d:8,m:7,t:'Gato',type:'INT'},{d:19,m:7,t:'Fotografía',type:'CM'},{d:24,m:7,t:'Nostalgia (UY)',type:'UY'},{d:25,m:7,t:'Indep. (UY)',type:'UY'},{d:29,m:7,t:'Gamer',type:'CM'},
-            {d:13,m:8,t:'Programador',type:'CM'},{d:21,m:8,t:'Primavera',type:'INT'},{d:23,m:8,t:'Muerte Artigas',type:'UY'},{d:27,m:8,t:'Turismo',type:'INT'},
-            {d:1,m:9,t:'Café',type:'CM'},{d:4,m:9,t:'Animales',type:'INT'},{d:12,m:9,t:'Sarandí (UY)',type:'UY'},{d:16,m:9,t:'Alimentación',type:'INT'},{d:19,m:9,t:'Cáncer Mama',type:'INT'},{d:23,m:9,t:'Periodista (UY)',type:'UY'},{d:31,m:9,t:'Halloween',type:'INT'},
-            {d:1,m:10,t:'Todos Santos',type:'INT'},{d:2,m:10,t:'Difuntos (UY)',type:'UY'},{d:11,m:10,t:'Solteros',type:'CM'},{d:19,m:10,t:'Emprendedora',type:'CM'},{d:30,m:10,t:'Influencer',type:'CM'},
-            {d:8,m:11,t:'Playas (UY)',type:'UY'},{d:10,m:11,t:'DDHH',type:'INT'},{d:24,m:11,t:'Nochebuena',type:'INT'},{d:25,m:11,t:'Día Familia (UY)',type:'UY'},{d:31,m:11,t:'Fin Año',type:'INT'}
+            // Enero
+            {d:1,m:0,t:'Año Nuevo',type:'INT'},{d:6,m:0,t:'Día de los Niños (UY)',type:'UY'},{d:24,m:0,t:'Día Periodista',type:'CM'},{d:25,m:0,t:'Publicidad',type:'CM'},
+            // Febrero
+            {d:2,m:1,t:'Iemanjá (UY)',type:'UY'},{d:4,m:1,t:'Día Cáncer',type:'INT'},{d:14,m:1,t:'San Valentín',type:'INT'},{d:16,m:1,t:'Carnaval (Lunes)',type:'UY'},{d:17,m:1,t:'Carnaval (Martes)',type:'UY'},{d:20,m:1,t:'Día Gato',type:'INT'},{d:24,m:1,t:'CM Day',type:'CM'},{d:28,m:1,t:'Grito Asencio (UY)',type:'UY'},
+            // Marzo
+            {d:8,m:2,t:'Día Mujer',type:'INT'},{d:15,m:2,t:'Consumidor',type:'CM'},{d:17,m:2,t:'San Patricio',type:'INT'},{d:19,m:2,t:'José P. Varela (UY)',type:'UY'},{d:21,m:2,t:'Poesía',type:'CM'},
+            // Abril (Semana Turismo Variable - Aprox 2026: 2 y 3 Abril)
+            {d:2,m:3,t:'Jueves Santo (UY)',type:'UY'},{d:3,m:3,t:'Viernes Santo (UY)',type:'UY'},{d:7,m:3,t:'Día Salud',type:'INT'},{d:14,m:3,t:'Día Américas (UY)',type:'UY'},{d:15,m:3,t:'Día Arte',type:'INT'},{d:19,m:3,t:'Desembarco 33 (UY)',type:'UY'},{d:22,m:3,t:'Tierra',type:'INT'},{d:23,m:3,t:'Libro',type:'INT'},{d:27,m:3,t:'Diseño',type:'CM'},{d:30,m:3,t:'Trabajador Rural (UY)',type:'UY'},
+            // Mayo
+            {d:1,m:4,t:'Trabajador',type:'INT'},{d:2,m:4,t:'Bullying',type:'INT'},{d:4,m:4,t:'Star Wars',type:'CM'},{d:15,m:4,t:'Familia',type:'INT'},{d:17,m:4,t:'Internet',type:'CM'},{d:18,m:4,t:'Batalla Piedras (UY)',type:'UY'},{d:20,m:4,t:'Marcha Silencio (UY)',type:'UY'},{d:26,m:4,t:'Día Libro (UY)',type:'UY'},
+            // Junio
+            {d:5,m:5,t:'Medio Amb.',type:'INT'},{d:8,m:5,t:'Océanos',type:'INT'},{d:19,m:5,t:'Artigas/Abuelos (UY)',type:'UY'},{d:20,m:5,t:'Yellow Day',type:'CM'},{d:27,m:5,t:'Trab. Estado (UY)',type:'UY'},{d:28,m:5,t:'Orgullo',type:'INT'},{d:30,m:5,t:'Social Media',type:'CM'},
+            // Julio
+            {d:4,m:6,t:'Indep. USA',type:'INT'},{d:17,m:6,t:'Prev. Suicidio (UY)',type:'UY'},{d:18,m:6,t:'Jura Constitución (UY)',type:'UY'},{d:20,m:6,t:'Día Amigo',type:'INT'},{d:23,m:6,t:'Payador (UY)',type:'UY'},{d:26,m:6,t:'Abuelos',type:'INT'},
+            // Agosto
+            {d:1,m:7,t:'Alegría',type:'CM'},{d:8,m:7,t:'Día Gato',type:'INT'},{d:16,m:7,t:'Día Niño (UY)',type:'UY'},{d:19,m:7,t:'Fotografía',type:'CM'},{d:24,m:7,t:'Nostalgia (UY)',type:'UY'},{d:25,m:7,t:'Indep. UY',type:'UY'},{d:29,m:7,t:'Gamer',type:'CM'},
+            // Septiembre
+            {d:13,m:8,t:'Programador',type:'CM'},{d:20,m:8,t:'Libertad Expr. (UY)',type:'UY'},{d:21,m:8,t:'Primavera/Estudiante',type:'UY'},{d:22,m:8,t:'Maestro (UY)',type:'UY'},{d:23,m:8,t:'Muerte Artigas (UY)',type:'UY'},{d:27,m:8,t:'Turismo',type:'INT'},
+            // Octubre
+            {d:1,m:9,t:'Música/Café (UY)',type:'UY'},{d:4,m:9,t:'Animales',type:'INT'},{d:12,m:9,t:'Sarandí (UY)',type:'UY'},{d:16,m:9,t:'Alimentación',type:'INT'},{d:19,m:9,t:'Cáncer Mama',type:'INT'},{d:23,m:9,t:'Periodista (UY)',type:'UY'},{d:31,m:9,t:'Halloween',type:'INT'},
+            // Noviembre
+            {d:1,m:10,t:'Todos Santos',type:'INT'},{d:2,m:10,t:'Difuntos (UY)',type:'UY'},{d:11,m:10,t:'Solteros',type:'CM'},{d:19,m:10,t:'Emprendedora',type:'CM'},{d:20,m:10,t:'Derechos Niño',type:'INT'},{d:30,m:10,t:'Influencer',type:'CM'},
+            // Diciembre
+            {d:3,m:11,t:'Candombe (UY)',type:'UY'},{d:8,m:11,t:'Playas (UY)',type:'UY'},{d:10,m:11,t:'DDHH',type:'INT'},{d:24,m:11,t:'Nochebuena',type:'INT'},{d:25,m:11,t:'Día Familia (UY)',type:'UY'},{d:31,m:11,t:'Fin Año',type:'INT'}
         ];
 
         // --- ESTRATEGIAS: PAPELERÍA CREATIVA (Detallado y rico) ---
@@ -344,10 +356,10 @@
           const NavItem = ({ id, label, icon: Icon }) => (<button onClick={() => { setActiveTab(id); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all font-bold text-xs uppercase tracking-tight ${activeTab === id ? 'bg-brand text-white shadow-lg' : 'text-slate-500 hover:bg-slate-100'}`}><Icon className="w-4 h-4" /> {label}</button>);
 
           if (!isAuthenticated) return (
-              <div className="flex h-screen items-center justify-center bg-white p-6">
-                 <div className="w-full max-w-sm text-center animate-in">
+              <div className="flex h-screen items-center justify-center bg-white p-6" style={{backgroundColor: '#ffffff', backgroundImage: 'radial-gradient(#E11D48 2px, transparent 2px)', backgroundSize: '30px 30px'}}>
+                 <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100">
                     <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
-                    <h1 className="text-3xl font-black text-slate-800 uppercase italic tracking-tighter mb-2">MC Pro</h1>
+                    <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2">MC Pro</h1>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10">{t.login_subtitle}</p>
                     <form onSubmit={handleLogin} className="space-y-4">
                        <div className="bg-slate-50 p-3 rounded-2xl flex items-center gap-3 border border-slate-100"><Icons.Mail className="w-5 h-5 text-slate-400" /><input type="text" placeholder={t.login_user} className="bg-transparent outline-none w-full font-bold text-slate-700" value={emailInput} onChange={e => setEmailInput(e.target.value)} /></div>
