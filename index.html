@@ -76,7 +76,7 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // --- GESTIÓN DE ICONOS SVG NATIVOS (Sin librerías externas) ---
+        // --- 1. COMPONENTES Y DEFINICIONES DE ICONOS ---
         const Icon = ({ path, className }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{__html: path}} />
         );
@@ -100,34 +100,38 @@
             ShieldCheck: (p) => <Icon {...p} path='<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>' />,
             MessageCircle: (p) => <Icon {...p} path='<path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/>' />,
             LogOut: (p) => <Icon {...p} path='<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>' />,
+            Settings: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>' />,
+            Image: (p) => <Icon {...p} path='<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>' />,
+            CreditCard: (p) => <Icon {...p} path='<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>' />,
+            Trash2: (p) => <Icon {...p} path='<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>' />,
+            Edit2: (p) => <Icon {...p} path='<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>' />,
+            ChevronLeft: (p) => <Icon {...p} path='<path d="m15 18-6-6 6-6"/>' />,
+            ChevronRight: (p) => <Icon {...p} path='<path d="m9 18 6-6-6-6"/>' />,
+            Save: (p) => <Icon {...p} path='<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>' />,
+            Download: (p) => <Icon {...p} path='<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>' />,
+            X: (p) => <Icon {...p} path='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' />,
+            CheckCircle2: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>' />,
             Globe: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>' />,
             Sun: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>' />,
             CloudSun: (p) => <Icon {...p} path='<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>' />,
             Palette: (p) => <Icon {...p} path='<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>' />,
-            BarChart3: (p) => <Icon {...p} path='<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>' />,
-            Instagram: (p) => <Icon {...p} path='<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>' />,
-            Plus: (p) => <Icon {...p} path='<path d="M5 12h14"/><path d="M12 5v14"/>' />,
             PlusCircle: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>' />,
-            Languages: (p) => <Icon {...p} path='<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>' />,
-            Trash2: (p) => <Icon {...p} path='<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>' />,
-            Edit2: (p) => <Icon {...p} path='<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>' />,
-            CheckCircle2: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>' />,
+            Plus: (p) => <Icon {...p} path='<path d="M5 12h14"/><path d="M12 5v14"/>' />,
+            Instagram: (p) => <Icon {...p} path='<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>' />,
             Zap: (p) => <Icon {...p} path='<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' />,
-            ChevronLeft: (p) => <Icon {...p} path='<path d="m15 18-6-6 6-6"/>' />,
-            ChevronRight: (p) => <Icon {...p} path='<path d="m9 18 6-6-6-6"/>' />,
-            Save: (p) => <Icon {...p} path='<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>' />,
+            BarChart3: (p) => <Icon {...p} path='<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>' />,
             ArrowUpCircle: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/>' />,
             ArrowDownCircle: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><path d="m16 12-4 4-4-4"/><path d="M12 8v8"/>' />,
             Box: (p) => <Icon {...p} path='<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/>' />,
             UserCheck: (p) => <Icon {...p} path='<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/>' />,
-            Download: (p) => <Icon {...p} path='<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>' />
+            Languages: (p) => <Icon {...p} path='<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>' />
         };
 
-        // --- TRADUCCIONES ---
+        // --- 2. TRADUCCIONES Y DATOS ---
         const translations = {
             es: {
                 login_subtitle: "Acceso a Miembros", login_user: "Usuario / Correo", login_license: "Licencia", login_btn: "Ingresar",
-                nav_dashboard: "Escritorio", nav_strategies: "Estrategias", nav_finances: "Finanzas", nav_clients: "Ventas", nav_budgets: "Presupuestos", nav_shipping: "Envíos", nav_planner: "Calendario", nav_inventory: "Inventario", nav_workshop: "Taller", nav_calculator: "Cotizador", nav_users: "Usuarios",
+                nav_dashboard: "Escritorio", nav_strategies: "Estrategias", nav_finances: "Finanzas", nav_clients: "Ventas", nav_budgets: "Presupuestos", nav_billing: "Facturación", nav_shipping: "Envíos", nav_planner: "Calendario", nav_inventory: "Insumos", nav_workshop: "Taller", nav_calculator: "Cotizador", nav_users: "Usuarios",
                 btn_support: "Soporte", btn_logout: "Salir", fin_download: "Descargar CSV", fin_income_title: "Ingreso", fin_expense_title: "Gasto", fin_income: "Ingresos", fin_expenses: "Gastos",
                 dash_trend: "Tendencia", dash_campaign: "Campaña", dash_balance: "Balance", dash_income: "Ingresos", dash_expenses: "Gastos",
                 strat_ideas: "Ideas", strat_trend: "Tendencia Visual", label_concept: "Concepto", label_amount: "Monto", btn_add: "Agregar",
@@ -138,12 +142,16 @@
                 plan_note: "Nota", placeholder_write: "Escribir...",
                 calc_title: "Cotizador Pro", calc_final: "Precio Final Sugerido",
                 acc_title: "Usuarios Autorizados", acc_new: "Nuevo Usuario",
-                bud_new: "Nuevo Presupuesto", bud_title_new: "Nuevo Presupuesto", btn_cancel: "Cancelar", btn_save: "Guardar", label_status: "Estado", bud_item: "Agregar Ítem", bud_total: "Total Estimado",
-                mod_title: "Soporte MC Pro", btn_close: "Cerrar"
+                bud_new: "Nuevo Presupuesto", bill_new: "Nueva Factura", bud_title_new: "Nuevo Presupuesto", bill_title_new: "Nueva Factura", btn_cancel: "Cancelar", btn_save: "Guardar", label_status: "Estado", bud_item: "Agregar Ítem", bud_total: "Total Estimado",
+                mod_title: "Soporte MC Pro", btn_close: "Cerrar",
+                days: ['L','M','M','J','V','S','D'],
+                settings_lang: "Idioma / Language",
+                bud_number: "N° Boleta", bill_number: "N° Factura",
+                bud_logo: "Subir Logo", bill_logo: "Subir Logo"
             },
             en: {
                 login_subtitle: "Member Access", login_user: "User / Email", login_license: "License", login_btn: "Login",
-                nav_dashboard: "Dashboard", nav_strategies: "Strategies", nav_finances: "Finances", nav_clients: "Sales", nav_budgets: "Budgets", nav_shipping: "Shipping", nav_planner: "Calendar", nav_inventory: "Inventory", nav_workshop: "Workshop", nav_calculator: "Calculator", nav_users: "Users",
+                nav_dashboard: "Dashboard", nav_strategies: "Strategies", nav_finances: "Finances", nav_clients: "Sales", nav_budgets: "Budgets", nav_billing: "Billing", nav_shipping: "Shipping", nav_planner: "Calendar", nav_inventory: "Insumos", nav_workshop: "Workshop", nav_calculator: "Calculator", nav_users: "Users",
                 btn_support: "Support", btn_logout: "Logout", fin_download: "Download CSV", fin_income_title: "Income", fin_expense_title: "Expense", fin_income: "Income", fin_expenses: "Expenses",
                 dash_trend: "Trend", dash_campaign: "Campaign", dash_balance: "Balance", dash_income: "Income", dash_expenses: "Expenses",
                 strat_ideas: "Ideas", strat_trend: "Visual Trend", label_concept: "Concept", label_amount: "Amount", btn_add: "Add",
@@ -152,16 +160,54 @@
                 cli_title: "New Sale", label_client: "Client", btn_save: "Save", table_client: "Client", table_amount: "Amount", table_actions: "x",
                 ship_title: "Dispatches", label_tracking: "Tracking", btn_dispatch: "Dispatch",
                 plan_note: "Note", placeholder_write: "Write...",
-                calc_title: "Pro Calculator", calc_final: "Suggested Final Price",
+                calc_title: "Calculator", calc_mat: "Material Cost", calc_waste: "% Waste", calc_hours: "Labor Hours", calc_rate: "Hourly Rate", calc_final: "Suggested Price",
                 acc_title: "Authorized Users", acc_new: "New User",
-                bud_new: "New Budget", bud_title_new: "New Budget", btn_cancel: "Cancel", btn_save: "Save", label_status: "Status", bud_item: "Add Item", bud_total: "Estimated Total",
-                mod_title: "MC Pro Support", btn_close: "Close"
+                bud_new: "New Budget", bill_new: "New Invoice", bud_title_new: "New Budget", bill_title_new: "New Invoice", btn_cancel: "Cancel", btn_save: "Save", label_status: "Status", bud_item: "Add Item", bud_total: "Estimated Total",
+                mod_title: "MC Pro Support", btn_close: "Close",
+                days: ['M','T','W','T','F','S','S'],
+                settings_lang: "Language / Idioma",
+                bud_number: "Invoice No.", bill_number: "Invoice No.",
+                bud_logo: "Upload Logo", bill_logo: "Upload Logo"
             }
         };
 
-        // --- HOOKS PERSISTENCIA ---
+        const FULL_EVENTS = [
+            // Enero
+            {d:1,m:0,t:'Año Nuevo',type:'INT'}, {d:4,m:0,t:'Braille',type:'INT'}, {d:6,m:0,t:'Día de Reyes (UY)',type:'UY'}, {d:16,m:0,t:'The Beatles',type:'INT'}, {d:24,m:0,t:'Periodista / CM Day',type:'CM'}, {d:25,m:0,t:'Publicidad',type:'CM'}, {d:28,m:0,t:'Protección de Datos',type:'INT'},
+            // Febrero
+            {d:2,m:1,t:'Iemanjá (UY)',type:'UY'}, {d:4,m:1,t:'Cáncer',type:'INT'}, {d:11,m:1,t:'Mujer en la Ciencia',type:'INT'}, {d:13,m:1,t:'Radio / Solteros',type:'INT'}, {d:14,m:1,t:'San Valentín',type:'INT'}, {d:16,m:1,t:'Carnaval (Lunes UY)',type:'UY'}, {d:17,m:1,t:'Carnaval (Martes UY)',type:'UY'}, {d:20,m:1,t:'Día del Gato',type:'INT'}, {d:24,m:1,t:'CM Day (Alt)',type:'CM'}, {d:28,m:1,t:'Grito Asencio (UY)',type:'UY'},
+            // Marzo
+            {d:3,m:2,t:'Naturaleza',type:'INT'}, {d:8,m:2,t:'Día de la Mujer',type:'INT'}, {d:15,m:2,t:'Consumidor',type:'INT'}, {d:17,m:2,t:'San Patricio',type:'INT'}, {d:19,m:2,t:'José P. Varela (UY)',type:'UY'}, {d:20,m:2,t:'Felicidad',type:'INT'}, {d:21,m:2,t:'Poesía / CM Bday',type:'CM'}, {d:22,m:2,t:'Agua',type:'INT'}, {d:27,m:2,t:'Teatro',type:'INT'}, {d:29,m:2,t:'Turismo (Domingo Ramos UY)',type:'UY'},
+            // Abril
+            {d:1,m:3,t:'Turismo (Continúa UY)',type:'UY'}, {d:2,m:3,t:'Autismo',type:'INT'}, {d:7,m:3,t:'Salud',type:'INT'}, {d:13,m:3,t:'Día del Beso',type:'INT'}, {d:14,m:3,t:'Día Américas (UY)',type:'UY'}, {d:15,m:3,t:'Día Arte',type:'INT'}, {d:19,m:3,t:'Desembarco 33 (UY)',type:'UY'}, {d:21,m:3,t:'Creatividad',type:'CM'}, {d:22,m:3,t:'Tierra',type:'INT'}, {d:23,m:3,t:'Libro / Idioma',type:'INT'}, {d:26,m:3,t:'Diseño Gráfico',type:'CM'},
+            // Mayo
+            {d:1,m:4,t:'Día del Trabajador',type:'INT'}, {d:2,m:4,t:'Bullying',type:'INT'}, {d:4,m:4,t:'Star Wars Day',type:'CM'}, {d:15,m:4,t:'Familia',type:'INT'}, {d:17,m:4,t:'Internet / Reciclaje',type:'INT'}, {d:18,m:4,t:'Batalla Piedras (UY)',type:'UY'}, {d:20,m:4,t:'Marcha Silencio (UY)',type:'UY'}, {d:24,m:4,t:'Orgullo Geek',type:'INT'}, {d:31,m:4,t:'Día del Tabaco',type:'INT'},
+            // Junio
+            {d:5,m:5,t:'Medio Ambiente',type:'INT'}, {d:8,m:5,t:'Océanos',type:'INT'}, {d:12,m:5,t:'Día del Niño (Alt)',type:'INT'}, {d:19,m:5,t:'Artigas / Abuelos (UY)',type:'UY'}, {d:21,m:5,t:'Selfie / Yoga',type:'CM'}, {d:28,m:5,t:'Orgullo LGTB',type:'INT'}, {d:30,m:5,t:'Social Media Day',type:'CM'},
+            // Julio
+            {d:13,m:6,t:'Rock / Tequila',type:'INT'}, {d:17,m:6,t:'Emoji Day',type:'CM'}, {d:18,m:6,t:'Jura Constitución (UY)',type:'UY'}, {d:20,m:6,t:'Día del Amigo',type:'INT'}, {d:21,m:6,t:'Perro',type:'INT'}, {d:26,m:6,t:'Abuelos (INT)',type:'INT'}, {d:30,m:6,t:'Amistad',type:'INT'},
+            // Agosto
+            {d:1,m:7,t:'Alegría',type:'INT'}, {d:8,m:7,t:'Gato (INT)',type:'INT'}, {d:16,m:7,t:'Día del Niño (UY Est.)',type:'UY'}, {d:19,m:7,t:'Fotografía',type:'CM'}, {d:24,m:7,t:'Nostalgia (UY)',type:'UY'}, {d:25,m:7,t:'Independencia (UY)',type:'UY'}, {d:29,m:7,t:'Gamer Day',type:'CM'},
+            // Septiembre
+            {d:13,m:8,t:'Programador',type:'CM'}, {d:21,m:8,t:'Primavera / Estudiante',type:'UY'}, {d:27,m:8,t:'Turismo',type:'INT'}, {d:29,m:8,t:'Corazón',type:'INT'},
+            // Octubre
+            {d:1,m:9,t:'Música / Café',type:'INT'}, {d:4,m:9,t:'Animales / Sonrisa',type:'INT'}, {d:12,m:9,t:'Diversidad / Sarandí (UY)',type:'UY'}, {d:16,m:9,t:'Alimentación',type:'INT'}, {d:19,m:9,t:'Cáncer de Mama',type:'INT'}, {d:31,m:9,t:'Halloween',type:'INT'},
+            // Noviembre
+            {d:1,m:10,t:'Todos los Santos',type:'INT'}, {d:2,m:10,t:'Difuntos (UY)',type:'UY'}, {d:10,m:10,t:'Dibujo',type:'INT'}, {d:20,m:10,t:'Derechos Niño',type:'INT'}, {d:27,m:10,t:'Black Friday',type:'CM'}, {d:30,m:10,t:'Influencer Day',type:'CM'},
+            // Diciembre
+            {d:1,m:11,t:'SIDA',type:'INT'}, {d:8,m:11,t:'Inmaculada / Playas (UY)',type:'UY'}, {d:10,m:11,t:'DDHH',type:'INT'}, {d:24,m:11,t:'Nochebuena',type:'INT'}, {d:25,m:11,t:'Navidad / Familia (UY)',type:'UY'}, {d:31,m:11,t:'Fin de Año',type:'INT'}
+        ];
+
+        const creativeStrategies = [
+            { m: 0, title: 'Vuelta a Clases', ideas: ['Etiquetas escolares personalizadas', 'Cuadernos laminados', 'Planners docentes'], trend: 'Colores primarios y tipografías bold.', keywords: "#VueltaAlCole #EtiquetasEscolares" },
+            { m: 1, title: 'San Valentín', ideas: ['Explosion Box con fotos', 'Tarjetas shaker interactivas', 'Cuponeras del amor'], trend: 'Rojos intensos, foil dorado y capas de papel.', keywords: "#SanValentin #RegalosPersonalizados #AmorYAmistad" },
+            { m: 2, title: 'Mes de la Mujer', ideas: ['Agendas emprendedoras con finanzas', 'Libretas pocket con frases de empoderamiento', 'Marcapáginas magnéticos'], trend: 'Acuarelas, motivos florales y tonos lila/morado.', keywords: "#DiaDeLaMujer #MujerEmprendedora #PapeleriaFemenina" },
+            { m: 11, title: 'Navidad Creativa', ideas: ['Esferas con foto y vinilo', 'Calendarios adviento personalizados', 'Agendas preventa 2027'], trend: 'Verde pino, rojo clásico y mucho glitter.', keywords: "#NavidadCreativa #RegalosNavidad #Agendas2027" }
+        ];
+
+        // --- 3. HOOKS PERSONALIZADOS ---
         const usePersistedState = (key, defaultValue) => {
-            const [state, setState] = useState(() => { try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : defaultValue; } catch { return defaultValue; } });
+            const [state, setState] = useState(() => { try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : defaultValue; } catch (e) { return defaultValue; } });
             const [loaded, setLoaded] = useState(false);
             useEffect(() => {
                 if (!window.firebaseModules) { setLoaded(true); return; }
@@ -213,38 +259,16 @@
             return [state, update];
         };
 
-        // --- FECHAS COMPLETAS (Uruguay Actualizadas con TODAS las celebraciones) ---
-        const FULL_EVENTS = [
-            {d:1,m:0,t:'Año Nuevo',type:'INT'},{d:6,m:0,t:'Día de los Niños (UY)',type:'UY'},{d:24,m:0,t:'Día Periodista',type:'CM'},{d:25,m:0,t:'Publicidad',type:'CM'},
-            {d:2,m:1,t:'Iemanjá (UY)',type:'UY'},{d:4,m:1,t:'Día Cáncer',type:'INT'},{d:14,m:1,t:'San Valentín',type:'INT'},{d:16,m:1,t:'Carnaval (Lunes)',type:'UY'},{d:17,m:1,t:'Carnaval (Martes)',type:'UY'},{d:20,m:1,t:'Día Gato',type:'INT'},{d:24,m:1,t:'CM Day',type:'CM'},{d:28,m:1,t:'Grito Asencio (UY)',type:'UY'},
-            {d:8,m:2,t:'Día Mujer',type:'INT'},{d:15,m:2,t:'Consumidor',type:'CM'},{d:17,m:2,t:'San Patricio',type:'INT'},{d:19,m:2,t:'José P. Varela (UY)',type:'UY'},{d:21,m:2,t:'Poesía',type:'CM'},
-            {d:2,m:3,t:'Jueves Santo (UY)',type:'UY'},{d:3,m:3,t:'Viernes Santo (UY)',type:'UY'},{d:7,m:3,t:'Día Salud',type:'INT'},{d:14,m:3,t:'Día Américas (UY)',type:'UY'},{d:15,m:3,t:'Día Arte',type:'INT'},{d:19,m:3,t:'Desembarco 33 (UY)',type:'UY'},{d:22,m:3,t:'Tierra',type:'INT'},{d:23,m:3,t:'Libro',type:'INT'},{d:27,m:3,t:'Diseño',type:'CM'},{d:30,m:3,t:'Trabajador Rural (UY)',type:'UY'},
-            {d:1,m:4,t:'Trabajador',type:'INT'},{d:2,m:4,t:'Bullying',type:'INT'},{d:4,m:4,t:'Star Wars',type:'CM'},{d:15,m:4,t:'Familia',type:'INT'},{d:17,m:4,t:'Internet',type:'CM'},{d:18,m:4,t:'Batalla Piedras (UY)',type:'UY'},{d:20,m:4,t:'Marcha Silencio (UY)',type:'UY'},{d:26,m:4,t:'Día Libro (UY)',type:'UY'},
-            {d:5,m:5,t:'Medio Amb.',type:'INT'},{d:8,m:5,t:'Océanos',type:'INT'},{d:19,m:5,t:'Artigas/Abuelos (UY)',type:'UY'},{d:20,m:5,t:'Yellow Day',type:'CM'},{d:27,m:5,t:'Trab. Estado (UY)',type:'UY'},{d:28,m:5,t:'Orgullo',type:'INT'},{d:30,m:5,t:'Social Media',type:'CM'},
-            {d:4,m:6,t:'Indep. USA',type:'INT'},{d:17,m:6,t:'Prev. Suicidio (UY)',type:'UY'},{d:18,m:6,t:'Jura Constitución (UY)',type:'UY'},{d:20,m:6,t:'Día Amigo',type:'INT'},{d:23,m:6,t:'Payador (UY)',type:'UY'},{d:26,m:6,t:'Abuelos',type:'INT'},
-            {d:1,m:7,t:'Alegría',type:'CM'},{d:8,m:7,t:'Día Gato',type:'INT'},{d:16,m:7,t:'Día Niño (UY)',type:'UY'},{d:19,m:7,t:'Fotografía',type:'CM'},{d:24,m:7,t:'Nostalgia (UY)',type:'UY'},{d:25,m:7,t:'Indep. UY',type:'UY'},{d:29,m:7,t:'Gamer',type:'CM'},
-            {d:13,m:8,t:'Programador',type:'CM'},{d:20,m:8,t:'Libertad Expr. (UY)',type:'UY'},{d:21,m:8,t:'Primavera/Estudiante',type:'UY'},{d:22,m:8,t:'Maestro (UY)',type:'UY'},{d:23,m:8,t:'Muerte Artigas (UY)',type:'UY'},{d:27,m:8,t:'Turismo',type:'INT'},
-            {d:1,m:9,t:'Música/Café (UY)',type:'UY'},{d:4,m:9,t:'Animales',type:'INT'},{d:12,m:9,t:'Sarandí (UY)',type:'UY'},{d:16,m:9,t:'Alimentación',type:'INT'},{d:19,m:9,t:'Cáncer Mama',type:'INT'},{d:23,m:9,t:'Periodista (UY)',type:'UY'},{d:31,m:9,t:'Halloween',type:'INT'},
-            {d:1,m:10,t:'Todos Santos',type:'INT'},{d:2,m:10,t:'Difuntos (UY)',type:'UY'},{d:11,m:10,t:'Solteros',type:'CM'},{d:19,m:10,t:'Emprendedora',type:'CM'},{d:20,m:10,t:'Derechos Niño',type:'INT'},{d:30,m:10,t:'Influencer',type:'CM'},
-            {d:3,m:11,t:'Candombe (UY)',type:'UY'},{d:8,m:11,t:'Playas (UY)',type:'UY'},{d:10,m:11,t:'DDHH',type:'INT'},{d:24,m:11,t:'Nochebuena',type:'INT'},{d:25,m:11,t:'Día Familia (UY)',type:'UY'},{d:31,m:11,t:'Fin Año',type:'INT'}
-        ];
+        const NavItemComp = ({ id, label, icon: IconComponent, activeTab, setActiveTab, setIsSidebarOpen }) => (
+            <button 
+                onClick={() => { setActiveTab(id); setIsSidebarOpen(false); }} 
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all font-bold text-xs uppercase tracking-tight ${activeTab === id ? 'bg-brand text-white shadow-lg' : 'text-slate-500 hover:bg-slate-100'}`}
+            >
+                {IconComponent && <IconComponent className="w-4 h-4" />} {label}
+            </button>
+        );
 
-        const creativeStrategies = [
-            { m: 0, title: 'Vuelta a Clases', ideas: ['Etiquetas escolares personalizadas', 'Cuadernos laminados', 'Planners docentes', 'Etiquetas lavables'], trend: 'Colores primarios y tipografías bold.', keywords: "#VueltaAlCole #EtiquetasEscolares" },
-            { m: 1, title: 'San Valentín', ideas: ['Explosion Box', 'Tarjetas shaker', 'Cuponeras amor', 'Packaging premium'], trend: 'Rojos intensos, foil dorado y capas.', keywords: "#SanValentin #RegalosPersonalizados" },
-            { m: 2, title: 'Mes de la Mujer', ideas: ['Agendas emprendedoras', 'Libretas frases', 'Marcapáginas', 'Stickers bullet journal'], trend: 'Acuarelas, tonos lilas y flores.', keywords: "#DiaDeLaMujer #MujerEmprendedora" },
-            { m: 3, title: 'Pascua Creativa', ideas: ['Cajas huevos visor', 'Toppers roscas', 'Bolsitas conejito', 'Kits búsqueda tesoro'], trend: 'Tonos pastel, kraft y rústico.', keywords: "#PascuaCreativa #HuevosDePascua" },
-            { m: 4, title: 'Día de la Madre', ideas: ['Álbumes scrapbook', 'Bandejas desayuno', 'Tarjetas pop-up 3D', 'Cuadros flores papel'], trend: 'Vintage, floral y script elegante.', keywords: "#DiaDeLaMadre #RegalosMama" },
-            { m: 5, title: 'Día del Padre', ideas: ['Cajas vinos grabadas', 'Tarjetas interactivas', 'Organizadores cartonaje', 'Llaveros acrílico'], trend: 'Madera, cuero y tonos sobrios.', keywords: "#DiaDelPadre #RegalosPapa" },
-            { m: 6, title: 'Vacaciones Invierno', ideas: ['Libros actividades', 'Juegos mesa papel', 'Kits DIY manualidades', 'Stickers resistentes'], trend: 'Neón y personajes divertidos.', keywords: "#VacacionesInvierno #NiñosPapel" },
-            { m: 7, title: 'Día del Niño', ideas: ['Cajitas Milk Box', 'Rompecabezas sublimados', 'Libritos colorear', 'Valijitas cartón'], trend: 'Superhéroes, princesas y color.', keywords: "#DiaDelNiño #PartyBox" },
-            { m: 8, title: 'Primavera', ideas: ['Banderines y guirnaldas', 'Flores papel gigantes', 'Suculentas con tags', 'Papelería picnic'], trend: 'Multicolor, mariposas y hojas.', keywords: "#BienvenidaPrimavera #Fiestas" },
-            { m: 9, title: 'Halloween', ideas: ['Cajas ataúd dulces', 'Invitaciones interactivas', 'Toppers terror', 'Máscaras cartulina'], trend: 'Naranja, violeta y negro.', keywords: "#HalloweenCreativo #Packaging" },
-            { m: 10, title: 'Temporada Bodas', ideas: ['Invitaciones caladas', 'Números mesa acrílico', 'Libros firmas', 'Conos arroz'], trend: 'Minimalismo, blanco y eucalipto.', keywords: "#InvitacionesBoda #EventosPro" },
-            { m: 11, title: 'Navidad Creativa', ideas: ['Esferas con foto', 'Calendarios adviento', 'Tags regalos foil', 'Agendas 2027'], trend: 'Verde pino, rojo y glitter.', keywords: "#NavidadCreativa #Agendas2027" }
-        ];
-
-        // --- APP ---
+        // --- 4. COMPONENTE APP ---
         const App = () => {
           const [isAuthenticated, setIsAuthenticated] = usePersistedState('mc_auth_session', false);
           const [licenseInput, setLicenseInput] = useState('');
@@ -263,7 +287,7 @@
           const [isSidebarOpen, setIsSidebarOpen] = useState(false);
           const [userCountry, setUserCountry] = usePersistedState('mc_country', 'UY');
 
-          // Data
+          // Estados de datos
           const [inventory, setInventory] = usePersistedState('mc_inventory', []);
           const [tasks, setTasks] = usePersistedState('mc_tasks', []);
           const [clients, setClients] = usePersistedState('mc_clients', []); 
@@ -272,38 +296,19 @@
           const [extraIncomes, setExtraIncomes] = usePersistedState('mc_extra_incomes', []); 
           const [personalEvents, setPersonalEvents] = usePersistedState('mc_personal_events', {});
           const [presupuestos, setPresupuestos] = usePersistedState('mc_presupuestos', []);
+          const [facturas, setFacturas] = usePersistedState('mc_facturas', []);
+          const [materialDb, setMaterialDb] = usePersistedState('mc_material_db', [{ id: 1, name: 'Papel Fotográfico A4', price: 15 }, { id: 2, name: 'Cartulina Bristol', price: 10 }]);
           
-          // Cotizador Pro State (Detallado)
-          const [calc, setCalc] = usePersistedState('mc_calc_pro', { 
-            // 1. Materiales
-            substrateCost: 0,
-            inkPercent: 10,
-            assemblyCost: 0,
-            packagingCost: 0,
-            // 2. Producción
-            designHours: 0,
-            cuttingHours: 0,
-            assemblyHours: 0,
-            finishingCost: 0,
-            hourlyRate: 0,
-            // 3. Gastos Operativos
-            opExpenses: 0,
-            maintenanceFund: 0,
-            subscriptions: 0,
-            // 4. Inteligencia
-            wastePercent: 10,
-            profitMargin: 50,
-            taxesPercent: 0
-          });
+          const [calc, setCalc] = usePersistedState('mc_calc_pro', { selectedMaterialId: '', materialQty: 1, inkPercent: 10, assemblyCost: 0, packagingCost: 0, designHours: 0, cuttingHours: 0, assemblyHours: 0, finishingCost: 0, hourlyRate: 0, opExpenses: 0, maintenanceFund: 0, subscriptions: 0, wastePercent: 10, profitMargin: 50, taxesPercent: 0 });
 
-          // UI
+          // UI Presupuestos y Facturas
           const [isCreatingBudget, setIsCreatingBudget] = useState(false);
-          const [currentBudget, setCurrentBudget] = useState({ id: null, client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
+          const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
+          const [currentBudget, setCurrentBudget] = useState({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
+          const [currentInvoice, setCurrentInvoice] = useState({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pagada', notes: '' });
+
           const [viewDate, setViewDate] = useState(new Date());
           const [selectedDay, setSelectedDay] = useState(new Date().getDate());
-
-          useEffect(() => { const timer = setInterval(() => setCurrentTime(new Date()), 1000); return () => clearInterval(timer); }, []);
-          useEffect(() => { const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; if (tz.includes('Argentina')) setUserCountry('AR'); else if (tz.includes('Santiago')) setUserCountry('CL'); else if (tz.includes('Mexico')) setUserCountry('MX'); else if (tz.includes('Bogota')) setUserCountry('CO'); else if (tz.includes('Madrid')) setUserCountry('ES'); else if (tz.includes('Montevideo')) setUserCountry('UY'); }, []);
 
           const notify = (msg) => { setNotification(msg); setTimeout(() => setNotification(null), 2500); };
           const deleteItem = (id, setter, name) => { setter(p => p.filter(i => i.id !== id)); notify(`${name} eliminado`); };
@@ -313,14 +318,6 @@
             if(d.amount) d.amount = Number(d.amount); if(d.qty) d.qty = Number(d.qty); if(d.price) d.price = Number(d.price);
             const item = { id: Date.now(), ...d, date: new Date().toISOString().split('T')[0], completed: false };
             setter(p => [...p, item]); e.target.reset(); notify(`${name} guardado`);
-          };
-
-          const exportToCSV = (data, filename) => {
-             if(!data || !data.length) return notify("Sin datos");
-             const h = Object.keys(data[0]).join(",");
-             const r = data.map(o => Object.values(o).map(v => typeof v === 'string' ? `"${v.replace(/"/g, '""')}"` : v).join(","));
-             const b = new Blob(["\uFEFF" + [h, ...r].join("\n")], {type: 'text/csv;charset=utf-8;'});
-             const u = URL.createObjectURL(b); const l = document.createElement("a"); l.href = u; l.download = `${filename}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l);
           };
 
           const handleLogin = (e) => {
@@ -333,106 +330,123 @@
             } else setAuthError('Licencia inválida.');
           };
 
-          const addAllowedUser = (e) => {
-              e.preventDefault(); const u = e.target.newUser.value.trim(); if(!u)return;
-              if(allowedEmails.includes(u)) return notify("Existe");
-              setAllowedEmails([...allowedEmails, u]); e.target.reset(); notify("Agregado");
-          };
-          const removeAllowedUser = (u) => { setAllowedEmails(allowedEmails.filter(x => x !== u)); notify("Eliminado"); };
-
-          const handleBudgetChange = (f, v) => setCurrentBudget(p => ({ ...p, [f]: v }));
-          const addBudItem = () => setCurrentBudget(p => ({ ...p, items: [...p.items, { id: Date.now(), desc: '', qty: 1, price: 0 }] }));
-          const removeBudItem = (id) => { if(currentBudget.items.length>1) setCurrentBudget(p => ({...p, items: p.items.filter(i=>i.id!==id)})); };
-          const updateBudgetItem = (id, f, v) => setCurrentBudget(p => ({ ...p, items: p.items.map(i => i.id === id ? { ...i, [f]: v } : i) }));
-          const saveBudget = () => { if(!currentBudget.client) return notify("Falta cliente"); setPresupuestos(p => currentBudget.id ? p.map(b=>b.id===currentBudget.id?currentBudget:b) : [...p, {...currentBudget, id:Date.now()}]); setIsCreatingBudget(false); notify("Guardado"); };
-          const editBudget = (b) => { setCurrentBudget(b); setIsCreatingBudget(true); };
-          const calcBudTotal = (items) => items.reduce((a,i) => a+(Number(i.qty)*Number(i.price)),0);
-
-          const totalIncomes = clients.reduce((a,c) => a+(c.amount||0),0) + extraIncomes.reduce((a,i) => a+(i.amount||0),0);
-          const totalExpenses = expenses.reduce((a,e) => a+(e.amount||0),0);
+          const totalIncomes = (clients?.reduce((a,c) => a+(c.amount||0),0) || 0) + (extraIncomes?.reduce((a,i) => a+(i.amount||0),0) || 0);
+          const totalExpenses = expenses?.reduce((a,e) => a+(e.amount||0),0) || 0;
           const netBalance = totalIncomes - totalExpenses;
           
           const themeData = useMemo(() => {
              const m = currentTime.getMonth();
-             const s = { Verano: [11,0,1], Otoño: [2,3,4], Invierno: [5,6,7], Primavera: [8,9,10] };
-             const season = Object.keys(s).find(k => s[k].includes(m)) || 'Verano';
+             const seasons = { Verano: [11,0,1], Otoño: [2,3,4], Invierno: [5,6,7], Primavera: [8,9,10] };
+             const season = Object.keys(seasons).find(k => seasons[k].includes(m)) || 'Verano';
              const colors = { Verano: ['#FFD700','#FF8C00'], Otoño: ['#D35400','#8B4513'], Invierno: ['#4169E1','#87CEEB'], Primavera: ['#FF69B4','#32CD32'] };
              const strat = creativeStrategies.find(st => st.m === m) || creativeStrategies[0];
              return { seasonName: season, seasonalPalette: colors[season], campaignName: strat.title, strategies: strat };
           }, [currentTime]);
 
-          const calendarDays = useMemo(() => {
-            const y = viewDate.getFullYear(), m = viewDate.getMonth();
-            const dInM = new Date(y, m + 1, 0).getDate();
-            const offset = (new Date(y, m, 1).getDay() + 6) % 7;
-            const days = []; for (let i = 0; i < offset; i++) days.push(null); for (let i = 1; i <= dInM; i++) days.push(i); return days;
-          }, [viewDate]);
-          const getDayKey = (d) => `${viewDate.getFullYear()}-${String(viewDate.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-          
-          const NavItem = ({ id, label, icon: Icon }) => (<button onClick={() => { setActiveTab(id); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all font-bold text-xs uppercase tracking-tight ${activeTab === id ? 'bg-brand text-white shadow-lg' : 'text-slate-500 hover:bg-slate-100'}`}><Icon className="w-4 h-4" /> {label}</button>);
-
-          // CÁLCULO COTIZADOR PRO
           const proCalcResult = useMemo(() => {
-            const directCosts = (calc.substrateCost || 0) + (calc.substrateCost * ((calc.inkPercent || 0)/100)) + (calc.assemblyCost || 0) + (calc.packagingCost || 0);
+            const material = materialDb.find(m => m.id === Number(calc.selectedMaterialId));
+            const baseMaterialCost = material ? material.price * (calc.materialQty || 1) : 0;
+            const directCosts = baseMaterialCost + (baseMaterialCost * ((calc.inkPercent || 0)/100)) + (calc.assemblyCost || 0) + (calc.packagingCost || 0);
             const waste = directCosts * ((calc.wastePercent || 0)/100);
             const labor = ((calc.designHours || 0) + (calc.cuttingHours || 0) + (calc.assemblyHours || 0)) * (calc.hourlyRate || 0);
-            const finishing = (calc.finishingCost || 0);
-            const productionTotal = directCosts + waste + labor + finishing;
+            const productionTotal = directCosts + waste + labor + (calc.finishingCost || 0);
             const operatingTotal = (calc.opExpenses || 0) + (calc.maintenanceFund || 0) + (calc.subscriptions || 0);
             const subTotal = productionTotal + operatingTotal;
             const withProfit = subTotal * (1 + (calc.profitMargin || 0)/100);
-            const final = withProfit * (1 + (calc.taxesPercent || 0)/100);
-            return { cost: subTotal, final: final };
-          }, [calc]);
+            return { cost: subTotal, final: withProfit * (1 + (calc.taxesPercent || 0)/100) };
+          }, [calc, materialDb]);
 
-          if (!isAuthenticated) return (
-              <div className="flex h-screen items-center justify-center dots-bg p-6">
-                 <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100">
-                    <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
-                    <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2">MC Pro</h1>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10">{t.login_subtitle}</p>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                       <div className="bg-slate-50 p-3 rounded-2xl flex items-center gap-3 border border-slate-100"><Icons.Mail className="w-5 h-5 text-slate-400" /><input type="text" placeholder={t.login_user} className="bg-transparent outline-none w-full font-bold text-slate-700" value={emailInput} onChange={e => setEmailInput(e.target.value)} /></div>
-                       <div className="bg-slate-50 p-3 rounded-2xl flex items-center gap-3 border border-slate-100"><Icons.Key className="w-5 h-5 text-slate-400" /><input type="password" placeholder={t.login_license} className="bg-transparent outline-none w-full font-bold text-slate-700" value={licenseInput} onChange={e => setLicenseInput(e.target.value)} /></div>
-                       {authError && <p className="text-xs font-bold text-red-500">{authError}</p>}
-                       <button className="w-full py-4 bg-dark text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg flex gap-2 justify-center items-center"><Icons.Lock className="w-4 h-4" /> {t.login_btn}</button>
-                    </form>
-                 </div>
-              </div>
-          );
+          const handleBudgetChange = (f, v) => setCurrentBudget(p => ({ ...p, [f]: v }));
+          const handleInvoiceChange = (f, v) => setCurrentInvoice(p => ({ ...p, [f]: v }));
+          const addBudItem = () => setCurrentBudget(p => ({ ...p, items: [...p.items, { id: Date.now(), desc: '', qty: 1, price: 0 }] }));
+          const addInvItem = () => setCurrentInvoice(p => ({ ...p, items: [...p.items, { id: Date.now(), desc: '', qty: 1, price: 0 }] }));
+          const removeBudgetItem = (id) => { if(currentBudget.items.length>1) setCurrentBudget(p => ({...p, items: p.items.filter(i=>i.id!==id)})); };
+          const removeInvItem = (id) => { if(currentInvoice.items.length>1) setCurrentInvoice(p => ({...p, items: p.items.filter(i=>i.id!==id)})); };
+          const updateBudgetItem = (id, f, v) => setCurrentBudget(p => ({ ...p, items: p.items.map(i => i.id === id ? { ...i, [f]: v } : i) }));
+          const updateInvItem = (id, f, v) => setCurrentInvoice(p => ({ ...p, items: p.items.map(i => i.id === id ? { ...i, [f]: v } : i) }));
+
+          const resetBudgetForm = () => setCurrentBudget({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
+          const resetInvoiceForm = () => setCurrentInvoice({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pagada', notes: '' });
+          const saveBudget = () => { if(!currentBudget.client) return notify("Falta cliente"); setPresupuestos(p => currentBudget.id ? p.map(b=>b.id===currentBudget.id?currentBudget:b) : [...p, {...currentBudget, id:Date.now()}]); setIsCreatingBudget(false); resetBudgetForm(); notify("Guardado"); };
+          const saveInvoice = () => { if(!currentInvoice.client) return notify("Falta cliente"); setFacturas(p => currentInvoice.id ? p.map(b=>b.id===currentInvoice.id?currentInvoice:b) : [...p, {...currentInvoice, id:Date.now()}]); setIsCreatingInvoice(false); resetInvoiceForm(); notify("Factura Guardada"); };
+          const editBudget = (b) => { setCurrentBudget(b); setIsCreatingBudget(true); };
+          const editInvoice = (i) => { setCurrentInvoice(i); setIsCreatingInvoice(true); };
+          const calcBudTotal = (items) => items.reduce((a,i) => a+(Number(i.qty)*Number(i.price)),0);
+
+          const handleLogoUpload = (e, type) => {
+              const file = e.target.files[0];
+              if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => { if(type==='budget') handleBudgetChange('logo', reader.result); else handleInvoiceChange('logo', reader.result); };
+                  reader.readAsDataURL(file);
+              }
+          };
+
+          const addMaterialToDb = (e) => {
+              e.preventDefault();
+              const f = new FormData(e.target);
+              const name = f.get('name');
+              const price = Number(f.get('price'));
+              if(!name || isNaN(price)) return;
+              setMaterialDb([...materialDb, { id: Date.now(), name, price }]);
+              e.target.reset();
+              notify("Material guardado");
+          };
+
+          const calendarDays = useMemo(() => {
+            const y = viewDate.getFullYear(), m = viewDate.getMonth();
+            const dInM = new Date(y, m + 1, 0).getDate();
+            const firstDay = new Date(y, m, 1).getDay();
+            const offset = firstDay === 0 ? 6 : firstDay - 1;
+            const days = []; for (let i = 0; i < offset; i++) days.push(null); for (let i = 1; i <= dInM; i++) days.push(i); return days;
+          }, [viewDate]);
+          const getDayKey = (d) => `${viewDate.getFullYear()}-${String(viewDate.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+          const exportToCSV = (data, filename) => {
+             if(!data || !data.length) return notify("Sin datos");
+             const h = Object.keys(data[0]).join(",");
+             const r = data.map(o => Object.values(o).map(v => typeof v === 'string' ? `"${v.replace(/"/g, '""')}"` : v).join(","));
+             const b = new Blob(["\uFEFF" + [h, ...r].join("\n")], {type: 'text/csv;charset=utf-8;'});
+             const u = URL.createObjectURL(b); const l = document.createElement("a"); l.href = u; l.download = `${filename}.csv`; document.body.appendChild(l); l.click(); document.body.removeChild(l);
+          };
+
+          useEffect(() => { const timer = setInterval(() => setCurrentTime(new Date()), 1000); return () => clearInterval(timer); }, []);
 
           return (
             <div className="flex h-screen overflow-hidden bg-[#fcfcfc] text-slate-800 font-sans">
               <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-100 flex flex-col shrink-0 shadow-2xl z-50 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
                 <div className="p-6 text-center"><div className="inline-block p-3 rounded-2xl text-white shadow-xl rotate-3 mb-3 bg-brand"><Icons.Star className="w-6 h-6 fill-current" /></div><h1 className="font-black text-xl uppercase text-slate-800">MC Pro</h1><p className="text-[9px] font-bold text-brand uppercase tracking-[0.4em] mt-1">Modo Creativo</p></div>
                 <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                  <NavItem id="dashboard" label={t.nav_dashboard} icon={Icons.Layout} />
-                  <NavItem id="strategies" label={t.nav_strategies} icon={Icons.Lightbulb} />
-                  <NavItem id="finances" label={t.nav_finances} icon={Icons.Wallet} />
-                  <NavItem id="clients" label={t.nav_clients} icon={Icons.DollarSign} />
-                  <NavItem id="presupuestos" label={t.nav_budgets} icon={Icons.FileText} />
-                  <NavItem id="shipping" label={t.nav_shipping} icon={Icons.Truck} />
-                  <NavItem id="planner" label={t.nav_planner} icon={Icons.Calendar} />
-                  <NavItem id="inventory" label={t.nav_inventory} icon={Icons.Package} />
-                  <NavItem id="checklist" label={t.nav_workshop} icon={Icons.ClipboardList} />
-                  <NavItem id="calculator" label={t.nav_calculator} icon={Icons.Calculator} />
-                  {currentUserEmail === ADMIN_EMAIL && <NavItem id="access_control" label={t.nav_users} icon={Icons.ShieldCheck} />}
+                  <NavItemComp id="dashboard" label={t.nav_dashboard} icon={Icons.Layout} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="strategies" label={t.nav_strategies} icon={Icons.Lightbulb} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="finances" label={t.nav_finances} icon={Icons.Wallet} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="clients" label={t.nav_clients} icon={Icons.DollarSign} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="presupuestos" label={t.nav_budgets} icon={Icons.FileText} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="facturas" label={t.nav_billing} icon={Icons.CreditCard} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="shipping" label={t.nav_shipping} icon={Icons.Truck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="planner" label={t.nav_planner} icon={Icons.Calendar} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="inventory" label={t.nav_inventory} icon={Icons.Package} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="checklist" label={t.nav_workshop} icon={Icons.ClipboardList} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  <NavItemComp id="calculator" label={t.nav_calculator} icon={Icons.Calculator} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                  {currentUserEmail === ADMIN_EMAIL && <NavItemComp id="access_control" label={t.nav_users} icon={Icons.ShieldCheck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />}
                 </nav>
                 <div className="p-4 border-t border-slate-50 space-y-2">
                   <div className="flex gap-2">
-                      <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} className="flex-1 py-2 bg-slate-50 text-slate-500 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-100 flex justify-center gap-1"><Icons.Languages className="w-3 h-3" /> {language.toUpperCase()}</button>
+                      <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')} className="flex-1 py-2 bg-slate-50 text-slate-500 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-100 flex justify-center gap-1 transition-all"><Icons.Settings className="w-3 h-3" /> {language.toUpperCase()}</button>
                       <button onClick={() => setIsAuthenticated(false)} className="flex-1 py-2 text-slate-400 hover:text-brand rounded-xl font-bold text-[10px] uppercase hover:bg-rose-50 flex justify-center gap-1"><Icons.LogOut className="w-3 h-3" /> {t.btn_logout}</button>
                   </div>
                   <button onClick={() => setShowContactModal(true)} className="w-full py-3 bg-dark text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-[1.02] transition-all flex justify-center gap-2"><Icons.MessageCircle className="w-4 h-4" /> {t.btn_support}</button>
                 </div>
               </aside>
 
-              <main className="flex-1 overflow-y-auto p-4 md:p-6 relative">
+              <main className="flex-1 overflow-y-auto p-4 md:p-6 relative text-slate-800">
                 {notification && <div className="fixed top-6 right-6 bg-dark text-white px-6 py-3 rounded-xl font-bold text-xs uppercase shadow-2xl z-[100] animate-in">{notification}</div>}
                 
                 <header className="flex justify-between items-center mb-6">
                   <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-brand"><Icons.Menu className="w-6 h-6" /></button>
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800">{activeTab === 'access_control' ? t.acc_title : activeTab === 'dashboard' ? t.nav_dashboard : activeTab === 'strategies' ? t.nav_strategies : activeTab === 'finances' ? t.nav_finances : activeTab === 'clients' ? t.nav_clients : activeTab === 'presupuestos' ? t.nav_budgets : activeTab === 'shipping' ? t.nav_shipping : activeTab === 'planner' ? t.nav_planner : activeTab === 'inventory' ? t.nav_inventory : activeTab === 'checklist' ? t.nav_workshop : t.nav_calculator}</h2>
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800">
+                    {activeTab === 'access_control' ? t.acc_title : activeTab === 'dashboard' ? t.nav_dashboard : activeTab === 'strategies' ? t.nav_strategies : activeTab === 'finances' ? t.nav_finances : activeTab === 'clients' ? t.nav_clients : activeTab === 'presupuestos' ? t.nav_budgets : activeTab === 'facturas' ? t.nav_billing : activeTab === 'shipping' ? t.nav_shipping : activeTab === 'planner' ? t.nav_planner : activeTab === 'inventory' ? t.nav_inventory : activeTab === 'checklist' ? t.nav_workshop : t.nav_calculator}
+                  </h2>
                   <div className="hidden md:flex items-center gap-3 bg-white p-2 pr-4 rounded-xl border border-slate-100 shadow-sm">
                     <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Icons.Globe className="w-4 h-4 text-slate-400" /><span className="text-xs font-bold text-slate-500 uppercase">{userCountry}</span></div>
                     <div className="bg-amber-100 p-1.5 rounded-lg text-amber-500"><Icons.Sun className="w-4 h-4" /></div>
@@ -440,387 +454,189 @@
                   </div>
                 </header>
 
-                {/* --- DASHBOARD --- */}
                 {activeTab === 'dashboard' && (
-                  <div className="space-y-6 animate-in">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.CloudSun className="w-4 h-4 text-amber-500"/> {t.dash_trend} ({themeData.seasonName})</h3>
-                        <div className="flex h-12 rounded-xl overflow-hidden border border-slate-50 shadow-inner">{themeData.seasonalPalette.map((c,i)=><div key={i} className="flex-1" style={{backgroundColor:c}}/>)}</div>
+                  <div className="space-y-6 animate-in flex flex-col h-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-[180px]">
+                      <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Icons.CloudSun className="w-6 h-6 text-amber-500"/> {t.dash_trend} ({themeData.seasonName})</h3>
+                        <div className="flex h-16 rounded-2xl overflow-hidden border border-slate-50 shadow-inner">{themeData.seasonalPalette.map((c,i)=><div key={i} className="flex-1" style={{backgroundColor:c}}/>)}</div>
                       </div>
-                      <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.Palette className="w-4 h-4 text-brand"/> {t.dash_campaign} ({themeData.campaignName})</h3>
-                        <div className="flex h-12 rounded-xl overflow-hidden border border-slate-50 shadow-inner"><div className="flex-1 bg-rose-500"></div><div className="flex-1 bg-rose-400"></div><div className="flex-1 bg-rose-300"></div></div>
+                      <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-center">
+                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Icons.Palette className="w-6 h-6 text-brand"/> {t.dash_campaign} ({themeData.campaignName})</h3>
+                        <div className="flex h-16 rounded-2xl overflow-hidden border border-slate-50 shadow-inner"><div className="flex-1 bg-rose-500"></div><div className="flex-1 bg-rose-400"></div><div className="flex-1 bg-rose-300"></div></div>
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                       <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-                           <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Lightbulb className="w-24 h-24" /></div>
-                           <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Icons.Lightbulb className="w-4 h-4 text-brand"/> {t.nav_strategies}</h3>
-                           <p className="text-xl font-black text-slate-800 mb-1 leading-tight">{themeData.strategies.title}</p>
-                           <p className="text-xs text-slate-500 italic truncate border-l-2 border-brand pl-2">"{themeData.strategies.trend}"</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-[220px]">
+                       <div className="bg-white p-10 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all flex flex-col justify-center">
+                           <div className="absolute right-0 top-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Lightbulb className="w-32 h-32" /></div>
+                           <h3 className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.Lightbulb className="w-6 h-6 text-brand"/> {t.nav_strategies}</h3>
+                           <p className="text-2xl font-black text-slate-800 mb-2 leading-tight">{themeData.strategies.title}</p>
+                           <p className="text-sm text-slate-500 italic border-l-4 border-brand pl-3">"{themeData.strategies.trend}"</p>
                        </div>
-                       <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-                           <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Truck className="w-24 h-24" /></div>
-                           <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Icons.Truck className="w-4 h-4 text-indigo-500"/> {t.nav_shipping}</h3>
-                           <p className="text-3xl font-black text-slate-800 mb-2">{shipping.length}</p>
-                           <div className="flex gap-2">
-                               <span className="px-2 py-1 bg-slate-100 rounded-lg text-[9px] font-bold text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500"></span>DAC: {shipping.filter(s=>s.agency==='DAC').length}</span>
-                               <span className="px-2 py-1 bg-slate-100 rounded-lg text-[9px] font-bold text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span>UES: {shipping.filter(s=>s.agency==='UES').length}</span>
+                       <div className="bg-white p-10 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all flex flex-col justify-center">
+                           <div className="absolute right-0 top-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.Truck className="w-32 h-32" /></div>
+                           <h3 className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.Truck className="w-6 h-6 text-indigo-500"/> {t.nav_shipping}</h3>
+                           <p className="text-5xl font-black text-slate-800 mb-3 tracking-tighter">{shipping.length}</p>
+                           <div className="flex gap-4">
+                               <span className="px-4 py-2 bg-slate-100 rounded-xl text-[11px] font-bold text-slate-500 flex items-center gap-2 shadow-sm"><span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>DAC: {shipping.filter(s=>s.agency==='DAC').length}</span>
+                               <span className="px-4 py-2 bg-slate-100 rounded-xl text-[11px] font-bold text-slate-500 flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>UES: {shipping.filter(s=>s.agency==='UES').length}</span>
                            </div>
                        </div>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="bg-dark p-6 rounded-[2rem] text-white shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6 opacity-10"><Icons.BarChart3 className="w-20 h-20" /></div>
-                        <h3 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">{t.dash_balance}</h3>
-                        <p className="text-3xl font-black italic tracking-tighter">${netBalance}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 min-h-[200px]">
+                      <div className="bg-dark p-10 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col justify-center">
+                        <div className="absolute top-0 right-0 p-8 opacity-10"><Icons.BarChart3 className="w-24 h-24" /></div>
+                        <h3 className="text-[12px] font-black text-indigo-400 uppercase tracking-widest mb-3">{t.dash_balance}</h3>
+                        <p className="text-5xl font-black tracking-tighter">${netBalance}</p>
                       </div>
-                      <div className="bg-emerald-50 p-6 rounded-[2rem] border border-emerald-100"><h3 className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">{t.dash_income}</h3><p className="text-3xl font-black text-emerald-800 tracking-tighter">${totalIncomes}</p></div>
-                      <div className="bg-rose-50 p-6 rounded-[2rem] border border-rose-100"><h3 className="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-2">{t.dash_expenses}</h3><p className="text-3xl font-black text-rose-800 tracking-tighter">${totalExpenses}</p></div>
+                      <div className="bg-emerald-50 p-10 rounded-[2.5rem] border border-emerald-100 flex flex-col justify-center"><h3 className="text-[12px] font-black text-emerald-600 uppercase tracking-widest mb-3">{t.dash_income}</h3><p className="text-5xl font-black text-emerald-800 tracking-tighter">${totalIncomes}</p></div>
+                      <div className="bg-rose-50 p-10 rounded-[2.5rem] border border-rose-100 flex flex-col justify-center"><h3 className="text-[12px] font-black text-rose-600 uppercase tracking-widest mb-3">{t.dash_expenses}</h3><p className="text-5xl font-black text-rose-800 tracking-tighter">${totalExpenses}</p></div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <a href="https://web.whatsapp.com/" target="_blank" className="bg-[#25D366] p-6 rounded-[2rem] text-white shadow-sm flex items-center gap-4 hover:scale-[1.02] transition-transform"><Icons.MessageCircle className="w-6 h-6" /><div><p className="text-[9px] font-black uppercase opacity-80">Chat</p><h3 className="text-xl font-black italic">WhatsApp</h3></div></a>
-                      <a href="https://instagram.com/" target="_blank" className="bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 p-6 rounded-[2rem] text-white shadow-sm flex items-center gap-4 hover:scale-[1.02] transition-transform"><Icons.Instagram className="w-6 h-6" /><div><p className="text-[9px] font-black uppercase opacity-80">Feed</p><h3 className="text-xl font-black italic">Instagram</h3></div></a>
-                      <a href="https://mail.google.com/" target="_blank" className="bg-slate-900 p-6 rounded-[2rem] text-white shadow-sm flex items-center gap-4 hover:scale-[1.02] transition-transform"><Icons.Mail className="w-6 h-6" /><div><p className="text-[9px] font-black uppercase opacity-80">Bandeja</p><h3 className="text-xl font-black italic">Gmail</h3></div></a>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+                      <a href="https://web.whatsapp.com/" target="_blank" className="bg-[#25D366] p-10 rounded-[2.5rem] text-white shadow-sm flex items-center gap-6 hover:scale-[1.02] transition-transform group">
+                        <Icons.MessageCircle className="w-10 h-10 group-hover:animate-bounce" />
+                        <div><p className="text-[11px] font-black uppercase opacity-80 tracking-widest">Abrir</p><h3 className="text-2xl font-black tracking-tighter">WhatsApp</h3></div>
+                      </a>
+                      <a href="https://instagram.com/" target="_blank" className="bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 p-10 rounded-[2.5rem] text-white shadow-sm flex items-center gap-6 hover:scale-[1.02] transition-transform group">
+                        <Icons.Instagram className="w-10 h-10 group-hover:animate-pulse" />
+                        <div><p className="text-[11px] font-black uppercase opacity-80 tracking-widest">Feed</p><h3 className="text-2xl font-black tracking-tighter">Instagram</h3></div>
+                      </a>
+                      <a href="https://mail.google.com/" target="_blank" className="bg-dark p-10 rounded-[2.5rem] text-white shadow-sm flex items-center gap-6 hover:scale-[1.02] transition-transform group border border-slate-700">
+                        <Icons.Mail className="w-10 h-10 group-hover:animate-bounce" />
+                        <div><p className="text-[11px] font-black uppercase opacity-80 tracking-widest">Bandeja</p><h3 className="text-2xl font-black tracking-tighter">Gmail</h3></div>
+                      </a>
                     </div>
                   </div>
                 )}
 
-                {/* --- FINANZAS --- */}
-                {activeTab === 'finances' && (
+                {activeTab === 'strategies' && (
                   <div className="space-y-6 animate-in">
-                     <div className="flex justify-end gap-3"><button onClick={() => exportToCSV([...clients.map(c=>({...c, tipo:'Venta'})), ...extraIncomes.map(i=>({...i, tipo:'Ingreso'})), ...expenses.map(e=>({...e, tipo:'Gasto'}))], 'Finanzas')} className="flex items-center gap-2 bg-dark text-white px-4 py-2 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg hover:scale-105 transition-all"><Icons.Download className="w-3 h-3"/> {t.fin_download}</button></div>
-                     <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-wrap gap-6 justify-around items-center">
-                        <div className="text-center"><p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1">{t.dash_income}</p><p className="text-2xl font-black text-slate-800">${totalIncomes}</p></div>
-                        <div className="text-center"><p className="text-[9px] font-black text-rose-500 uppercase tracking-widest mb-1">{t.dash_expenses}</p><p className="text-2xl font-black text-slate-800">${totalExpenses}</p></div>
-                        <div className="text-center"><p className="text-[9px] font-black text-brand uppercase tracking-widest mb-1">{t.dash_balance}</p><p className={`text-3xl font-black ${netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>${netBalance}</p></div>
+                     <div className="relative overflow-hidden rounded-[2.5rem] p-8 text-white shadow-xl" style={{background: `linear-gradient(135deg, ${themeData.seasonalPalette[0]} 0%, ${themeData.seasonalPalette[1]} 100%)`}}>
+                        <div className="relative z-10"><div className="flex items-center gap-2 mb-2 opacity-80"><Icons.Star className="w-4 h-4" /><span className="text-[10px] font-black uppercase tracking-[0.3em]">Campaña del Mes</span></div><h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 uppercase">{themeData.campaignName}</h2><div className="flex flex-wrap gap-2">{themeData.strategies.keywords.split(' ').map((tag, i) => (<span key={i} className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-[10px] font-bold uppercase tracking-wider">{tag}</span>))}</div></div>
+                        <div className="absolute -right-6 -bottom-6 opacity-20"><Icons.Lightbulb className="w-48 h-48" /></div>
                      </div>
-                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                       <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                          <h3 className="text-lg font-black mb-4 uppercase italic flex items-center gap-2 text-emerald-600"><Icons.ArrowUpCircle className="w-5 h-5"/> {t.fin_income_title}</h3>
-                          <form onSubmit={(e) => saveEntity(e, setExtraIncomes, "Ingreso")} className="space-y-3"><input name="name" required placeholder={t.label_concept} className="w-full p-3 bg-slate-50 rounded-xl outline-none font-bold text-sm" /><div className="flex gap-3"><input name="amount" type="number" required placeholder="$" className="flex-1 p-3 bg-slate-50 rounded-xl outline-none font-bold text-sm" /><button className="px-6 bg-emerald-500 text-white rounded-xl font-black uppercase text-xs">{t.btn_add}</button></div></form>
-                          <div className="mt-4 space-y-2 max-h-56 overflow-y-auto">{extraIncomes.map(i => (<div key={i.id} className="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-100"><div><p className="font-bold text-slate-700 text-sm">{i.name}</p><p className="text-[10px] text-slate-400">{i.date}</p></div><div className="flex items-center gap-2"><span className="font-black text-emerald-500 text-sm">+${i.amount}</span><button onClick={() => deleteItem(i.id, setExtraIncomes, "Ingreso")} className="text-slate-300 hover:text-red-500"><Icons.Trash2 className="w-3 h-3"/></button></div></div>))}</div>
-                       </div>
-                       <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                          <h3 className="text-lg font-black mb-4 uppercase italic flex items-center gap-2 text-rose-600"><Icons.ArrowDownCircle className="w-5 h-5"/> {t.fin_expense_title}</h3>
-                          <form onSubmit={(e) => saveEntity(e, setExpenses, "Gasto")} className="space-y-3"><input name="name" required placeholder={t.label_concept} className="w-full p-3 bg-slate-50 rounded-xl outline-none font-bold text-sm" /><div className="flex gap-3"><input name="amount" type="number" required placeholder="$" className="flex-1 p-3 bg-slate-50 rounded-xl outline-none font-bold text-sm" /><button className="px-6 bg-rose-500 text-white rounded-xl font-black uppercase text-xs">{t.btn_add}</button></div></form>
-                          <div className="mt-4 space-y-2 max-h-56 overflow-y-auto">{expenses.map(e => (<div key={e.id} className="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-100"><div><p className="font-bold text-slate-700 text-sm">{e.name}</p><p className="text-[10px] text-slate-400">{e.date}</p></div><div className="flex items-center gap-2"><span className="font-black text-rose-500 text-sm">-${e.amount}</span><button onClick={() => deleteItem(e.id, setExpenses, "Gasto")} className="text-slate-300 hover:text-red-500"><Icons.Trash2 className="w-3 h-3"/></button></div></div>))}</div>
-                       </div>
+                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 space-y-6"><h3 className="text-lg font-black text-slate-800 flex items-center gap-2 uppercase tracking-tight"><Icons.Lightbulb className="w-5 h-5 text-yellow-500" /> Ideas para tu estudio</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4">{themeData.strategies.ideas.map((idea, i) => (<div key={i} className="group p-5 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"><div className="flex justify-between items-start mb-3"><span className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-xs font-black text-slate-400">0{i+1}</span></div><p className="font-bold text-slate-700 text-sm leading-relaxed">{idea}</p></div>))}</div></div>
+                        <div className="space-y-6"><div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm"><h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.Palette className="w-4 h-4"/> Tendencia Visual</h3><div className="p-4 bg-slate-50 rounded-2xl mb-4 border border-slate-100"><p className="text-lg font-black text-slate-800 italic leading-snug">"{themeData.strategies.trend}"</p></div><div className="flex h-12 rounded-xl overflow-hidden shadow-inner">{themeData.seasonalPalette.map((c, i) => (<div key={i} className="flex-1" style={{ backgroundColor: c }}></div>))}</div></div></div>
                      </div>
                   </div>
                 )}
 
-                {/* --- VENTAS --- */}
-                {activeTab === 'clients' && (
-                  <div className="space-y-6 animate-in">
-                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                       <div className="flex justify-between items-start mb-6"><h3 className="text-lg font-black uppercase italic flex items-center gap-2"><Icons.Plus className="w-5 h-5 text-brand"/> {t.cli_title}</h3><button onClick={() => exportToCSV(clients, 'Ventas')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button></div>
-                       <form onSubmit={(e) => saveEntity(e, setClients, "Venta")} className="grid grid-cols-1 md:grid-cols-3 gap-4"><input name="name" required placeholder={t.label_client} className="p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" /><input name="amount" type="number" required placeholder={t.label_amount} className="p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" /><button className="bg-brand text-white rounded-2xl font-black uppercase py-3 shadow-lg text-xs hover:scale-105 transition-all">{t.btn_save}</button></form>
-                    </div>
-                    <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm">
-                      <table className="w-full text-left">
-                        <thead className="bg-slate-50 text-slate-400 font-bold text-[9px] uppercase tracking-widest border-b border-slate-100"><tr><th className="px-6 py-4">{t.table_client}</th><th className="px-6 py-4">{t.table_amount}</th><th className="px-6 py-4 text-center">{t.table_actions}</th></tr></thead>
-                        <tbody className="divide-y divide-slate-50">{clients.map(c => (<tr key={c.id} className="hover:bg-rose-50 transition-all group"><td className="px-6 py-4 font-black uppercase text-slate-700 text-sm">{c.name}</td><td className="px-6 py-4 font-black text-brand italic tracking-tighter text-sm">${c.amount}</td><td className="px-6 py-4 text-center"><button onClick={() => deleteItem(c.id, setClients, "Venta")} className="text-slate-200 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button></td></tr>))}</tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
+                {activeTab === 'finances' && (<div className="space-y-6 animate-in"><div className="flex justify-end gap-3 mb-6"><button onClick={() => exportToCSV([...extraIncomes, ...clients, ...expenses], 'Finanzas')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button></div><div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-wrap gap-6 justify-around items-center"><div className="text-center"><p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1">Ingresos</p><p className="text-2xl font-black text-slate-800">${totalIncomes}</p></div><div className="text-center"><p className="text-[9px] font-black text-rose-500 uppercase tracking-widest mb-1">Gastos</p><p className="text-2xl font-black text-slate-800">${totalExpenses}</p></div><div className="text-center"><p className="text-[9px] font-black text-brand uppercase tracking-widest mb-1">Balance</p><p className={`text-3xl font-black ${netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>${netBalance}</p></div></div><div className="grid grid-cols-1 lg:grid-cols-2 gap-6"><div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 className="text-lg font-black mb-4 uppercase flex items-center gap-2 text-emerald-600"><Icons.ArrowUpCircle className="w-5 h-5"/> {t.fin_income_title}</h3><form onSubmit={(e)=>saveEntity(e,setExtraIncomes,"Ingreso")} className="flex gap-2 mb-4"><input name="name" required placeholder="Concepto" className="flex-1 p-2 bg-slate-50 rounded-xl shadow-inner outline-none"/><input name="amount" type="number" required placeholder="$" className="w-24 p-2 bg-slate-50 rounded-xl outline-none shadow-inner"/><button className="p-2 bg-emerald-500 text-white rounded-xl"><Icons.Plus className="w-4 h-4"/></button></form><div className="space-y-2 max-h-60 overflow-y-auto">{extraIncomes.map(i=><div key={i.id} className="flex justify-between p-3 bg-slate-50 rounded-xl"><span>{i.name}</span><span className="font-black text-emerald-600">+${i.amount}</span></div>)}</div></div><div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"><h3 className="text-lg font-black mb-4 uppercase flex items-center gap-2 text-rose-600"><Icons.ArrowDownCircle className="w-5 h-5"/> {t.fin_expense_title}</h3><form onSubmit={(e)=>saveEntity(e,setExpenses,"Gasto")} className="flex gap-2 mb-4"><input name="name" required placeholder="Concepto" className="flex-1 p-2 bg-slate-50 rounded-xl outline-none shadow-inner"/><input name="amount" type="number" required placeholder="$" className="w-24 p-2 bg-slate-50 rounded-xl outline-none shadow-inner"/><button className="p-2 bg-rose-500 text-white rounded-xl"><Icons.Plus className="w-4 h-4"/></button></form><div className="space-y-2 max-h-60 overflow-y-auto">{expenses.map(e=><div key={e.id} className="flex justify-between p-3 bg-slate-50 rounded-xl"><span>{e.name}</span><span className="font-black text-rose-600">-${e.amount}</span></div>)}</div></div></div></div>)}
 
-                {/* --- ENVÍOS --- */}
-                {activeTab === 'shipping' && (
-                  <div className="space-y-6 animate-in">
-                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                       <div className="flex justify-between items-start mb-6"><h3 className="text-lg font-black uppercase italic flex items-center gap-2 text-indigo-500 mb-4"><Icons.Truck className="w-5 h-5"/> {t.ship_title}</h3><button onClick={() => exportToCSV(shipping, 'Envios')} className="text-slate-400 hover:text-indigo-500 transition-all"><Icons.Download className="w-5 h-5"/></button></div>
-                       <form onSubmit={(e) => saveEntity(e, setShipping, "Envío")} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                          <input name="client" required placeholder={t.label_client} className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" />
-                          <select name="agency" required className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm"><option value="DAC">DAC</option><option value="UES">UES</option><option value="De Punta">De Punta</option></select>
-                          <input name="tracking" placeholder={t.label_tracking} className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" />
-                          <button className="bg-indigo-600 text-white rounded-2xl font-black uppercase py-3 shadow-xl text-xs hover:scale-105 transition-all">{t.btn_dispatch}</button>
-                       </form>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {shipping.map(s => (
-                        <div key={s.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all">
-                          <div className={`absolute top-0 right-0 w-2 h-full ${s.agency === 'DAC' ? 'bg-red-600' : 'bg-blue-600'}`}></div>
-                          <h4 className="font-black text-slate-800 uppercase text-base mb-1">{s.client}</h4>
-                          <div className="flex justify-between items-center">
-                              <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase bg-slate-900 text-white">{s.agency}</span>
-                              <button onClick={() => deleteItem(s.id, setShipping, "Envío")} className="text-slate-200 hover:text-red-500"><Icons.Trash2 className="w-4 h-4"/></button>
-                          </div>
-                          <div className="mt-4 p-3 bg-slate-50 rounded-xl flex items-center gap-3"><Icons.Zap className="w-4 h-4 text-indigo-500" /><p className="text-[10px] font-bold text-slate-700">{s.tracking || 'S/N'}</p></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {activeTab === 'clients' && (<div className="space-y-6 animate-in"><div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100"><h3 className="text-lg font-black uppercase flex items-center gap-2"><Icons.PlusCircle className="w-5 h-5 text-brand"/> Nueva Venta</h3><form onSubmit={(e)=>saveEntity(e,setClients,"Venta")} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4"><input name="name" required placeholder="Cliente" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none"/><input name="amount" type="number" required placeholder="Monto $" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none"/><button className="bg-brand text-white rounded-xl font-black py-3">Guardar</button></form></div><div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm"><table className="w-full text-left"><thead className="bg-slate-50 text-[10px] uppercase font-black text-slate-400"><tr><th className="px-6 py-4">Cliente</th><th className="px-6 py-4">Monto</th><th className="px-6 py-4 text-center">x</th></tr></thead><tbody className="divide-y divide-slate-50">{clients.map(c => (<tr key={c.id} className="hover:bg-slate-50/50"><td className="px-6 py-4 font-black uppercase text-sm">{c.name}</td><td className="px-6 py-4 font-black text-brand text-sm">${c.amount}</td><td className="px-6 py-4 text-center"><button onClick={() => deleteItem(c.id, setClients, "Venta")}><Icons.Trash2 className="w-4 h-4 text-slate-300"/></button></td></tr>))}</tbody></table></div></div>)}
 
-                {/* --- INVENTARIO --- */}
-                {activeTab === 'inventory' && (
-                  <div className="space-y-6 animate-in">
-                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                       <div className="flex justify-between items-start mb-6"><h3 className="text-lg font-black uppercase italic flex items-center gap-2 text-brand"><Icons.Package className="w-5 h-5"/> {t.inv_title}</h3><button onClick={() => exportToCSV(inventory, 'Inventario')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button></div>
-                       <form onSubmit={(e) => saveEntity(e, setInventory, "Insumo")} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                          <input name="name" required placeholder={t.label_item} className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" /><input name="qty" type="number" placeholder={t.label_stock} className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" /><input name="price" type="number" placeholder={t.label_cost} className="w-full p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm" /><button className="bg-brand text-white rounded-2xl font-black uppercase py-3 shadow-xl text-xs hover:scale-105 transition-all">{t.btn_add}</button>
-                       </form>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {inventory.map(item => (
-                        <div key={item.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between hover:border-rose-100 transition-all">
-                          <div className="flex justify-between items-start mb-3"><div className="p-2 bg-rose-50 rounded-xl text-brand"><Icons.Box className="w-4 h-4" /></div><button onClick={() => deleteItem(item.id, setInventory, "Insumo")} className="text-slate-200 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button></div>
-                          <h4 className="font-black text-slate-800 uppercase text-base leading-tight mb-2">{item.name}</h4>
-                          <div className="flex justify-between items-end border-t border-slate-50 pt-3 mt-3"><div><p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t.label_stock}</p><p className="text-2xl font-black text-slate-800 italic">{item.qty}</p></div><div className="text-right"><p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t.label_cost}</p><p className="text-lg font-black text-emerald-500 italic">${item.price}</p></div></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {activeTab === 'inventory' && (<div className="space-y-6 animate-in"><div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100"><h3 className="text-lg font-black uppercase flex items-center gap-2 text-brand"><Icons.Package className="w-5 h-5"/> {t.inv_title}</h3><form onSubmit={(e) => saveEntity(e, setInventory, "Insumo")} className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><input name="name" required placeholder="Item" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none"/><input name="qty" type="number" placeholder="Stock" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none"/><input name="price" type="number" placeholder="Precio" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none"/><button className="bg-brand text-white rounded-xl font-black py-3">Añadir</button></form></div><div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">{inventory.map(item => (<div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between group hover:border-brand transition-all"><div><h4 className="font-black uppercase text-sm">{item.name}</h4><p className="text-xs text-slate-400">Stock: {item.qty} | Costo: ${item.price}</p></div><button onClick={()=>deleteItem(item.id,setInventory,"Insumo")}><Icons.Trash2 className="w-4 h-4 text-slate-300 group-hover:text-red-500"/></button></div>))}</div></div>)}
 
-                {/* --- TALLER --- */}
-                {activeTab === 'checklist' && (
-                   <div className="space-y-6 animate-in">
-                      <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                        <div className="flex justify-between items-center mb-6"><h3 className="text-lg font-black uppercase italic flex items-center gap-2 text-slate-800"><Icons.ClipboardList className="w-5 h-5 text-brand"/> {t.chk_title}</h3><button onClick={() => exportToCSV(tasks, 'Taller')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button></div>
-                        <form onSubmit={(e)=>saveEntity(e,setTasks,"Tarea")} className="space-y-4"><input name="title" required placeholder={t.label_job} className="w-full p-3 bg-slate-50 rounded-2xl font-bold text-sm outline-none"/><textarea name="details" placeholder={t.label_details} className="w-full p-3 bg-slate-50 rounded-2xl font-medium text-sm h-24 outline-none border-0 focus:ring-2 ring-brand/10"/><button className="w-full bg-dark text-white rounded-2xl font-black uppercase py-3 text-xs shadow-lg hover:scale-[1.01] transition-all">{t.btn_create}</button></form>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {tasks.map(k=>(
-                          <div key={k.id} className={`p-5 bg-white border rounded-[2rem] transition-all flex items-center justify-between ${k.completed ? 'opacity-40 border-slate-100 grayscale' : 'shadow-sm border-slate-100 hover:border-brand'}`}>
-                            <div className="flex items-center gap-4">
-                                <button onClick={()=>setTasks(tasks.map(x=>x.id===k.id?{...x, completed: !x.completed} : x))} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${k.completed ? 'bg-emerald-500 text-white' : 'bg-slate-50 text-slate-200 border-2 border-slate-100'}`}><Icons.CheckCircle2 className="w-5 h-5"/></button>
-                                <div><h4 className="font-black text-slate-800 text-sm uppercase">{k.title}</h4><p className="text-[10px] text-slate-500 mt-1">{k.details}</p></div>
-                            </div>
-                            <button onClick={()=>deleteItem(k.id,setTasks,"Tarea")} className="text-slate-200 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button>
-                          </div>
-                        ))}
-                      </div>
-                   </div>
-                )}
+                {activeTab === 'checklist' && (<div className="space-y-6 animate-in"><div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100"><h3 className="text-lg font-black uppercase flex items-center gap-2 text-slate-800"><Icons.ClipboardList className="w-5 h-5 text-brand"/> Taller</h3><form onSubmit={(e)=>saveEntity(e,setTasks,"Tarea")} className="mt-4 space-y-4"><input name="title" required placeholder="Trabajo" className="w-full p-3 bg-slate-50 rounded-xl font-bold shadow-inner outline-none border-0"/><textarea name="details" placeholder="Detalles..." className="w-full p-3 bg-slate-50 rounded-xl font-medium h-20 shadow-inner outline-none border-0"/><button className="w-full bg-dark text-white rounded-xl font-black py-3 uppercase text-xs">Crear Ficha</button></form></div><div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">{tasks.map(k=>(<div key={k.id} className={`p-5 bg-white border rounded-2xl flex items-center justify-between group ${k.completed?'opacity-40':''}`}><div className="flex items-center gap-4"><button onClick={()=>setTasks(tasks.map(x=>x.id===k.id?{...x,completed:!x.completed}:x))} className={`w-10 h-10 rounded-xl flex items-center justify-center ${k.completed?'bg-emerald-500 text-white':'bg-slate-100'}`}><Icons.CheckCircle2 className="w-5 h-5"/></button><div><h4 className="font-black text-sm uppercase">{k.title}</h4><p className="text-xs text-slate-400">{k.details}</p></div></div><button onClick={()=>deleteItem(k.id,setTasks,"Tarea")}><Icons.Trash2 className="w-4 h-4 text-slate-300 group-hover:text-red-500"/></button></div>))}</div></div>)}
 
-                {/* --- USUARIOS (ADMIN) --- */}
-                {activeTab === 'access_control' && currentUserEmail === ADMIN_EMAIL && (
-                  <div className="space-y-6 animate-in">
-                     <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                        <h3 className="text-lg font-black uppercase italic flex items-center gap-3 text-slate-800 mb-6"><Icons.ShieldCheck className="w-6 h-6 text-brand"/> {t.acc_title}</h3>
-                        <form onSubmit={addAllowedUser} className="flex gap-4 mb-6"><input name="u" required placeholder={t.acc_new} className="flex-1 p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-0 focus:ring-2 ring-brand/10 shadow-inner" /><button className="bg-brand text-white rounded-2xl font-black uppercase px-6 shadow-xl text-xs hover:scale-105 transition-all">{t.btn_add}</button></form>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {allowedEmails.map((u,i)=>(
-                                <div key={i} className="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:bg-white hover:shadow-md transition-all">
-                                    <div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-black text-[10px] text-slate-500">{u.substring(0,2).toUpperCase()}</div><span className="font-bold text-slate-700 text-sm">{u}</span></div>
-                                    <button onClick={()=>removeAllowedUser(u)} className="text-slate-200 group-hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button>
-                                </div>
-                            ))}
-                        </div>
-                     </div>
-                  </div>
-                )}
+                {activeTab === 'shipping' && (<div className="space-y-6 animate-in"><div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100"><h3 className="text-lg font-black uppercase flex items-center gap-2 text-indigo-500"><Icons.Truck className="w-5 h-5"/> Envíos</h3><form onSubmit={(e) => saveEntity(e, setShipping, "Envío")} className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"><input name="client" required placeholder="Cliente" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0"/><select name="agency" className="p-3 bg-slate-50 rounded-xl font-bold border-0"><option>DAC</option><option>UES</option><option>De Punta</option></select><input name="tracking" placeholder="Tracking" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0"/><button className="bg-indigo-600 text-white rounded-xl font-black py-3 uppercase text-xs">Enviar</button></form></div><div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">{shipping.map(s => (<div key={s.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden"><div className={`absolute top-0 right-0 w-2 h-full ${s.agency==='DAC'?'bg-red-600':'bg-blue-600'}`}></div><div className="flex justify-between"><div><h4 className="font-black uppercase text-sm">{s.client}</h4><span className="text-[10px] font-black uppercase opacity-60">{s.agency}</span></div><button onClick={()=>deleteItem(s.id, setShipping, "Envío")}><Icons.Trash2 className="w-4 h-4 text-slate-200"/></button></div><div className="mt-4 p-2 bg-slate-50 rounded-xl flex items-center gap-2 text-xs font-bold text-slate-600"><Icons.Zap className="w-3 h-3 text-indigo-500"/> {s.tracking || 'S/N'}</div></div>))}</div></div>)}
 
-                {/* --- COTIZADOR PRO MEJORADO --- */}
-                {activeTab === 'calculator' && (
-                  <div className="space-y-6 animate-in">
-                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-black uppercase text-slate-800 italic">{t.calc_title}</h3>
-                            <span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest">Calculadora Integral</span>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Pilar 1: Materiales */}
-                            <div className="space-y-4">
-                                <h4 className="text-xs font-black text-brand uppercase tracking-widest border-b border-rose-50 pb-2 flex items-center gap-2">
-                                    <Icons.Package className="w-4 h-4"/> 1. Materiales
-                                </h4>
-                                <div className="space-y-3">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Sustratos (Papeles/Vinilos)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.substrateCost} onChange={e=>setCalc({...calc, substrateCost:Number(e.target.value)})}/>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Tinta (%)</label>
-                                            <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.inkPercent} onChange={e=>setCalc({...calc, inkPercent:Number(e.target.value)})}/>
-                                        </div>
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Ensamble/Pegas</label>
-                                            <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.assemblyCost} onChange={e=>setCalc({...calc, assemblyCost:Number(e.target.value)})}/>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Packaging (Bolsas/Tags)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.packagingCost} onChange={e=>setCalc({...calc, packagingCost:Number(e.target.value)})}/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Pilar 2: Producción */}
-                            <div className="space-y-4">
-                                <h4 className="text-xs font-black text-indigo-600 uppercase tracking-widest border-b border-indigo-50 pb-2 flex items-center gap-2">
-                                    <Icons.Layout className="w-4 h-4"/> 2. Producción
-                                </h4>
-                                <div className="space-y-3">
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Diseño (Hs)</label>
-                                            <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.designHours} onChange={e=>setCalc({...calc, designHours:Number(e.target.value)})}/>
-                                        </div>
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Plotter/Corte (Hs)</label>
-                                            <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.cuttingHours} onChange={e=>setCalc({...calc, cuttingHours:Number(e.target.value)})}/>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Armado Manual (Hs)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.assemblyHours} onChange={e=>setCalc({...calc, assemblyHours:Number(e.target.value)})}/>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Precio x Hora ($)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none border-2 border-brand/10" value={calc.hourlyRate} onChange={e=>setCalc({...calc, hourlyRate:Number(e.target.value)})}/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Pilar 3: Operativos */}
-                            <div className="space-y-4">
-                                <h4 className="text-xs font-black text-emerald-600 uppercase tracking-widest border-b border-emerald-50 pb-2 flex items-center gap-2">
-                                    <Icons.Wallet className="w-4 h-4"/> 3. Operativos
-                                </h4>
-                                <div className="space-y-3">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Luz/Internet/Fijos (Hs)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.opExpenses} onChange={e=>setCalc({...calc, opExpenses:Number(e.target.value)})}/>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Fondo Mantenimiento Maq.</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.maintenanceFund} onChange={e=>setCalc({...calc, maintenanceFund:Number(e.target.value)})}/>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Suscripciones (Canva/Adobe)</label>
-                                        <input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none" value={calc.subscriptions} onChange={e=>setCalc({...calc, subscriptions:Number(e.target.value)})}/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Pilar 4: Inteligencia de Negocio */}
-                        <div className="mt-10 p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100">
-                            <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-6 flex items-center gap-2">
-                                <Icons.Star className="w-4 h-4 text-brand"/> 4. Inteligencia y Margen
-                            </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div>
-                                    <div className="flex justify-between items-end mb-2"><label className="text-[10px] font-black text-slate-400 uppercase">Margen Desperdicio</label><span className="text-sm font-black text-brand">{calc.wastePercent}%</span></div>
-                                    <input type="range" min="0" max="30" step="1" className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer accent-brand" value={calc.wastePercent} onChange={e=>setCalc({...calc, wastePercent:Number(e.target.value)})}/>
-                                </div>
-                                <div>
-                                    <div className="flex justify-between items-end mb-2"><label className="text-[10px] font-black text-slate-400 uppercase">Margen de Ganancia</label><span className="text-sm font-black text-brand">{calc.profitMargin}%</span></div>
-                                    <input type="range" min="0" max="200" step="5" className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer accent-brand" value={calc.profitMargin} onChange={e=>setCalc({...calc, profitMargin:Number(e.target.value)})}/>
-                                </div>
-                                <div>
-                                    <div className="flex justify-between items-end mb-2"><label className="text-[10px] font-black text-slate-400 uppercase">Impuestos/Tasas</label><span className="text-sm font-black text-brand">{calc.taxesPercent}%</span></div>
-                                    <input type="range" min="0" max="40" step="1" className="w-full h-2 bg-white rounded-lg appearance-none cursor-pointer accent-brand" value={calc.taxesPercent} onChange={e=>setCalc({...calc, taxesPercent:Number(e.target.value)})}/>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Resultado Final */}
-                        <div className="mt-8 bg-dark p-8 rounded-[2.5rem] text-white flex flex-col md:flex-row justify-between items-center gap-6 shadow-2xl">
-                            <div className="text-center md:text-left">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Costo Base de Producción</p>
-                                <p className="text-3xl font-black italic tracking-tighter text-slate-200">${proCalcResult.cost.toFixed(2)}</p>
-                            </div>
-                            <div className="text-center md:text-right">
-                                <p className="text-[10px] font-black text-brand uppercase tracking-[0.5em] mb-2">{t.calc_final}</p>
-                                <h4 className="text-7xl font-black tracking-tighter text-white">${proCalcResult.final.toFixed(0)}</h4>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* --- PRESUPUESTOS --- */}
-                {activeTab === 'presupuestos' && (
-                  <div className="space-y-6 animate-in">
-                    {!isCreatingBudget ? (
-                      <div className="animate-in">
-                        <div className="flex justify-end gap-3 mb-6"><button onClick={() => exportToCSV(presupuestos.map(p => ({Cliente: p.client, Total: calcBudTotal(p.items)})), 'Presupuestos')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button><button onClick={() => setIsCreatingBudget(true)} className="flex items-center gap-3 bg-brand text-white px-6 py-3 rounded-2xl font-black uppercase shadow-xl text-xs hover:scale-105 transition-all"><Icons.PlusCircle className="w-4 h-4"/> {t.bud_new}</button></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{presupuestos.map(b => (<div key={b.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm relative group hover:shadow-md transition-all"><div className="flex justify-between items-start mb-4"><h4 className="font-black text-lg uppercase text-slate-800">{b.client}</h4><div className="flex gap-2"><button onClick={() => editBudget(b)} className="text-slate-300 hover:text-indigo-500 transition-colors"><Icons.Edit2 className="w-4 h-4"/></button><button onClick={()=>deleteItem(b.id, setPresupuestos, "Presupuesto")} className="text-slate-300 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button></div></div><div className="flex justify-between items-end"><span className="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500">{b.status}</span><p className="text-2xl font-black text-slate-900">${calcBudTotal(b.items)}</p></div></div>))}</div>
-                      </div>
-                    ) : (
-                      <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 animate-in">
-                         <div className="flex justify-between mb-6"><h3 className="text-xl font-black uppercase text-slate-800">{t.bud_title_new}</h3><div className="flex gap-2"><button onClick={()=>setIsCreatingBudget(false)} className="px-4 py-2 rounded-xl bg-slate-100 font-bold text-xs text-slate-500 hover:bg-slate-200 transition-colors">{t.btn_cancel}</button><button onClick={saveBudget} className="px-4 py-2 rounded-xl bg-dark text-white font-bold text-xs shadow-lg hover:scale-105 transition-all">{t.btn_save}</button></div></div>
-                         <div className="grid grid-cols-2 gap-4 mb-4"><input value={currentBudget.client} onChange={e=>handleBudgetChange('client',e.target.value)} placeholder={t.label_client} className="p-3 bg-slate-50 rounded-2xl font-bold text-sm outline-none border-0 focus:ring-2 ring-brand/10" /><select value={currentBudget.status} onChange={e=>handleBudgetChange('status',e.target.value)} className="p-3 bg-slate-50 rounded-2xl font-bold text-sm outline-none border-0"><option>Pendiente</option><option>Aprobado</option></select></div>
-                         <div className="space-y-2 mb-4">{currentBudget.items.map(i => (<div key={i.id} className="flex gap-2 items-center"><input placeholder={t.label_item} value={i.desc} onChange={e=>updateBudgetItem(i.id,'desc',e.target.value)} className="flex-1 p-3 bg-slate-50 rounded-xl text-sm outline-none border-0 shadow-inner" /><input type="number" placeholder="$" value={i.price} onChange={e=>updateBudgetItem(i.id,'price',e.target.value)} className="w-24 p-3 bg-slate-50 rounded-xl text-sm outline-none border-0 text-right shadow-inner" /><button onClick={() => removeBudItem(i.id)} className="p-2 text-slate-300 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button></div>))}<button onClick={addBudItem} className="text-brand font-black text-[10px] uppercase mt-2 flex items-center gap-1 hover:scale-105 transition-all"><Icons.PlusCircle className="w-3 h-3"/> {t.bud_item}</button></div>
-                         <div className="pt-4 border-t border-slate-50 flex justify-end items-center gap-4"><span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.bud_total}</span><span className="text-4xl font-black text-slate-900">${calcBudTotal(currentBudget.items)}</span></div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* --- PLANNER --- */}
                 {activeTab === 'planner' && (
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-in">
-                    <div className="xl:col-span-2 bg-white p-6 rounded-[2rem] shadow-2xl border border-slate-100">
+                    <div className="xl:col-span-2 bg-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-100">
                        <div className="flex justify-between items-center mb-6">
-                          <h3 className="text-lg font-black text-slate-800 uppercase tracking-tighter">{viewDate.toLocaleDateString('es-UY', { month: 'long', year: 'numeric' })}</h3>
-                          <div className="flex gap-2"><button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))} className="p-2 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"><Icons.ChevronLeft className="w-4 h-4" /></button><button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))} className="p-2 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"><Icons.ChevronRight className="w-4 h-4" /></button></div>
+                          <h3 className="text-xl font-black text-slate-800 uppercase italic tracking-tighter">{viewDate.toLocaleDateString('es-UY', { month: 'long', year: 'numeric' })}</h3>
+                          <div className="flex gap-2"><button onClick={()=>setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1))} className="p-2 bg-slate-50 rounded-xl hover:bg-slate-100"><Icons.ChevronLeft className="w-4 h-4"/></button><button onClick={()=>setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1))} className="p-2 bg-slate-50 rounded-xl hover:bg-slate-100"><Icons.ChevronRight className="w-4 h-4"/></button></div>
                        </div>
-                       <div className="grid grid-cols-7 gap-1">
-                         {['L','M','M','J','V','S','D'].map(d => <div key={d} className="text-center font-black text-slate-900 pb-2 text-xs uppercase tracking-widest">{d}</div>)}
-                         {calendarDays.map((d, i) => {
-                           if (!d) return <div key={`empty-${i}`} className="h-20 bg-slate-50/30 rounded-xl"></div>;
-                           const isToday = d === new Date().getDate() && viewDate.getMonth() === new Date().getMonth();
-                           const events = FULL_EVENTS.filter(e => e.d === d && e.m === viewDate.getMonth());
-                           const isSelected = selectedDay === d;
+                       <div className="grid grid-cols-7 gap-1.5">
+                         {t.days.map(d=><div key={d} className="text-center font-black pb-2 text-[10px] text-slate-400 uppercase">{d}</div>)}
+                         {calendarDays.map((d,i)=>{
+                           const hasEvents = FULL_EVENTS.some(e => e.d === d && e.m === viewDate.getMonth());
+                           const isToday = d === new Date().getDate() && viewDate.getMonth() === new Date().getMonth() && viewDate.getFullYear() === new Date().getFullYear();
                            return (
-                             <div key={d} onClick={() => setSelectedDay(d)} className={`h-20 p-2 rounded-xl border cursor-pointer flex flex-col justify-between transition-all ${isSelected?'bg-dark text-white shadow-xl scale-105 z-10':isToday?'border-brand text-brand font-bold bg-rose-50':'bg-white border-slate-100 hover:border-slate-300'}`}>
-                               <div className="flex justify-between items-start"><span className="text-xs font-bold">{d}</span>{events.length > 0 && <div className="w-2 h-2 rounded-full bg-brand"></div>}</div>
-                               <div className="flex flex-col gap-1">{events.slice(0, 2).map((ev, idx) => (<div key={idx} className={`h-1 rounded-full w-full ${isSelected ? 'bg-white/30' : 'bg-slate-200'}`}></div>))}</div>
+                             <div key={i} onClick={()=>d && setSelectedDay(d)} className={`h-16 p-2 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${selectedDay===d?'bg-dark text-white shadow-xl scale-105 z-10':hasEvents?'bg-rose-50 border-rose-100':'bg-white border-slate-100 hover:border-brand'}`}>
+                               {d && <div className="flex justify-between items-start"><span className="text-sm font-bold">{d}</span>{hasEvents && <div className="w-2 h-2 rounded-full bg-brand shadow-sm"></div>}</div>}
+                               {isToday && <div className="text-[8px] font-black uppercase text-brand">Hoy</div>}
                              </div>
                            );
                          })}
                        </div>
                     </div>
                     <div className="bg-white p-6 rounded-[2rem] shadow-xl border border-slate-100 h-fit">
-                       <h4 className="text-xl font-black text-slate-800 uppercase mb-4">{selectedDay} {viewDate.toLocaleDateString('es-UY', { month: 'short' })}</h4>
-                       <div className="space-y-3">
-                          {FULL_EVENTS.filter(e => e.d === selectedDay && e.m === viewDate.getMonth()).map((ev, i) => (<div key={i} className="p-3 bg-rose-50 rounded-xl border border-rose-100"><p className="text-[10px] font-black uppercase text-rose-800 mb-1 leading-tight">{ev.t}</p></div>))}
-                          <div className="pt-4 border-t border-slate-100"><h5 className="text-[9px] font-black uppercase text-slate-400 mb-2">{t.plan_note}</h5><form onSubmit={(e) => {e.preventDefault(); const n = e.target.n.value; if(!n)return; setPersonalEvents({...personalEvents, [getDayKey(selectedDay)]: n}); e.target.reset();}} className="flex gap-2 mb-2"><input name="n" placeholder={t.placeholder_write} className="flex-1 p-2 bg-slate-50 rounded-lg outline-none text-xs shadow-inner" /><button className="p-2 bg-dark text-white rounded-lg hover:scale-110 transition-transform"><Icons.Save className="w-3 h-3"/></button></form>{personalEvents[getDayKey(selectedDay)] && (<div className="p-3 bg-indigo-50 rounded-xl text-indigo-900 font-bold text-xs flex justify-between items-center group"><span>{personalEvents[getDayKey(selectedDay)]}</span> <button onClick={()=> {const n={...personalEvents}; delete n[getDayKey(selectedDay)]; setPersonalEvents(n)}} className="text-indigo-300 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-3 h-3"/></button></div>)}</div>
-                       </div>
+                       <h4 className="text-2xl font-black uppercase italic mb-4">{selectedDay} {viewDate.toLocaleDateString(language === 'es' ? 'es-UY' : 'en-US', { month: 'short' })}</h4>
+                       <div className="space-y-4 max-h-[400px] overflow-y-auto">{FULL_EVENTS.filter(e => e.d === selectedDay && e.m === viewDate.getMonth()).map((ev, i) => (<div key={i} className="p-4 bg-rose-50 rounded-xl border border-rose-100 shadow-sm animate-in"><p className="font-black uppercase text-xs text-rose-800 leading-tight">{ev.t}</p></div>))}</div>
                     </div>
                   </div>
                 )}
 
-                {/* --- STRATEGIES --- */}
-                {activeTab === 'strategies' && (
+                {activeTab === 'calculator' && (
                   <div className="space-y-6 animate-in">
-                     <div className="relative overflow-hidden rounded-[2.5rem] p-10 text-white shadow-xl" style={{background: `linear-gradient(135deg, ${themeData.seasonalPalette[0]} 0%, ${themeData.seasonalPalette[1]} 100%)`}}>
-                        <div className="relative z-10">
-                            <div className="flex items-center gap-2 mb-2 opacity-80"><Icons.Star className="w-4 h-4" /><span className="text-[10px] font-black uppercase tracking-[0.3em]">Inspiración del Mes</span></div>
-                            <h2 className="text-5xl font-black tracking-tighter mb-4">{themeData.campaignName}</h2>
-                            <div className="flex flex-wrap gap-2">{themeData.strategies.keywords.split(' ').map((tag, i) => (<span key={i} className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-[10px] font-bold uppercase tracking-wider">{tag}</span>))}</div>
+                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                        <h3 className="text-lg font-black uppercase text-slate-800 mb-4 flex items-center gap-2"><Icons.Settings className="w-5 h-5 text-brand" /> Mis Materiales</h3>
+                        <form onSubmit={addMaterialToDb} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input name="name" required placeholder="Nombre (ej: Vinilo Brillo)" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none" />
+                            <input name="price" type="number" step="0.01" required placeholder="Costo ($)" className="p-3 bg-slate-50 rounded-xl font-bold shadow-inner border-0 outline-none" />
+                            <button type="submit" className="bg-dark text-white rounded-xl font-black uppercase py-3 shadow-lg flex items-center justify-center gap-2"><Icons.PlusCircle className="w-4 h-4"/> Guardar</button>
+                        </form>
+                        <div className="mt-4 flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                            {materialDb.map(m => (
+                                <div key={m.id} className="bg-slate-50 px-3 py-2 rounded-lg border border-slate-100 flex items-center gap-3 animate-in">
+                                    <span className="text-xs font-bold text-slate-700">{m.name}: <span className="text-brand">${m.price}</span></span>
+                                    <button onClick={() => deleteItem(m.id, setMaterialDb, "Material")} className="text-slate-300 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-3 h-3"/></button>
+                                </div>
+                            ))}
                         </div>
-                        <div className="absolute -right-6 -bottom-6 opacity-20"><Icons.Lightbulb className="w-48 h-48" /></div>
-                     </div>
-                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="lg:col-span-2 space-y-6"><h3 className="text-lg font-black text-slate-800 flex items-center gap-2 uppercase tracking-tight"><Icons.Lightbulb className="w-5 h-5 text-yellow-500" /> Ideas para tu estudio</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4">{themeData.strategies.ideas.map((idea, i) => (<div key={i} className="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"><div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-xs font-black text-slate-400 mb-3">0{i+1}</div><p className="font-bold text-slate-700 text-sm leading-relaxed">{idea}</p></div>))}</div></div>
-                        <div className="space-y-6"><div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm"><h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Icons.Palette className="w-4 h-4"/> Tendencia Visual</h3><div className="p-5 bg-slate-50 rounded-2xl mb-4 border border-slate-100"><p className="text-lg font-black text-slate-800 italic leading-snug">"{themeData.strategies.trend}"</p></div><div className="flex h-16 rounded-2xl overflow-hidden shadow-inner border border-slate-50">{themeData.seasonalPalette.map((c, i) => (<div key={i} className="flex-1 hover:scale-110 transition-transform cursor-help" style={{ backgroundColor: c }} title={c}></div>))}</div><p className="text-center text-[9px] font-bold text-slate-400 mt-4 uppercase tracking-widest">Gama Cromática Sugerida</p></div></div>
-                     </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 animate-in">
+                        <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black uppercase text-slate-800 italic">Cotizador Integral Pro</h3><span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest">Cálculo Preciso</span></div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="space-y-4">
+                                <h4 className="text-xs font-black text-brand uppercase tracking-widest border-b border-rose-50 pb-2 flex items-center gap-2"><Icons.Package className="w-4 h-4"/> 1. Materiales y Empaque</h4>
+                                <div className="space-y-3">
+                                    <div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Material Base</label><select className="w-full p-2 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none border border-transparent focus:border-brand/20 shadow-inner" value={calc.selectedMaterialId} onChange={e=>setCalc({...calc, selectedMaterialId:e.target.value})}><option value="">-- Elige un material --</option>{materialDb.map(m => <option key={m.id} value={m.id}>{m.name} (${m.price})</option>)}</select></div>
+                                    <div className="grid grid-cols-2 gap-2"><div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Cant.</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.materialQty} onChange={e=>setCalc({...calc, materialQty:Number(e.target.value)})}/></div><div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Tinta (%)</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.inkPercent} onChange={e=>setCalc({...calc, inkPercent:Number(e.target.value)})}/></div></div>
+                                    <div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Packaging</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.packagingCost} onChange={e=>setCalc({...calc, packagingCost:Number(e.target.value)})}/></div>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <h4 className="text-xs font-black text-indigo-600 uppercase tracking-widest border-b border-indigo-50 pb-2 flex items-center gap-2"><Icons.Layout className="w-4 h-4"/> 2. Producción y Tiempos</h4>
+                                <div className="space-y-3"><div className="grid grid-cols-3 gap-2">
+                                    <div><label className="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Diseño(H)</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.designHours} onChange={e=>setCalc({...calc, designHours:Number(e.target.value)})}/></div>
+                                    <div><label className="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Corte(H)</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.cuttingHours} onChange={e=>setCalc({...calc, cuttingHours:Number(e.target.value)})}/></div>
+                                    <div><label className="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Armado(H)</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.assemblyHours} onChange={e=>setCalc({...calc, assemblyHours:Number(e.target.value)})}/></div>
+                                </div><div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Precio Hora ($)</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold border-2 border-brand/10 outline-none shadow-inner" value={calc.hourlyRate} onChange={e=>setCalc({...calc, hourlyRate:Number(e.target.value)})}/></div><div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Insumos Varios</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.assemblyCost} onChange={e=>setCalc({...calc, assemblyCost:Number(e.target.value)})}/></div></div>
+                            </div>
+                            <div className="space-y-4">
+                                <h4 className="text-xs font-black text-emerald-600 uppercase tracking-widest border-b border-emerald-50 pb-2 flex items-center gap-2"><Icons.Wallet className="w-4 h-4"/> 3. Operativos y Margen</h4>
+                                <div className="space-y-3"><div><label className="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Gastos Fijos</label><input type="number" className="w-full p-2 bg-slate-50 rounded-xl font-bold outline-none shadow-inner" value={calc.opExpenses} onChange={e=>setCalc({...calc, opExpenses:Number(e.target.value)})}/></div><div><div className="flex justify-between items-end mb-2"><label className="text-[10px] font-black text-slate-400 uppercase">Ganancia</label><span className="text-sm font-black text-brand">{calc.profitMargin}%</span></div><input type="range" min="0" max="200" step="5" className="w-full accent-brand cursor-pointer" value={calc.profitMargin} onChange={e=>setCalc({...calc, profitMargin:Number(e.target.value)})}/></div><div><div className="flex justify-between items-end mb-2"><label className="text-[10px] font-black text-slate-400 uppercase">Desperdicio</label><span className="text-sm font-black text-brand">{calc.wastePercent}%</span></div><input type="range" min="0" max="30" step="1" className="w-full accent-brand cursor-pointer" value={calc.wastePercent} onChange={e=>setCalc({...calc, wastePercent:Number(e.target.value)})}/></div></div>
+                            </div>
+                        </div>
+                        <div className="mt-8 bg-dark p-8 rounded-[2.5rem] text-white flex flex-col md:flex-row justify-between items-center gap-6 shadow-2xl relative overflow-hidden group"><div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><Icons.DollarSign className="w-32 h-32" /></div><div className="text-center md:text-left relative z-10"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">Inversión Total Estimada</p><p className="text-3xl font-black italic tracking-tighter text-slate-200">${proCalcResult.cost.toFixed(2)}</p></div><div className="text-center md:text-right relative z-10"><p className="text-[10px] font-black text-brand uppercase tracking-[0.5em] mb-2">{t.calc_final}</p><h4 className="text-7xl font-black tracking-tighter transition-all hover:scale-105 text-white">${proCalcResult.final.toFixed(0)}</h4></div></div>
+                    </div>
                   </div>
                 )}
 
+                {/* --- PRESUPUESTOS Y FACTURAS --- */}
+                {(activeTab === 'presupuestos' || activeTab === 'facturas') && (
+                  <div className="space-y-6 animate-in">
+                    {(!(activeTab === 'presupuestos' ? isCreatingBudget : isCreatingInvoice)) ? (
+                      <div><div className="flex justify-end gap-3 mb-6"><button onClick={() => exportToCSV(activeTab === 'presupuestos' ? presupuestos : facturas, activeTab === 'presupuestos' ? 'Presupuestos' : 'Facturas')} className="text-slate-400 hover:text-brand transition-all"><Icons.Download className="w-5 h-5"/></button><button onClick={() => activeTab === 'presupuestos' ? setIsCreatingBudget(true) : setIsCreatingInvoice(true)} className="flex items-center gap-3 bg-brand text-white px-8 py-4 rounded-2xl font-black uppercase shadow-xl text-xs hover:scale-105 transition-all"><Icons.PlusCircle className="w-4 h-4"/> {activeTab === 'presupuestos' ? 'Nuevo Presupuesto' : 'Nueva Factura'}</button></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{(activeTab === 'presupuestos' ? presupuestos : facturas).map(b => (<div key={b.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative group hover:shadow-md transition-all"><div className="flex justify-between items-start mb-4"><div><p className="text-[10px] font-black text-brand uppercase tracking-widest">{b.number || 'S/N'}</p><h4 className="font-black text-lg uppercase text-slate-800">{b.client}</h4></div><div className="flex gap-2"><button onClick={() => { if(activeTab === 'presupuestos') editBudget(b); else editInvoice(b); }} className="text-slate-300 hover:text-indigo-500 transition-colors"><Icons.Edit2 className="w-4 h-4"/></button><button onClick={()=>deleteItem(b.id, activeTab === 'presupuestos' ? setPresupuestos : setFacturas, "Documento")} className="text-slate-300 hover:text-red-500 transition-colors"><Icons.Trash2 className="w-4 h-4"/></button></div></div><div className="flex justify-between items-end"><span className="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500">{b.status}</span><p className="text-2xl font-black text-slate-900">${calcBudTotal(b.items)}</p></div></div>))}</div></div>
+                    ) : (
+                      <div className="max-w-4xl mx-auto bg-white p-10 rounded-[2.5rem] shadow-2xl border border-slate-100 animate-in relative"><div className="flex justify-between items-start mb-10 border-b border-slate-100 pb-8"><div className="flex flex-col gap-4 max-w-[200px]">{(activeTab === 'presupuestos' ? currentBudget.logo : currentInvoice.logo) ? (<div className="relative group"><img src={activeTab === 'presupuestos' ? currentBudget.logo : currentInvoice.logo} alt="Logo" className="max-h-24 rounded-lg shadow-sm object-contain" /><button onClick={() => activeTab === 'presupuestos' ? handleBudgetChange('logo', '') : handleInvoiceChange('logo', '')} className="absolute -top-2 -right-2 bg-brand text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><Icons.X className="w-3 h-3" /></button></div>) : (<label className="border-2 border-dashed border-slate-200 rounded-2xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:bg-slate-50 transition-all text-slate-400 group"><Icons.Image className="w-8 h-8 group-hover:text-brand transition-colors" /><span className="text-[10px] font-black uppercase">{t.bill_logo}</span><input type="file" className="hidden" accept="image/*" onChange={(e) => handleLogoUpload(e, activeTab === 'presupuestos' ? 'budget' : 'invoice')} /></label>)}</div><div className="text-right"><h3 className="text-3xl font-black uppercase text-slate-800 tracking-tighter mb-2">{activeTab === 'presupuestos' ? 'Presupuesto' : 'Factura'}</h3><div className="flex flex-col items-end gap-2"><div className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-100"><span className="text-[10px] font-black text-slate-400 uppercase">N°</span><input value={activeTab === 'presupuestos' ? currentBudget.number : currentInvoice.number} onChange={e=>activeTab === 'presupuestos' ? handleBudgetChange('number', e.target.value) : handleInvoiceChange('number', e.target.value)} placeholder="0001" className="bg-transparent text-right font-black text-slate-700 outline-none w-20" /></div><div className="text-[11px] font-bold text-slate-400 uppercase">{activeTab === 'presupuestos' ? currentBudget.date : currentInvoice.date}</div></div></div></div><div className="grid grid-cols-2 gap-8 mb-10"><div><label className="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-[0.2em]">Cliente</label><input value={activeTab === 'presupuestos' ? currentBudget.client : currentInvoice.client} onChange={e=>activeTab === 'presupuestos' ? handleBudgetChange('client',e.target.value) : handleInvoiceChange('client',e.target.value)} placeholder="..." className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-lg outline-none shadow-inner border-0" /></div><div><label className="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-[0.2em]">Estado</label><select value={activeTab === 'presupuestos' ? currentBudget.status : currentInvoice.status} onChange={e=>activeTab === 'presupuestos' ? handleBudgetChange('status',e.target.value) : handleInvoiceChange('status',e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-lg outline-none"><option>Pendiente</option><option>Aprobado</option><option>Pagada</option></select></div></div><div className="mb-8 overflow-hidden rounded-[2rem] border border-slate-100 shadow-sm"><table className="w-full text-left"><thead className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase border-b border-slate-100"><tr><th className="px-6 py-4">Item</th><th className="px-6 py-4 text-center">Cant.</th><th className="px-6 py-4 text-right">Precio</th><th className="px-6 py-4 text-right">Subtotal</th><th className="px-6 py-4"></th></tr></thead><tbody className="divide-y divide-slate-50">{(activeTab === 'presupuestos' ? currentBudget.items : currentInvoice.items).map(i => (<tr key={i.id} className="group hover:bg-slate-50/50"><td className="px-6 py-4"><input placeholder="..." value={i.desc} onChange={e=>activeTab === 'presupuestos' ? updateBudgetItem(i.id,'desc',e.target.value) : updateInvItem(i.id,'desc',e.target.value)} className="bg-transparent font-bold text-slate-700 outline-none w-full" /></td><td className="px-6 py-4 text-center"><input type="number" value={i.qty} onChange={e=>activeTab === 'presupuestos' ? updateBudgetItem(i.id,'qty',e.target.value) : updateInvItem(i.id,'qty',e.target.value)} className="bg-transparent text-center font-black text-slate-700 outline-none w-16" /></td><td className="px-6 py-4 text-right"><input type="number" value={i.price} onChange={e=>activeTab === 'presupuestos' ? updateBudgetItem(i.id,'price',e.target.value) : updateInvItem(i.id,'price',e.target.value)} className="bg-transparent text-right font-black text-brand outline-none w-24" /></td><td className="px-6 py-4 text-right font-black text-slate-800">${(Number(i.qty) * Number(i.price)).toFixed(2)}</td><td className="px-6 py-4 text-center"><button onClick={() => activeTab === 'presupuestos' ? removeBudgetItem(i.id) : removeInvItem(i.id)} className="text-slate-200 hover:text-red-500 transition-all"><Icons.Trash2 className="w-4 h-4"/></button></td></tr>))}</tbody></table><div className="p-4 bg-slate-50 flex justify-center"><button onClick={activeTab === 'presupuestos' ? addBudItem : addInvItem} className="text-brand font-black text-[10px] uppercase flex items-center gap-2 transition-all"><Icons.PlusCircle className="w-3 h-3"/> {t.bud_item}</button></div></div><div className="flex flex-col md:flex-row justify-between items-end gap-10 pt-6"><div className="w-full md:max-w-sm"><label className="block text-[10px] font-black text-slate-400 uppercase mb-2">Notas</label><textarea value={activeTab === 'presupuestos' ? currentBudget.notes : currentInvoice.notes} onChange={e=>activeTab === 'presupuestos' ? handleBudgetChange('notes', e.target.value) : handleInvoiceChange('notes', e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl text-sm font-medium h-24 outline-none border-0 shadow-inner" /></div><div className="text-right space-y-2"><div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">{t.bud_total}</div><div className="text-6xl font-black text-slate-900 tracking-tighter">${calcBudTotal(activeTab === 'presupuestos' ? currentBudget.items : currentInvoice.items).toFixed(0)}</div><div className="flex gap-2 pt-6"><button onClick={()=>{ if(activeTab === 'presupuestos') setIsCreatingBudget(false); else setIsCreatingInvoice(false); }} className="px-8 py-4 rounded-2xl bg-slate-100 font-black text-xs uppercase text-slate-500">Cancelar</button><button onClick={activeTab === 'presupuestos' ? saveBudget : saveInvoice} className="px-10 py-4 rounded-2xl bg-brand text-white font-black text-xs uppercase shadow-xl flex items-center gap-2"><Icons.Save className="w-4 h-4"/> {t.btn_save}</button></div></div></div></div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'access_control' && currentUserEmail === ADMIN_EMAIL && (
+                  <div className="space-y-6 animate-in">
+                     <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
+                        <h3 className="text-lg font-black uppercase flex items-center gap-3 text-slate-800 mb-6"><Icons.ShieldCheck className="w-6 h-6 text-brand"/> Usuarios Autorizados</h3>
+                        <form onSubmit={(e) => { e.preventDefault(); const n = e.target.newUser.value.trim(); if(n && !allowedEmails.includes(n)){ setAllowedEmails([...allowedEmails, n]); e.target.reset(); notify("Acceso concedido"); } }} className="flex gap-4 mb-6"><input name="newUser" required placeholder="Nuevo Usuario / Correo" className="flex-1 p-3 bg-slate-50 rounded-2xl outline-none font-bold text-sm border-0 focus:ring-2 ring-brand/10 shadow-inner" /><button className="bg-brand text-white rounded-2xl font-black uppercase px-6 shadow-xl text-xs hover:scale-105 transition-all">Agregar</button></form>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{allowedEmails.map((user, index) => (<div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-black text-xs">{user.substring(0,2).toUpperCase()}</div><span className="font-bold text-slate-700 text-sm">{user}</span></div><button onClick={() => setAllowedEmails(allowedEmails.filter(u=>u!==user))} className="text-slate-300 hover:text-red-500 transition-colors p-2"><Icons.Trash2 className="w-4 h-4"/></button></div>))}</div>
+                     </div>
+                  </div>
+                )}
               </main>
 
               {showContactModal && (
-                <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[200] flex items-center justify-center p-6 animate-in">
+                <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[200] flex items-center justify-center p-6 animate-in zoom-in duration-300">
                    <div className="bg-white max-w-sm w-full rounded-[3rem] p-10 text-center shadow-2xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-2 bg-brand"></div>
                       <div className="w-20 h-20 bg-rose-50 text-brand rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner"><Icons.UserCheck className="w-10 h-10" /></div>
-                      <h3 className="text-2xl font-black text-slate-800 uppercase italic mb-4 tracking-tighter">{t.mod_title}</h3>
-                      <p className="text-slate-500 mb-10 text-sm font-medium leading-relaxed">¿Necesitas ayuda con el MC Pro o buscas insumos premium para tu estudio?</p>
+                      <h3 className="text-2xl font-black text-slate-800 uppercase italic mb-4 tracking-tighter">Soporte MC Pro</h3>
                       <div className="space-y-3">
-                        <a href="https://wa.me/59892617525" target="_blank" className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-emerald-100 transition-all hover:scale-105"><Icons.MessageCircle className="w-4 h-4" /> WhatsApp</a>
+                        <a href="https://wa.me/59892617525" target="_blank" className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl transition-all hover:scale-105"><Icons.MessageCircle className="w-4 h-4" /> WhatsApp</a>
                         <button onClick={() => setShowContactModal(false)} className="block w-full py-3 text-slate-300 font-bold uppercase text-[9px] tracking-widest hover:text-brand">{t.btn_close}</button>
                       </div>
                    </div>
