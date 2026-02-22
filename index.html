@@ -2247,27 +2247,27 @@
                 <div className="flex h-screen items-center justify-center dots-bg p-6">
                     <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 relative">
                         <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
-                        <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2 leading-none">MC Pro</h1>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10 leading-none">{isRegisterMode ? 'Crear Cuenta Nueva' : 'Acceso a Miembros'}</p>
+                        <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2 leading-none text-center">MC Pro</h1>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10 leading-none text-center">{isRegisterMode ? 'Crear Cuenta Nueva' : 'Acceso a Miembros'}</p>
                         
                         <form onSubmit={handleAuth} className="space-y-4">
-                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center gap-3 border border-slate-100">
-                                <Icons.Mail className="w-5 h-5 text-slate-400" />
-                                <input type="email" required placeholder="Tu correo electrónico" className="bg-transparent outline-none w-full font-bold text-slate-700" value={emailInput} onChange={e => setEmailInput(e.target.value)} />
+                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center border border-slate-100 relative">
+                                <Icons.Mail className="w-5 h-5 text-slate-400 absolute left-4" />
+                                <input type="email" required placeholder="Tu correo electrónico" className="bg-transparent outline-none w-full font-bold text-slate-700 text-center px-10" value={emailInput} onChange={e => setEmailInput(e.target.value)} />
                             </div>
-                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center gap-3 border border-slate-100">
-                                <Icons.Key className="w-5 h-5 text-slate-400" />
-                                <input type="password" required placeholder="Tu contraseña" minLength="6" className="bg-transparent outline-none w-full font-bold text-slate-700" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
+                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center border border-slate-100 relative">
+                                <Icons.Key className="w-5 h-5 text-slate-400 absolute left-4" />
+                                <input type="password" required placeholder="Tu contraseña" minLength="6" className="bg-transparent outline-none w-full font-bold text-slate-700 text-center px-10" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
                             </div>
                             
-                            {authError && <p className="text-xs font-bold text-red-500 leading-tight bg-red-50 p-2 rounded-lg">{authError}</p>}
+                            {authError && <p className="text-xs font-bold text-red-500 leading-tight bg-red-50 p-2 rounded-lg text-center">{authError}</p>}
                             
-                            <button className="w-full py-4 bg-dark text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg flex gap-2 justify-center items-center">
+                            <button className="w-full py-4 bg-dark text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg flex justify-center items-center text-center">
                                 {isRegisterMode ? 'Registrarme' : 'Ingresar al Sistema'}
                             </button>
 
                             <div className="text-center pt-4 border-t border-slate-100 mt-4">
-                                <button type="button" onClick={() => setShowContactModal(true)} className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">
+                                <button type="button" onClick={() => setShowContactModal(true)} className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand transition-colors text-center w-full">
                                     ¿Problemas para ingresar? Contacta a soporte
                                 </button>
                             </div>
