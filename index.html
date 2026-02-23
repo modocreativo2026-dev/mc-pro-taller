@@ -471,9 +471,9 @@
                 desc: 'Más rápida, silenciosa y con mayor precisión. Ideal para stickers, vinilo y cajas.', 
                 price: '~$330 USD', 
                 features: ['Corte ultra preciso', 'Bluetooth integrado', 'Lectura mejorada'],
-                supplier: 'Disershop / BR', 
+                supplier: 'Silhouette Oficial', 
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CAMEO+5', 
-                link: 'https://disershop.com.uy/' 
+                link: 'https://www.silhouetteamerica.com/' 
             },
             { 
                 id: 2, 
@@ -482,9 +482,9 @@
                 desc: 'Corta más de 300 materiales, desde papel delicado hasta cuero y madera balsa.', 
                 price: '~$400 USD', 
                 features: ['Materiales Smart', 'Corte 2x rápido', 'Fácil uso'], 
-                supplier: 'BR Importaciones',
+                supplier: 'Cricut Oficial',
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+MAKER+3', 
-                link: 'https://www.brimportaciones.com.uy/' 
+                link: 'https://cricut.com/' 
             },
             { 
                 id: 3, 
@@ -493,9 +493,9 @@
                 desc: 'Impresión A3+ de alta calidad con 6 tintas. Perfecta para papelería social premium.', 
                 price: '~$700 USD', 
                 features: ['Formato A3+', '6 colores', 'Bajo costo'], 
-                supplier: 'BR Importaciones',
+                supplier: 'Epson Oficial',
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=EPSON+L8180', 
-                link: 'https://www.brimportaciones.com.uy/' 
+                link: 'https://epson.com/' 
             },
             { 
                 id: 4, 
@@ -504,9 +504,9 @@
                 desc: 'Alta definición, táctil y WiFi. Conocida por cortar detalles minúsculos en vinilo.', 
                 price: '~$499 USD', 
                 features: ['Pantalla táctil', 'Ultra silencioso', 'Precisión minuciosa'], 
-                supplier: 'Disershop',
+                supplier: 'Siser Oficial',
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=SISER+JULIET', 
-                link: 'https://disershop.com.uy/' 
+                link: 'https://www.siser.com/' 
             },
             { 
                 id: 5, 
@@ -515,9 +515,9 @@
                 desc: 'Inyección de tinta continua rápida y con cómoda bandeja bypass para papeles gruesos.', 
                 price: '~$350 USD', 
                 features: ['Doble faz auto', 'Bandeja bypass', 'Tinta continua'], 
-                supplier: 'BR Importaciones',
+                supplier: 'Brother Oficial',
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=BROTHER+T920DW', 
-                link: 'https://www.brimportaciones.com.uy/' 
+                link: 'https://www.brother.com/' 
             },
             { 
                 id: 6, 
@@ -526,9 +526,9 @@
                 desc: 'Perfecta para espacios pequeños. Con sensor de impresión y corte (Print then Cut).', 
                 price: '~$199 USD', 
                 features: ['Tamaño A4', 'Print then Cut', 'Ideal stickers'], 
-                supplier: 'Disershop',
+                supplier: 'Cricut Oficial',
                 imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+JOY+XTRA', 
-                link: 'https://disershop.com.uy/' 
+                link: 'https://cricut.com/' 
             }
         ];
 
@@ -648,8 +648,8 @@
             const [salesView, setSalesView] = useState('month');
             const [isCreatingBudget, setIsCreatingBudget] = useState(false);
             const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
-            const [currentBudget, setCurrentBudget] = useState({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
-            const [currentInvoice, setCurrentInvoice] = useState({ id: null, number: '', logo: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pagada', notes: '' });
+            const [currentBudget, setCurrentBudget] = useState({ id: null, number: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pendiente', notes: '' });
+            const [currentInvoice, setCurrentInvoice] = useState({ id: null, number: '', client: '', date: new Date().toISOString().split('T')[0], items: [{ id: Date.now(), desc: '', qty: 1, price: 0 }], status: 'Pagada', notes: '' });
             const [viewDate, setViewDate] = useState(new Date());
             const [selectedDay, setSelectedDay] = useState(new Date().getDate());
             const [strategyMonth, setStrategyMonth] = useState(new Date().getMonth());
@@ -832,7 +832,6 @@
                     <NavItemComp id="checklist" label="Taller" icon={Icons.ClipboardList} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="calculator" label="Cotizador" icon={Icons.Calculator} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="store" label="Tienda Digital" icon={Icons.ShoppingBag} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
-                    {isAdmin && <NavItemComp id="access_control" label="Usuarios" icon={Icons.ShieldCheck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />}
                     <NavItemComp id="profile" label="Mis Datos" icon={Icons.User} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                   </nav>
                   <div className="p-4 border-t border-slate-50 space-y-2">
@@ -847,7 +846,7 @@
                   <header className="flex justify-between items-center mb-6 no-print">
                     <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-brand"><Icons.Menu className="w-6 h-6" /></button>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800 leading-none">
-                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : activeTab === 'access_control' ? 'Usuarios' : 'Mis Datos'}
+                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : 'Mis Datos'}
                     </h2>
                     <div className="hidden md:flex items-center gap-3 bg-white p-2 pr-4 rounded-xl border border-slate-100 shadow-sm font-bold">
                       <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Icons.Globe className="w-4 h-4 text-slate-400" /><span className="text-xs uppercase leading-none">{userCountry}</span></div>
@@ -1447,83 +1446,105 @@
                               </div>
                           </div>
 
-                          <div className="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl flex flex-col justify-center h-fit sticky top-6">
-                              <h3 className="text-lg font-black uppercase tracking-widest text-indigo-400 mb-6">Ingreso Inteligente</h3>
-                              
-                              <div className="space-y-4">
-                                  <div>
-                                      <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Material</label>
-                                      <input 
-                                          value={invInput.name} 
-                                          onChange={e => setInvInput({...invInput, name: e.target.value})} 
-                                          placeholder="Ej. Resina Epóxica" 
-                                          className="w-full p-3 rounded-xl bg-white/10 border border-white/10 mt-1 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
-                                      />
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-6 h-fit sticky top-6">
+                              <div className="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl flex flex-col justify-center">
+                                  <h3 className="text-lg font-black uppercase tracking-widest text-indigo-400 mb-6">Ingreso Inteligente</h3>
+                                  
+                                  <div className="space-y-4">
                                       <div>
-                                          <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Costo Total ($)</label>
+                                          <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Material</label>
                                           <input 
-                                              type="number" 
-                                              value={invInput.totalCost} 
-                                              onChange={e => setInvInput({...invInput, totalCost: parseFloat(e.target.value) || 0})} 
+                                              value={invInput.name} 
+                                              onChange={e => setInvInput({...invInput, name: e.target.value})} 
+                                              placeholder="Ej. Resina Epóxica" 
                                               className="w-full p-3 rounded-xl bg-white/10 border border-white/10 mt-1 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
                                           />
                                       </div>
+
+                                      <div className="grid grid-cols-2 gap-4">
+                                          <div>
+                                              <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Costo Total ($)</label>
+                                              <input 
+                                                  type="number" 
+                                                  value={invInput.totalCost} 
+                                                  onChange={e => setInvInput({...invInput, totalCost: parseFloat(e.target.value) || 0})} 
+                                                  className="w-full p-3 rounded-xl bg-white/10 border border-white/10 mt-1 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
+                                              />
+                                          </div>
+                                          <div>
+                                              <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Cant. Comprada</label>
+                                              <input 
+                                                  type="number" 
+                                                  value={invInput.totalQty} 
+                                                  onChange={e => setInvInput({...invInput, totalQty: parseFloat(e.target.value) || 1})} 
+                                                  className="w-full p-3 rounded-xl bg-white/10 border border-white/10 mt-1 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
+                                              />
+                                          </div>
+                                      </div>
+
                                       <div>
-                                          <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Cant. Comprada</label>
-                                          <input 
-                                              type="number" 
-                                              value={invInput.totalQty} 
-                                              onChange={e => setInvInput({...invInput, totalQty: parseFloat(e.target.value) || 1})} 
-                                              className="w-full p-3 rounded-xl bg-white/10 border border-white/10 mt-1 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
-                                          />
+                                          <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Tamaño de Porción / Uso (Opcional)</label>
+                                          <div className="flex items-center gap-2 mt-1">
+                                              <input 
+                                                  type="number" 
+                                                  value={invInput.portion} 
+                                                  onChange={e => setInvInput({...invInput, portion: parseFloat(e.target.value) || 1})} 
+                                                  className="flex-1 p-3 rounded-xl bg-white/10 border border-white/10 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
+                                              />
+                                              <span className="text-[10px] uppercase font-bold text-slate-500">Unidades</span>
+                                          </div>
+                                          <p className="text-[9px] text-slate-400 mt-1">Ej: Si compraste 1000ml y usas de a 50ml, pon 50.</p>
                                       </div>
-                                  </div>
 
-                                  <div>
-                                      <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Tamaño de Porción / Uso (Opcional)</label>
-                                      <div className="flex items-center gap-2 mt-1">
-                                          <input 
-                                              type="number" 
-                                              value={invInput.portion} 
-                                              onChange={e => setInvInput({...invInput, portion: parseFloat(e.target.value) || 1})} 
-                                              className="flex-1 p-3 rounded-xl bg-white/10 border border-white/10 text-white font-bold text-xs focus:bg-white/20 transition-colors outline-none"
-                                          />
-                                          <span className="text-[10px] uppercase font-bold text-slate-500">Unidades</span>
+                                      <div className="p-4 bg-indigo-900/50 rounded-2xl border border-indigo-500/30">
+                                          <div className="flex justify-between items-end mb-2">
+                                              <span className="text-[9px] font-black uppercase text-indigo-300 tracking-widest">Costo x Porción</span>
+                                              <span className="text-2xl font-black text-white tracking-tighter">${calculatedUnitCost}</span>
+                                          </div>
+                                          <div className="flex justify-between items-end">
+                                              <span className="text-[9px] font-black uppercase text-indigo-300 tracking-widest">Stock Resultante</span>
+                                              <span className="text-sm font-bold text-white">{calculatedStock} u.</span>
+                                          </div>
                                       </div>
-                                      <p className="text-[9px] text-slate-400 mt-1">Ej: Si compraste 1000ml y usas de a 50ml, pon 50.</p>
-                                  </div>
 
-                                  <div className="p-4 bg-indigo-900/50 rounded-2xl border border-indigo-500/30">
-                                      <div className="flex justify-between items-end mb-2">
-                                          <span className="text-[9px] font-black uppercase text-indigo-300 tracking-widest">Costo x Porción</span>
-                                          <span className="text-2xl font-black text-white tracking-tighter">${calculatedUnitCost}</span>
-                                      </div>
-                                      <div className="flex justify-between items-end">
-                                          <span className="text-[9px] font-black uppercase text-indigo-300 tracking-widest">Stock Resultante</span>
-                                          <span className="text-sm font-bold text-white">{calculatedStock} u.</span>
-                                      </div>
+                                      <button 
+                                          onClick={() => {
+                                              if(!invInput.name) return notify("Falta nombre");
+                                              const newItem = {
+                                                  id: Date.now(),
+                                                  name: invInput.name,
+                                                  qty: calculatedStock,
+                                                  price: parseFloat(calculatedUnitCost)
+                                              };
+                                              setInventory(prev => [...prev, newItem]);
+                                              setInvInput({ name: '', totalCost: '', totalQty: '', portion: 1 });
+                                              notify("Material Calculado y Guardado");
+                                          }}
+                                          className="w-full py-4 bg-brand text-white rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg"
+                                      >
+                                          Guardar en Stock
+                                      </button>
                                   </div>
+                              </div>
 
-                                  <button 
-                                      onClick={() => {
-                                          if(!invInput.name) return notify("Falta nombre");
-                                          const newItem = {
-                                              id: Date.now(),
-                                              name: invInput.name,
-                                              qty: calculatedStock,
-                                              price: parseFloat(calculatedUnitCost)
-                                          };
-                                          setInventory(prev => [...prev, newItem]);
-                                          setInvInput({ name: '', totalCost: '', totalQty: '', portion: 1 });
-                                          notify("Material Calculado y Guardado");
-                                      }}
-                                      className="w-full py-4 bg-brand text-white rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg"
-                                  >
-                                      Guardar en Stock
-                                  </button>
+                              <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                                  <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2"><Icons.ShoppingBag className="w-4 h-4"/> Proveedores de Insumos</h3>
+                                  <div className="flex flex-col gap-3">
+                                      <a href="https://disershop.com.uy/" target="_blank" rel="noopener noreferrer" className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between hover:border-brand hover:shadow-md transition-all group">
+                                          <div className="flex items-center gap-3">
+                                              <div className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center font-black text-brand text-xs">D</div>
+                                              <span className="font-bold text-xs text-slate-700 group-hover:text-brand uppercase">Disershop</span>
+                                          </div>
+                                          <Icons.ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand" />
+                                      </a>
+                                      <a href="https://www.brimportaciones.com.uy/" target="_blank" rel="noopener noreferrer" className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between hover:border-brand hover:shadow-md transition-all group">
+                                          <div className="flex items-center gap-3">
+                                              <div className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center font-black text-brand text-xs">BR</div>
+                                              <span className="font-bold text-xs text-slate-700 group-hover:text-brand uppercase">BR Importaciones</span>
+                                          </div>
+                                          <Icons.ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand" />
+                                      </a>
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -1814,43 +1835,35 @@
                                       <button onClick={() => window.print()} className="p-3 bg-slate-900 text-white rounded-xl hover:scale-110 transition-transform shadow-lg"><Icons.Printer className="w-5 h-5"/></button>
                                   </div>
 
-                                  {/* CABECERA DOCUMENTO */}
+                                  {/* CABECERA DOCUMENTO (Sincronizada con Mis Datos) */}
                                   <div className="flex justify-between items-start mb-10 pb-10 border-b-2 border-slate-100">
                                       <div className="flex items-center gap-4 flex-1">
-                                          <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 relative group shrink-0">
+                                          <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 shrink-0">
                                               {userProfile.logo ? 
                                                   <img src={userProfile.logo} className="w-full h-full object-cover" /> : 
-                                                  <span className="text-[9px] uppercase font-bold text-slate-400 text-center p-2">Subir Logo</span>
+                                                  <span className="text-[9px] uppercase font-bold text-slate-400 text-center p-2 leading-tight">Sin Logo<br/><span className="text-[7px] normal-case">(Ve a Mis Datos)</span></span>
                                               }
-                                              <input type="file" onChange={(e) => {
-                                                  const file = e.target.files[0];
-                                                  if (file) {
-                                                      const reader = new FileReader();
-                                                      reader.onloadend = () => setUserProfile(p => ({...p, logo: reader.result}));
-                                                      reader.readAsDataURL(file);
-                                                  }
-                                              }} className="absolute inset-0 opacity-0 cursor-pointer no-print" title="Subir Logo" />
                                           </div>
                                           <div className="flex-1 pr-4">
                                               {userEmail === ADMIN_EMAIL ? (
                                                   <>
-                                                      <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900">MC PRO</h1>
-                                                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Modo Creativo Design</p>
+                                                      <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none">MC PRO</h1>
+                                                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Modo Creativo Design</p>
                                                   </>
                                               ) : (
                                                   <div className="flex flex-col">
-                                                      <input 
-                                                          value={userProfile.brand || ''} 
-                                                          onChange={(e) => setUserProfile({...userProfile, brand: e.target.value})} 
-                                                          placeholder="NOMBRE DE TU MARCA" 
-                                                          className="text-3xl font-black uppercase tracking-tighter text-slate-900 outline-none bg-transparent placeholder:text-slate-300 w-full"
-                                                      />
-                                                      <input 
-                                                          value={userProfile.owner || ''} 
-                                                          onChange={(e) => setUserProfile({...userProfile, owner: e.target.value})} 
-                                                          placeholder="Tu Nombre o Eslogan" 
-                                                          className="text-xs font-bold uppercase tracking-widest text-slate-400 outline-none bg-transparent placeholder:text-slate-300 w-full"
-                                                      />
+                                                      <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none">
+                                                          {userProfile.brand || 'TU MARCA AQUÍ'}
+                                                      </h1>
+                                                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">
+                                                          {userProfile.owner || 'Tu Nombre o Eslogan'}
+                                                      </p>
+                                                      {(userProfile.phone || userProfile.address) && (
+                                                          <div className="text-[10px] font-bold text-slate-500 mt-3 flex flex-col gap-1">
+                                                              {userProfile.phone && <span className="flex items-center gap-1"><Icons.MessageCircle className="w-3 h-3"/> {userProfile.phone}</span>}
+                                                              {userProfile.address && <span className="flex items-center gap-1"><Icons.Globe className="w-3 h-3"/> {userProfile.address}</span>}
+                                                          </div>
+                                                      )}
                                                   </div>
                                               )}
                                           </div>
@@ -2088,80 +2101,6 @@
                                   </div>
                               </form>
                           </div>
-
-                          {/* ZONA DE IMPRESIÓN (ETIQUETA) */}
-                          {selectedLabel && (
-                              <div className="hidden print:flex print-area absolute inset-0 bg-white items-center justify-center p-0 m-0 z-[9999]">
-                                  <div className="w-[10cm] border-[4px] border-slate-900 rounded-3xl p-6 text-slate-900 bg-white inline-block">
-                                      <div className="flex justify-between items-center border-b-[4px] border-slate-900 pb-4 mb-4">
-                                          <div>
-                                              <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">{userProfile.brand || 'MC PRO'}</h1>
-                                              <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mt-1">Etiqueta de Envío</p>
-                                          </div>
-                                          {userProfile.logo ? <img src={userProfile.logo} className="w-12 h-12 object-cover rounded-lg border-2 border-slate-200 grayscale" /> : <Icons.Package className="w-10 h-10 text-slate-400" />}
-                                      </div>
-                                      
-                                      <div className="space-y-4">
-                                          <div>
-                                              <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Destinatario</p>
-                                              <p className="text-2xl font-black uppercase leading-none">{selectedLabel.name}</p>
-                                          </div>
-                                          <div className="grid grid-cols-2 gap-4">
-                                              <div>
-                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Teléfono</p>
-                                                  <p className="text-base font-bold leading-none">{selectedLabel.phone}</p>
-                                              </div>
-                                              <div>
-                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Departamento</p>
-                                                  <p className="text-base font-bold uppercase leading-none">{selectedLabel.department}</p>
-                                              </div>
-                                          </div>
-                                          <div>
-                                              <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Dirección</p>
-                                              <p className="text-base font-bold leading-tight">{selectedLabel.address}</p>
-                                          </div>
-                                          <div className="border-t-[4px] border-slate-900 pt-4 grid grid-cols-2 gap-4">
-                                              <div>
-                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Agencia / Courier</p>
-                                                  <p className="text-xl font-black uppercase leading-none">{selectedLabel.agency}</p>
-                                              </div>
-                                              <div>
-                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Tracking N°</p>
-                                                  <p className="text-xl font-black uppercase leading-none">{selectedLabel.track}</p>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          )}
-                      </div>
-                  )}
-
-                  {/* --- USUARIOS --- */}
-                  {activeTab === 'access_control' && (
-                      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl max-w-2xl mx-auto animate-in">
-                          <div className="flex items-center gap-4 mb-8">
-                              <div className="p-4 bg-brand text-white rounded-2xl shadow-lg"><Icons.ShieldCheck className="w-8 h-8"/></div>
-                              <div>
-                                  <h3 className="text-2xl font-black uppercase tracking-tighter">Control de Acceso</h3>
-                                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Usuarios autorizados en el sistema</p>
-                              </div>
-                          </div>
-                          <div className="space-y-2 mb-8">
-                              {adminList.map(email => (
-                                  <div key={email} className="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                      <span className="font-bold text-sm text-slate-700">{email}</span>
-                                      {email !== ADMIN_EMAIL && (
-                                          <button onClick={() => { const newList = adminList.filter(e => e !== email); setAdminList(newList); notify("Usuario eliminado"); }} className="p-2 text-slate-300 hover:text-red-500"><Icons.Trash2 className="w-4 h-4"/></button>
-                                      )}
-                                      {email === ADMIN_EMAIL && <span className="text-[9px] font-black uppercase bg-brand text-white px-2 py-1 rounded-md">Admin</span>}
-                                  </div>
-                              ))}
-                          </div>
-                          <form onSubmit={(e) => { e.preventDefault(); const email = e.target.email.value.trim(); if(email && !adminList.includes(email)) { setAdminList([...adminList, email]); e.target.reset(); notify("Usuario autorizado"); } }} className="flex gap-2">
-                              <input name="email" type="email" placeholder="usuario@gmail.com" required className="flex-1 p-3 rounded-xl bg-slate-100 text-xs font-bold outline-none" />
-                              <button className="px-6 py-3 bg-slate-900 text-white rounded-xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform">Autorizar</button>
-                          </form>
                       </div>
                   )}
 
@@ -2175,6 +2114,28 @@
                                   <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Información de tu marca</p>
                               </div>
                           </div>
+
+                          {/* NUEVO: FOTO DE LOGO */}
+                          <div className="mb-6 flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                              <div className="w-20 h-20 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 relative shrink-0 shadow-sm">
+                                  {userProfile.logo ? 
+                                      <img src={userProfile.logo} className="w-full h-full object-cover" /> : 
+                                      <Icons.Image className="w-8 h-8 text-slate-300" />
+                                  }
+                              </div>
+                              <div className="flex-1">
+                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Logo de tu Empresa</label>
+                                  <input type="file" accept="image/*" onChange={(e) => {
+                                      const file = e.target.files[0];
+                                      if (file) {
+                                          const reader = new FileReader();
+                                          reader.onloadend = () => setUserProfile(p => ({...p, logo: reader.result}));
+                                          reader.readAsDataURL(file);
+                                      }
+                                  }} className="text-xs font-bold text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-brand file:text-white hover:file:bg-rose-600 cursor-pointer w-full" />
+                              </div>
+                          </div>
+
                           <div className="space-y-4">
                               <div>
                                   <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Email (Cuenta vinculada)</label>
