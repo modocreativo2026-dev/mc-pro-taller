@@ -39,7 +39,7 @@
         // =====================================================================
         
         const manualConfig = {
-            apiKey: "AIzaSyABXR5HOYBiK2OIR8wjDZgEWqrC8Nadt1A",
+            apiKey: "AIzaSyB_K5650wKOYZVXYRXj1gV2NdiPm3sNFKU",
             authDomain: "mc-pro-sistema.firebaseapp.com",
             projectId: "mc-pro-sistema",
             storageBucket: "mc-pro-sistema.firebasestorage.app",
@@ -1589,7 +1589,7 @@
                                           </div>
                                           
                                           <div className="w-full py-3.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl text-center flex items-center justify-center gap-2 group-hover:bg-brand transition-colors shadow-md">
-                                              Ver en {m.supplier.split(' / ')[0]} <Icons.ChevronRight className="w-3 h-3" />
+                                              Ir a la tienda oficial <Icons.ChevronRight className="w-3 h-3" />
                                           </div>
                                       </div>
                                   </a>
@@ -2124,10 +2124,16 @@
                                   }
                               </div>
                               <div className="flex-1">
-                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-2">Logo de tu Empresa</label>
-                                  <input type="file" accept="image/*" onChange={(e) => {
+                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-1">Logo de tu Empresa</label>
+                                  <p className="text-[9px] font-bold text-slate-400 mb-2 leading-tight">Formatos aceptados: JPG, PNG. Tamaño recomendado: 500x500px.<br/>⚠️ <span className="text-rose-500">Límite máximo de peso: 800KB.</span></p>
+                                  <input type="file" accept="image/png, image/jpeg, image/jpg" onChange={(e) => {
                                       const file = e.target.files[0];
                                       if (file) {
+                                          if (file.size > 800 * 1024) {
+                                              notify("❌ Error: La imagen supera el límite de 800KB. Usa una imagen más liviana.");
+                                              e.target.value = "";
+                                              return;
+                                          }
                                           const reader = new FileReader();
                                           reader.onloadend = () => setUserProfile(p => ({...p, logo: reader.result}));
                                           reader.readAsDataURL(file);
