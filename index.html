@@ -47,7 +47,6 @@
             appId: "1:593304120965:web:36d43fc72a9c85c76dc3ec"
         };
 
-        // MAGIA: Si estamos en Gemini (Canvas), usamos el entorno de Gemini. Si estamos en Donweb, usamos tu manualConfig.
         const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : manualConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'mc-pro-app';
         const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -183,278 +182,40 @@
                 acc_title: "Usuarios Autorizados", acc_new: "Nuevo Usuario",
                 bud_new: "Nuevo Presupuesto", bill_new: "Nueva Factura", bud_title_new: "Nuevo Presupuesto", bill_title_new: "Nueva Factura", btn_cancel: "Cancelar", btn_save: "Guardar", label_status: "Estado", bud_item: "Agregar Ítem", bud_total: "Total Estimado",
                 mod_title: "Soporte MC Pro", btn_close: "Cerrar",
-                days: ['L','M','M','J','V','S','D'],
-                settings_lang: "Idioma / Language",
-                bud_number: "N° Boleta", bill_number: "N° Factura",
-                bud_logo: "Subir Logo", bill_logo: "Subir Logo"
+                days: ['L','M','M','J','V','S','D']
             }
         };
         
         const t = translations.es;
 
         const FULL_EVENTS = [
-            // ENERO (m: 0)
-            {d:1,m:0,t:'Año Nuevo (Feriado)',type:'UY'},
-            {d:4,m:0,t:'Día del Braille',type:'INT'},
-            {d:6,m:0,t:'Día de los Niños / Reyes',type:'UY'},
-            {d:13,m:0,t:'Día Mundial contra la Depresión',type:'CM'},
-            {d:16,m:0,t:'Día de The Beatles',type:'INT'},
-            {d:19,m:0,t:'Blue Monday (Día más triste)',type:'CM'},
-            {d:21,m:0,t:'Día Internacional del Abrazo',type:'CM'},
-            {d:24,m:0,t:'Día Internacional de la Educación',type:'INT'},
-            {d:26,m:0,t:'Día del Community Manager',type:'CM'},
-            {d:28,m:0,t:'Día de la Privacidad de Datos',type:'CM'},
-
-            // FEBRERO (m: 1)
-            {d:2,m:1,t:'Iemanjá (UY)',type:'UY'},
-            {d:4,m:1,t:'Día Mundial contra el Cáncer',type:'INT'},
-            {d:9,m:1,t:'Día Mundial de la Pizza',type:'CM'},
-            {d:11,m:1,t:'Día Mujer y Niña en la Ciencia',type:'INT'},
-            {d:13,m:1,t:'Día Mundial de la Radio / Soltero',type:'INT'},
-            {d:14,m:1,t:'San Valentín',type:'INT'},
-            {d:16,m:1,t:'Carnaval (Lunes)',type:'UY'},
-            {d:17,m:1,t:'Carnaval (Martes)',type:'UY'},
-            {d:20,m:1,t:'Día Internacional del Gato',type:'CM'},
-            {d:27,m:1,t:'Día Mundial de las ONG',type:'INT'},
-            {d:28,m:1,t:'Grito de Asencio (UY)',type:'UY'},
-
-            // MARZO (m: 2)
-            {d:3,m:2,t:'Día Mundial de la Naturaleza',type:'INT'},
-            {d:8,m:2,t:'Día Internacional de la Mujer',type:'INT'},
-            {d:15,m:2,t:'Día de los Derechos del Consumidor',type:'CM'},
-            {d:17,m:2,t:'San Patricio',type:'INT'},
-            {d:19,m:2,t:'Nacimiento José P. Varela (UY)',type:'UY'},
-            {d:20,m:2,t:'Día Internacional de la Felicidad',type:'INT'},
-            {d:21,m:2,t:'Día de la Poesía / Síndrome de Down',type:'INT'},
-            {d:22,m:2,t:'Día Mundial del Agua',type:'INT'},
-            {d:27,m:2,t:'Día Mundial del Teatro',type:'INT'},
-
-            // ABRIL (m: 3)
-            {d:2,m:3,t:'Jueves Santo / Semana Turismo / Día Autismo',type:'UY'},
-            {d:3,m:3,t:'Viernes Santo / Semana Turismo',type:'UY'},
-            {d:7,m:3,t:'Día Mundial de la Salud',type:'INT'},
-            {d:13,m:3,t:'Día Internacional del Beso',type:'CM'},
-            {d:15,m:3,t:'Día Mundial del Arte',type:'INT'},
-            {d:16,m:3,t:'Día Mundial del Emprendimiento',type:'CM'},
-            {d:19,m:3,t:'Desembarco 33 Orientales / Día Simpson',type:'UY'},
-            {d:22,m:3,t:'Día de la Tierra',type:'INT'},
-            {d:23,m:3,t:'Día Mundial del Libro / Idioma',type:'INT'},
-            {d:27,m:3,t:'Día Mundial del Diseño Gráfico',type:'CM'},
-            {d:29,m:3,t:'Día Internacional de la Danza',type:'INT'},
-
-            // MAYO (m: 4)
-            {d:1,m:4,t:'Día de los Trabajadores (Feriado)',type:'UY'},
-            {d:2,m:4,t:'Día contra el Bullying',type:'INT'},
-            {d:4,m:4,t:'Star Wars Day',type:'CM'},
-            {d:10,m:4,t:'Día de la Madre (Comercial UY)',type:'UY'},
-            {d:15,m:4,t:'Día Internacional de la Familia',type:'INT'},
-            {d:17,m:4,t:'Día de Internet / Reciclaje',type:'CM'},
-            {d:18,m:4,t:'Batalla de las Piedras',type:'UY'},
-            {d:25,m:4,t:'Día del Orgullo Friki / Geek',type:'CM'},
-            {d:28,m:4,t:'Día de la Hamburguesa',type:'CM'},
-
-            // JUNIO (m: 5)
-            {d:5,m:5,t:'Día Mundial del Medio Ambiente',type:'INT'},
-            {d:8,m:5,t:'Día Mundial de los Océanos',type:'INT'},
-            {d:19,m:5,t:'Natalicio de Artigas / Día del Abuelo',type:'UY'},
-            {d:20,m:5,t:'Yellow Day (Día más feliz)',type:'CM'},
-            {d:21,m:5,t:'Día Internacional del Yoga / Selfie',type:'CM'},
-            {d:28,m:5,t:'Día del Orgullo LGTBIQ+',type:'INT'},
-            {d:30,m:5,t:'Social Media Day',type:'CM'},
-
-            // JULIO (m: 6)
-            {d:7,m:6,t:'Día Mundial del Cacao',type:'CM'},
-            {d:12,m:6,t:'Día del Padre (Comercial UY)',type:'UY'},
-            {d:13,m:6,t:'Día Mundial del Rock',type:'INT'},
-            {d:17,m:6,t:'World Emoji Day',type:'CM'},
-            {d:18,m:6,t:'Jura de la Constitución (Feriado)',type:'UY'},
-            {d:20,m:6,t:'Día del Amigo',type:'INT'},
-            {d:21,m:6,t:'Día Mundial del Perro',type:'CM'},
-            {d:26,m:6,t:'Día de los Abuelos (Internacional)',type:'INT'},
-            {d:30,m:6,t:'Día Internacional de la Amistad',type:'INT'},
-
-            // AGOSTO (m: 7)
-            {d:1,m:7,t:'Día de la Alegría',type:'INT'},
-            {d:8,m:7,t:'Día Internacional del Gato',type:'CM'},
-            {d:12,m:7,t:'Día Internacional de la Juventud',type:'INT'},
-            {d:16,m:7,t:'Día del Niño (Comercial UY)',type:'UY'},
-            {d:19,m:7,t:'Día Mundial de la Fotografía',type:'CM'},
-            {d:24,m:7,t:'Noche de la Nostalgia',type:'UY'},
-            {d:25,m:7,t:'Declaratoria Independencia (Feriado)',type:'UY'},
-            {d:29,m:7,t:'Día del Gamer',type:'CM'},
-            {d:31,m:7,t:'Día Internacional del Blog',type:'CM'},
-
-            // SEPTIEMBRE (m: 8)
-            {d:13,m:8,t:'Día del Programador / Día del Chocolate',type:'CM'},
-            {d:21,m:8,t:'Día de la Primavera / Estudiante',type:'UY'},
-            {d:27,m:8,t:'Día del Turismo / Cumpleaños de Google',type:'CM'},
-            {d:29,m:8,t:'Día Mundial del Corazón',type:'INT'},
-            {d:30,m:8,t:'Día Internacional del Podcast',type:'CM'},
-
-            // OCTUBRE (m: 9)
-            {d:1,m:9,t:'Día del Café / Música / Vegetarianismo',type:'CM'},
-            {d:4,m:9,t:'Día Mundial de los Animales',type:'INT'},
-            {d:10,m:9,t:'Día de la Salud Mental',type:'INT'},
-            {d:12,m:9,t:'Batalla de Sarandí',type:'UY'},
-            {d:16,m:9,t:'Día Mundial de la Alimentación',type:'INT'},
-            {d:19,m:9,t:'Día contra el Cáncer de Mama',type:'INT'},
-            {d:24,m:9,t:'Día contra el Cambio Climático',type:'INT'},
-            {d:31,m:9,t:'Halloween / Día del Ahorro',type:'INT'},
-
-            // NOVIEMBRE (m: 10)
-            {d:1,m:10,t:'Día Mundial del Veganismo',type:'CM'},
-            {d:2,m:10,t:'Día de los Difuntos',type:'UY'},
-            {d:11,m:10,t:'Día del Soltero (11/11)',type:'CM'},
-            {d:19,m:10,t:'Día de la Mujer Emprendedora',type:'CM'},
-            {d:20,m:10,t:'Día Universal del Niño',type:'INT'},
-            {d:21,m:10,t:'Día Mundial de la Televisión',type:'INT'},
-            {d:27,m:10,t:'Black Friday 2026',type:'CM'},
-            {d:30,m:10,t:'Cyber Monday / Día del Influencer',type:'CM'},
-
-            // DICIEMBRE (m: 11)
-            {d:1,m:11,t:'Día Mundial de Lucha contra el SIDA',type:'INT'},
-            {d:3,m:11,t:'Día Personas con Discapacidad',type:'INT'},
-            {d:10,m:11,t:'Día de los Derechos Humanos',type:'INT'},
-            {d:15,m:11,t:'Día Mundial del Otaku',type:'CM'},
-            {d:24,m:11,t:'Nochebuena',type:'INT'},
-            {d:25,m:11,t:'Navidad / Día de la Familia (Feriado)',type:'UY'},
-            {d:28,m:11,t:'Día de los Inocentes',type:'INT'},
-            {d:31,m:11,t:'Fin de Año',type:'INT'}
+            {d:1,m:0,t:'Año Nuevo (Feriado)',type:'UY'},{d:4,m:0,t:'Día del Braille',type:'INT'},{d:6,m:0,t:'Día de los Niños / Reyes',type:'UY'},{d:13,m:0,t:'Día Mundial contra la Depresión',type:'CM'},{d:16,m:0,t:'Día de The Beatles',type:'INT'},{d:19,m:0,t:'Blue Monday (Día más triste)',type:'CM'},{d:21,m:0,t:'Día Internacional del Abrazo',type:'CM'},{d:24,m:0,t:'Día Internacional de la Educación',type:'INT'},{d:26,m:0,t:'Día del Community Manager',type:'CM'},{d:28,m:0,t:'Día de la Privacidad de Datos',type:'CM'},
+            {d:2,m:1,t:'Iemanjá (UY)',type:'UY'},{d:4,m:1,t:'Día Mundial contra el Cáncer',type:'INT'},{d:9,m:1,t:'Día Mundial de la Pizza',type:'CM'},{d:11,m:1,t:'Día Mujer y Niña en la Ciencia',type:'INT'},{d:13,m:1,t:'Día Mundial de la Radio / Soltero',type:'INT'},{d:14,m:1,t:'San Valentín',type:'INT'},{d:16,m:1,t:'Carnaval (Lunes)',type:'UY'},{d:17,m:1,t:'Carnaval (Martes)',type:'UY'},{d:20,m:1,t:'Día Internacional del Gato',type:'CM'},{d:27,m:1,t:'Día Mundial de las ONG',type:'INT'},{d:28,m:1,t:'Grito de Asencio (UY)',type:'UY'},
+            {d:3,m:2,t:'Día Mundial de la Naturaleza',type:'INT'},{d:8,m:2,t:'Día Internacional de la Mujer',type:'INT'},{d:15,m:2,t:'Día de los Derechos del Consumidor',type:'CM'},{d:17,m:2,t:'San Patricio',type:'INT'},{d:19,m:2,t:'Nacimiento José P. Varela (UY)',type:'UY'},{d:20,m:2,t:'Día Internacional de la Felicidad',type:'INT'},{d:21,m:2,t:'Día de la Poesía / Síndrome de Down',type:'INT'},{d:22,m:2,t:'Día Mundial del Agua',type:'INT'},{d:27,m:2,t:'Día Mundial del Teatro',type:'INT'},
+            {d:2,m:3,t:'Jueves Santo / Semana Turismo / Día Autismo',type:'UY'},{d:3,m:3,t:'Viernes Santo / Semana Turismo',type:'UY'},{d:7,m:3,t:'Día Mundial de la Salud',type:'INT'},{d:13,m:3,t:'Día Internacional del Beso',type:'CM'},{d:15,m:3,t:'Día Mundial del Arte',type:'INT'},{d:16,m:3,t:'Día Mundial del Emprendimiento',type:'CM'},{d:19,m:3,t:'Desembarco 33 Orientales / Día Simpson',type:'UY'},{d:22,m:3,t:'Día de la Tierra',type:'INT'},{d:23,m:3,t:'Día Mundial del Libro / Idioma',type:'INT'},{d:27,m:3,t:'Día Mundial del Diseño Gráfico',type:'CM'},{d:29,m:3,t:'Día Internacional de la Danza',type:'INT'},
+            {d:1,m:4,t:'Día de los Trabajadores (Feriado)',type:'UY'},{d:2,m:4,t:'Día contra el Bullying',type:'INT'},{d:4,m:4,t:'Star Wars Day',type:'CM'},{d:10,m:4,t:'Día de la Madre (Comercial UY)',type:'UY'},{d:15,m:4,t:'Día Internacional de la Familia',type:'INT'},{d:17,m:4,t:'Día de Internet / Reciclaje',type:'CM'},{d:18,m:4,t:'Batalla de las Piedras',type:'UY'},{d:25,m:4,t:'Día del Orgullo Friki / Geek',type:'CM'},{d:28,m:4,t:'Día de la Hamburguesa',type:'CM'},
+            {d:5,m:5,t:'Día Mundial del Medio Ambiente',type:'INT'},{d:8,m:5,t:'Día Mundial de los Océanos',type:'INT'},{d:19,m:5,t:'Natalicio de Artigas / Día del Abuelo',type:'UY'},{d:20,m:5,t:'Yellow Day (Día más feliz)',type:'CM'},{d:21,m:5,t:'Día Internacional del Yoga / Selfie',type:'CM'},{d:28,m:5,t:'Día del Orgullo LGTBIQ+',type:'INT'},{d:30,m:5,t:'Social Media Day',type:'CM'},
+            {d:7,m:6,t:'Día Mundial del Cacao',type:'CM'},{d:12,m:6,t:'Día del Padre (Comercial UY)',type:'UY'},{d:13,m:6,t:'Día Mundial del Rock',type:'INT'},{d:17,m:6,t:'World Emoji Day',type:'CM'},{d:18,m:6,t:'Jura de la Constitución (Feriado)',type:'UY'},{d:20,m:6,t:'Día del Amigo',type:'INT'},{d:21,m:6,t:'Día Mundial del Perro',type:'CM'},{d:26,m:6,t:'Día de los Abuelos (Internacional)',type:'INT'},{d:30,m:6,t:'Día Internacional de la Amistad',type:'INT'},
+            {d:1,m:7,t:'Día de la Alegría',type:'INT'},{d:8,m:7,t:'Día Internacional del Gato',type:'CM'},{d:12,m:7,t:'Día Internacional de la Juventud',type:'INT'},{d:16,m:7,t:'Día del Niño (Comercial UY)',type:'UY'},{d:19,m:7,t:'Día Mundial de la Fotografía',type:'CM'},{d:24,m:7,t:'Noche de la Nostalgia',type:'UY'},{d:25,m:7,t:'Declaratoria Independencia (Feriado)',type:'UY'},{d:29,m:7,t:'Día del Gamer',type:'CM'},{d:31,m:7,t:'Día Internacional del Blog',type:'CM'},
+            {d:13,m:8,t:'Día del Programador / Día del Chocolate',type:'CM'},{d:21,m:8,t:'Día de la Primavera / Estudiante',type:'UY'},{d:27,m:8,t:'Día del Turismo / Cumpleaños de Google',type:'CM'},{d:29,m:8,t:'Día Mundial del Corazón',type:'INT'},{d:30,m:8,t:'Día Internacional del Podcast',type:'CM'},
+            {d:1,m:9,t:'Día del Café / Música / Vegetarianismo',type:'CM'},{d:4,m:9,t:'Día Mundial de los Animales',type:'INT'},{d:10,m:9,t:'Día de la Salud Mental',type:'INT'},{d:12,m:9,t:'Batalla de Sarandí',type:'UY'},{d:16,m:9,t:'Día Mundial de la Alimentación',type:'INT'},{d:19,m:9,t:'Día contra el Cáncer de Mama',type:'INT'},{d:24,m:9,t:'Día contra el Cambio Climático',type:'INT'},{d:31,m:9,t:'Halloween / Día del Ahorro',type:'INT'},
+            {d:1,m:10,t:'Día Mundial del Veganismo',type:'CM'},{d:2,m:10,t:'Día de los Difuntos',type:'UY'},{d:11,m:10,t:'Día del Soltero (11/11)',type:'CM'},{d:19,m:10,t:'Día de la Mujer Emprendedora',type:'CM'},{d:20,m:10,t:'Día Universal del Niño',type:'INT'},{d:21,m:10,t:'Día Mundial de la Televisión',type:'INT'},{d:27,m:10,t:'Black Friday 2026',type:'CM'},{d:30,m:10,t:'Cyber Monday / Día del Influencer',type:'CM'},
+            {d:1,m:11,t:'Día Mundial de Lucha contra el SIDA',type:'INT'},{d:3,m:11,t:'Día Personas con Discapacidad',type:'INT'},{d:10,m:11,t:'Día de los Derechos Humanos',type:'INT'},{d:15,m:11,t:'Día Mundial del Otaku',type:'CM'},{d:24,m:11,t:'Nochebuena',type:'INT'},{d:25,m:11,t:'Navidad / Día de la Familia (Feriado)',type:'UY'},{d:28,m:11,t:'Día de los Inocentes',type:'INT'},{d:31,m:11,t:'Fin de Año',type:'INT'}
         ];
 
         const creativeStrategies = [
-            { 
-                m: 0, 
-                title: 'Planificación & Vuelta a Clases', 
-                productIdeas: ['Kits escolares personalizados (etiquetas, reglas, libretas)', 'Agendas y Planners anuales 2026', 'Cuadernos corporativos para inicio de año', 'Stickers resistentes al agua para botellas'], 
-                contentIdeas: ['Reel: "Empaca un mega pedido escolar conmigo" (ASMR)', 'Carrusel IG: Tips para organizar tu escritorio este año', 'TikTok: Mostrando el proceso de plastificado de etiquetas', 'Story: Encuestas de paletas de colores favoritas para agendas'],
-                promoIdeas: ['Preventa escolar exclusiva con 15% OFF (hasta el 15/Ene)', 'Envío gratis en compras de "Combos Escolares completos"', 'Regalo sorpresa (ej. un marcapáginas) con cada agenda'],
-                trend: 'Colores primarios fuertes, tipografías bold estilo college, pop art y minimalismo funcional.', 
-                managerTip: 'La anticipación es clave. Los padres previsores compran en enero. Lanza tu campaña fuerte a mediados de mes.', 
-                keywords: "#VueltaAlCole2026 #Organizacion #PapeleriaCreativa",
-                platforms: ['Instagram', 'TikTok', 'Pinterest']
-            },
-            { 
-                m: 1, 
-                title: 'Amor, Amistad & Carnaval', 
-                productIdeas: ['Cajas sorpresa (Explosion Box) con fotos', 'Tarjetas pop-up interactivas / Shaker Cards', 'Cuponeras del amor/amistad troqueladas', 'Packaging especial romántico para emprendedores'], 
-                contentIdeas: ['Reel: Storytime de historias de amor de tus clientes (con permiso)', 'Tutorial TikTok: Cómo hacer una tarjeta fácil en casa (atrae tráfico)', 'Carrusel: 3 ideas de regalos que no son chocolates', 'Live: Armado en vivo de kits de San Valentín'],
-                promoIdeas: ['Promoción "Doble Amor": 2x1 en tarjetas personalizadas', 'Descuento especial por el Día del Soltero (13 Feb)', 'Sorteo "Etiqueta a tu media naranja" para ganar un kit'],
-                trend: 'Rojos intensos, rosa pastel, foil dorado, técnica de layering (capas de papel) y estética coquette.', 
-                managerTip: 'No te centres solo en parejas; el amor propio y la amistad (Galentine\'s Day) venden muchísimo en papelería.', 
-                keywords: "#SanValentin #RegalosPersonalizados #AmorYAmistad",
-                platforms: ['Instagram', 'TikTok']
-            },
-            { 
-                m: 2, 
-                title: 'Poder Femenino & Cambio de Temporada', 
-                productIdeas: ['Agendas y bitácoras para mujeres emprendedoras', 'Libretas pocket con frases de empoderamiento', 'Marcapáginas magnéticos florales', 'Kits de regalo corporativo para el Día de la Mujer'], 
-                contentIdeas: ['Reel: Detrás de escena siendo mujer emprendedora', 'Carrusel IG: Frases motivacionales que inspiran nuestra papelería', 'Colaboración: Entrevista corta a otra creadora uruguaya', 'Story: Moodboard inspiracional de Otoño'],
-                promoIdeas: ['Cajas corporativas con descuento por volumen para empresas', 'Regalo de lámina con frase empoderadora con cada compra el 8M', 'Sorteo cruzado con otra marca liderada por mujeres'],
-                trend: 'Acuarelas, motivos florales otoñales, tonos lila, morado y ocre. Tipografías script elegantes.', 
-                managerTip: 'Ofrece soluciones para empresas locales que buscan regalos rápidos y bonitos para el 8 de marzo.', 
-                keywords: "#DiaDeLaMujer #MujerEmprendedora #PapeleriaOtoño",
-                platforms: ['Instagram', 'LinkedIn', 'Pinterest']
-            },
-            { 
-                m: 3, 
-                title: 'Magia de Pascuas & Otoño', 
-                productIdeas: ['Cajas con visor transparente para huevos de Pascua', 'Toppers y tags temáticos para roscas (para pastelerías)', 'Bolsitas kraft con forma de conejo', 'Kits imprimibles para "Búsqueda del tesoro" infantil'], 
-                contentIdeas: ['TikTok: Ideas de cómo rellenar las cajitas de Pascua (No solo chocolate)', 'Reel: Armado rápido de packaging para pastelerías (B2B)', 'Carrusel: Plantillas de regalo (Freebies) para los niños', 'Story: Cuenta regresiva para Semana Santa/Turismo'],
-                promoIdeas: ['Descuento por preventa temprana de packaging para pasteleros', 'Kit "Búsqueda del Tesoro" a mitad de precio llevando la caja', 'Cupón de descuento escondido en un "huevo de pascua" digital en Stories'],
-                trend: 'Tonos pastel (celeste, verde agua, amarillo), texturas rústicas (kraft, hilo sisal) y minimalismo tierno.', 
-                managerTip: 'Enfoca tu estrategia B2B (venta a otras empresas) a principios de mes para captar reposteros y pastelerías.', 
-                keywords: "#PascuaCreativa #PackagingPascuas #SemanaTurismo",
-                platforms: ['Instagram', 'Pinterest']
-            },
-            { 
-                m: 4, 
-                title: 'Día de la Madre & Momentos', 
-                productIdeas: ['Álbumes de fotos estilo Scrapbook', 'Bandejas de desayuno decoradas con papelería', 'Tarjetas pop-up 3D premium', 'Cuadros de profundidad con flores de papel'], 
-                contentIdeas: ['Reel Emotivo: Preparando regalos para mamás (Música nostálgica)', 'Carrusel IG: Guía de regalos según el tipo de mamá', 'TikTok: Cómo personalizar tu álbum de fotos', 'Story: Preguntas sobre los mejores recuerdos de la infancia'],
-                promoIdeas: ['Envío exprés gratis la semana previa al Día de la Madre', 'Descuento especial "Regala a la abuela también"', 'Kits listos para regalar (Papelería + Chocolate en alianza con otra marca)'],
-                trend: 'Estampados florales vintage, tonos cálidos, rosa viejo, dorado y tipografías script tipo caligrafía.', 
-                managerTip: 'El formato "Guía de Regalos" en Pinterest e Instagram Carousels atrae mucho tráfico orgánico de gente indecisa.', 
-                keywords: "#DiaDeLaMadreUY #RegalosMama #Scrapbooking",
-                platforms: ['Instagram', 'Facebook', 'Pinterest']
-            },
-            { 
-                m: 5, 
-                title: 'Día del Padre & Sobriedad', 
-                productIdeas: ['Cajas para vinos/cervezas grabadas o personalizadas', 'Tarjetas con diseño de camisa/herramientas', 'Organizadores de escritorio minimalistas', 'Etiquetas personalizadas para regalos caseros'], 
-                contentIdeas: ['Carrusel IG: "Regalos para el papá que dice que no quiere nada"', 'Reel: Mostrando texturas premium y sobrias', 'TikTok: Armado de un kit cervecero/vinitero', 'Story: Dinámica "Qué frase típica de padre pondrías en una taza/tarjeta"'],
-                promoIdeas: ['Promo "Padre e Hijo": Descuento al llevar 2 organizadores', 'Envío gratis en combos Premium', 'Tarjetas de cortesía en todas las compras de la semana'],
-                trend: 'Texturas de madera, cuero, papel kraft grueso. Paleta de azules marinos, grises, negro y verde bosque.', 
-                managerTip: 'Los regalos del Día del Padre suelen dejarse para último momento. Prepara "Kits Salvavidas" listos para entregar.', 
-                keywords: "#DiaDelPadre #RegalosPapa #PapeleriaSobria",
-                platforms: ['Instagram', 'Facebook']
-            },
-            { 
-                m: 6, 
-                title: 'Vacaciones de Invierno & Diversión', 
-                productIdeas: ['Libros de actividades y colorear para niños', 'Kits de manualidades DIY (Hazlo tú mismo)', 'Stickers resistentes al agua para decorar termos', 'Bitácoras de viaje / Diarios de invierno'], 
-                contentIdeas: ['Reel/TikTok: "Qué incluye nuestro kit para vencer el aburrimiento"', 'Carrusel: 3 ideas de manualidades para hacer con niños en casa', 'Story: Freebie (Descargable gratis) para colorear', 'Live: Tarde de manualidades usando los kits'],
-                promoIdeas: ['Descuento "Vacaciones" en la sección infantil', 'Regalo de plancha de stickers en compras de bitácoras', 'Concurso de dibujo en Stories para ganar un kit completo'],
-                trend: 'Personajes divertidos, colores neón vibrantes contrastando con el invierno, ilustraciones doodle.', 
-                managerTip: 'Ofrece un "Freebie" (imprimible gratis) a cambio de que se suscriban a tu newsletter o te mencionen en Stories.', 
-                keywords: "#InviernoDivertido #ActividadesNiños #KitsDIY",
-                platforms: ['TikTok', 'Instagram', 'Pinterest']
-            },
-            { 
-                m: 7, 
-                title: 'Día del Niño & Nostalgia', 
-                productIdeas: ['Cajitas sorpresita temáticas "Party Box"', 'Rompecabezas personalizados con fotos', 'Valijitas de cartón para tesoros', 'Papelería temática "Noche de la Nostalgia" (Retro)'], 
-                contentIdeas: ['Reel: Montando una Party Box espectacular', 'TikTok: Efecto nostalgia (Ayer vs Hoy en la papelería)', 'Carrusel IG: Por qué regalar experiencias (rompecabezas) es mejor', 'Story: Cuestionario retro musical por la Noche de la Nostalgia'],
-                promoIdeas: ['Combo "Hermanos": Descuento en la segunda unidad infantil', 'Kits decorativos listos para fiestas de la Nostalgia a precio especial', 'Sorteo Día del Niño con influencers locales'],
-                trend: 'Para niños: Súper héroes, magia y full color. Para Nostalgia: Estética de los 80s/90s, neón, casetes y vinilos.', 
-                managerTip: 'Aprovecha la Noche de la Nostalgia en Uruguay. Los salones y fiestas privadas necesitan tickets, pulseras y decoración retro.', 
-                keywords: "#DiaDelNiño #NocheDeLaNostalgia #PartyBox",
-                platforms: ['Instagram', 'Facebook']
-            },
-            { 
-                m: 8, 
-                title: 'Primavera, Color & Eventos', 
-                productIdeas: ['Banderines y guirnaldas florales', 'Flores gigantes de papel para vidrieras o eventos', 'Tags plantables (con semillas) o para suculentas', 'Sets de papelería para picnics de primavera'], 
-                contentIdeas: ['Reel: Transición (Papelería de invierno a full color primavera)', 'Carrusel: Cómo decorar una mesa de primavera', 'TikTok: Tutorial para hacer flores de papel', 'Story: Unboxing de nuevos papeles y texturas de temporada'],
-                promoIdeas: ['Lanzamiento de temporada con "Early Bird" discount', 'Regalo de Tag Plantable con cada pedido', 'Promoción 3x2 en decoración colgante'],
-                trend: 'Mariposas, flores vibrantes, hojas botánicas, estilo boho-chic, tonos pastel saturados y verde menta.', 
-                managerTip: 'La primavera activa la temporada de eventos al aire libre. Enfócate en papelería social (cumpleaños, baby showers).', 
-                keywords: "#BienvenidaPrimavera #EventosPrimavera #PapeleriaSocial",
-                platforms: ['Instagram', 'Pinterest', 'TikTok']
-            },
-            { 
-                m: 9, 
-                title: 'Halloween & Bodas de Primavera', 
-                productIdeas: ['Cajas ataúd o formas divertidas para golosinas', 'Invitaciones interactivas (deslizables) para bodas/15s', 'Toppers terroríficos para cupcakes', 'Máscaras y props imprimibles para fotocabinas'], 
-                contentIdeas: ['TikTok: ASMR armando cajitas de Halloween', 'Reel: Tendencias en invitaciones de Boda 2026', 'Carrusel IG: Qué debe incluir una invitación perfecta', 'Story: Votación "Truco o Trato" con descuentos ocultos'],
-                promoIdeas: ['Packaging temático "Monstruoso" para negocios locales (B2B)', 'Envío de muestras gratuitas de invitaciones a Wedding Planners', 'Flash Sale de 24hs por Halloween'],
-                trend: 'Halloween: Naranja, violeta, negro y diseños "spooky-cute". Bodas: Minimalismo, papel vegetal, eucalipto y blanco.', 
-                managerTip: 'Es un mes dual. Muestra tu lado divertido para Halloween, pero no descuides el lado elegante; octubre y noviembre son alta temporada de bodas.', 
-                keywords: "#HalloweenCreativo #Bodas2026 #Invitaciones",
-                platforms: ['Instagram', 'Pinterest']
-            },
-            { 
-                m: 10, 
-                title: 'Black Friday & Prep. Cierre de Año', 
-                productIdeas: ['Papelería corporativa para fin de año (Calendarios de escritorio)', 'Números de mesa y menús para eventos de noviembre', 'Lanzamiento: Agendas y Planners 2027', 'Etiquetas de agradecimiento para otros emprendedores'], 
-                contentIdeas: ['Reel: Alerta Black Friday (Mostrando stock rebajado)', 'TikTok: Cómo preparo mi negocio para el pico de ventas', 'Carrusel IG: Guía de regalos empresariales', 'Story: Sneak Peek (vistazo) de la nueva colección de Agendas'],
-                promoIdeas: ['Campaña Black Friday: Descuentos escalonados (20%, 30%, 50% en Outlet)', 'Preventa exclusiva VIP de Agendas 2027', 'Kits "Agradece a tus clientes" en promoción para emprendedores'],
-                trend: 'Tonos metalizados, contraste oscuro/elegante para ofertas, y comienzo de introducción a estéticas festivas sutiles.', 
-                managerTip: 'En Black Friday no compitas solo por precio, compite por valor percibido. Añade cosas extra (stickers, packaging hermoso) en lugar de regalar tu trabajo.', 
-                keywords: "#BlackFridayUY #Agendas2027 #PapeleriaCorporativa",
-                platforms: ['Instagram', 'Facebook', 'LinkedIn']
-            },
-            { 
-                m: 11, 
-                title: 'Navidad Creativa & Gratitud', 
-                productIdeas: ['Esferas personalizadas con foto/vinilo para el arbolito', 'Calendarios de adviento de cartulina', 'Tags con foil y cintas para regalos navideños', 'Tarjetas de "Felices Fiestas" empresariales'], 
-                contentIdeas: ['Reel Emotivo: "Gracias por acompañarnos este año" (Humanizando marca)', 'TikTok: Empacando un pedido versión Navidad', 'Carrusel IG: Ideas de último minuto para decorar tu mesa navideña', 'Story: Detrás de escena del caos hermoso de diciembre'],
-                promoIdeas: ['Combos de Etiquetas y Tags listos para usar a precios accesibles', 'Envíos con packaging navideño especial sin costo extra', 'Sorteo "Cesta de Navidad" con tus mejores productos'],
-                trend: 'Verde pino, rojo clásico, tartán (cuadros), mucho glitter, brillo foil dorado/plateado y texturas nevadas.', 
-                managerTip: 'Diciembre es agotador. Limita los productos personalizados a los primeros 15 días y luego vende solo "Stock Listo para Entregar".', 
-                keywords: "#NavidadCreativa #RegalosNavidad #FinDeAño",
-                platforms: ['Instagram', 'TikTok']
-            }
+            { m: 0, title: 'Planificación & Vuelta a Clases', productIdeas: ['Kits escolares personalizados (etiquetas, reglas, libretas)', 'Agendas y Planners anuales', 'Cuadernos corporativos para inicio de año', 'Stickers resistentes al agua para botellas'], contentIdeas: ['Reel: "Empaca un mega pedido escolar conmigo" (ASMR)', 'Carrusel IG: Tips para organizar tu escritorio este año', 'TikTok: Mostrando el proceso de plastificado de etiquetas', 'Story: Encuestas de paletas de colores favoritas para agendas'], promoIdeas: ['Preventa escolar exclusiva con 15% OFF (hasta el 15/Ene)', 'Envío gratis en compras de "Combos Escolares completos"', 'Regalo sorpresa (ej. un marcapáginas) con cada agenda'], trend: 'Colores primarios fuertes, tipografías bold estilo college, pop art y minimalismo funcional.', managerTip: 'La anticipación es clave. Los padres previsores compran en enero. Lanza tu campaña fuerte a mediados de mes.', keywords: "#VueltaAlCole #Organizacion #PapeleriaCreativa", platforms: ['Instagram', 'TikTok', 'Pinterest'] },
+            { m: 1, title: 'Amor, Amistad & Carnaval', productIdeas: ['Cajas sorpresa (Explosion Box) con fotos', 'Tarjetas pop-up interactivas / Shaker Cards', 'Cuponeras del amor/amistad troqueladas', 'Packaging especial romántico para emprendedores'], contentIdeas: ['Reel: Storytime de historias de amor de tus clientes (con permiso)', 'Tutorial TikTok: Cómo hacer una tarjeta fácil en casa (atrae tráfico)', 'Carrusel: 3 ideas de regalos que no son chocolates', 'Live: Armado en vivo de kits de San Valentín'], promoIdeas: ['Promoción "Doble Amor": 2x1 en tarjetas personalizadas', 'Descuento especial por el Día del Soltero (13 Feb)', 'Sorteo "Etiqueta a tu media naranja" para ganar un kit'], trend: 'Rojos intensos, rosa pastel, foil dorado, técnica de layering (capas de papel) y estética coquette.', managerTip: 'No te centres solo en parejas; el amor propio y la amistad (Galentine\'s Day) venden muchísimo en papelería.', keywords: "#SanValentin #RegalosPersonalizados #AmorYAmistad", platforms: ['Instagram', 'TikTok'] },
+            { m: 2, title: 'Poder Femenino & Cambio de Temporada', productIdeas: ['Agendas y bitácoras para mujeres emprendedoras', 'Libretas pocket con frases de empoderamiento', 'Marcapáginas magnéticos florales', 'Kits de regalo corporativo para el Día de la Mujer'], contentIdeas: ['Reel: Detrás de escena siendo mujer emprendedora', 'Carrusel IG: Frases motivacionales que inspiran nuestra papelería', 'Colaboración: Entrevista corta a otra creadora uruguaya', 'Story: Moodboard inspiracional de Otoño'], promoIdeas: ['Cajas corporativas con descuento por volumen para empresas', 'Regalo de lámina con frase empoderadora con cada compra el 8M', 'Sorteo cruzado con otra marca liderada por mujeres'], trend: 'Acuarelas, motivos florales otoñales, tonos lila, morado y ocre. Tipografías script elegantes.', managerTip: 'Ofrece soluciones para empresas locales que buscan regalos rápidos y bonitos para el 8 de marzo.', keywords: "#DiaDeLaMujer #MujerEmprendedora #PapeleriaOtoño", platforms: ['Instagram', 'LinkedIn', 'Pinterest'] },
+            { m: 3, title: 'Magia de Pascuas & Otoño', productIdeas: ['Cajas con visor transparente para huevos de Pascua', 'Toppers y tags temáticos para roscas (para pastelerías)', 'Bolsitas kraft con forma de conejo', 'Kits imprimibles para "Búsqueda del tesoro" infantil'], contentIdeas: ['TikTok: Ideas de cómo rellenar las cajitas de Pascua (No solo chocolate)', 'Reel: Armado rápido de packaging para pastelerías (B2B)', 'Carrusel: Plantillas de regalo (Freebies) para los niños', 'Story: Cuenta regresiva para Semana Santa/Turismo'], promoIdeas: ['Descuento por preventa temprana de packaging para pasteleros', 'Kit "Búsqueda del Tesoro" a mitad de precio llevando la caja', 'Cupón de descuento escondido en un "huevo de pascua" digital en Stories'], trend: 'Tonos pastel (celeste, verde agua, amarillo), texturas rústicas (kraft, hilo sisal) y minimalismo tierno.', managerTip: 'Enfoca tu estrategia B2B (venta a otras empresas) a principios de mes para captar reposteros y pastelerías.', keywords: "#PascuaCreativa #PackagingPascuas #SemanaTurismo", platforms: ['Instagram', 'Pinterest'] },
+            { m: 4, title: 'Día de la Madre & Momentos', productIdeas: ['Álbumes de fotos estilo Scrapbook', 'Bandejas de desayuno decoradas con papelería', 'Tarjetas pop-up 3D premium', 'Cuadros de profundidad con flores de papel'], contentIdeas: ['Reel Emotivo: Preparando regalos para mamás (Música nostálgica)', 'Carrusel IG: Guía de regalos según el tipo de mamá', 'TikTok: Cómo personalizar tu álbum de fotos', 'Story: Preguntas sobre los mejores recuerdos de la infancia'], promoIdeas: ['Envío exprés gratis la semana previa al Día de la Madre', 'Descuento especial "Regala a la abuela también"', 'Kits listos para regalar (Papelería + Chocolate en alianza con otra marca)'], trend: 'Estampados florales vintage, tonos cálidos, rosa viejo, dorado y tipografías script tipo caligrafía.', managerTip: 'El formato "Guía de Regalos" en Pinterest e Instagram Carousels atrae mucho tráfico orgánico de gente indecisa.', keywords: "#DiaDeLaMadreUY #RegalosMama #Scrapbooking", platforms: ['Instagram', 'Facebook', 'Pinterest'] },
+            { m: 5, title: 'Día del Padre & Sobriedad', productIdeas: ['Cajas para vinos/cervezas grabadas o personalizadas', 'Tarjetas con diseño de camisa/herramientas', 'Organizadores de escritorio minimalistas', 'Etiquetas personalizadas para regalos caseros'], contentIdeas: ['Carrusel IG: "Regalos para el papá que dice que no quiere nada"', 'Reel: Mostrando texturas premium y sobrias', 'TikTok: Armado de un kit cervecero/vinitero', 'Story: Dinámica "Qué frase típica de padre pondrías en una taza/tarjeta"'], promoIdeas: ['Promo "Padre e Hijo": Descuento al llevar 2 organizadores', 'Envío gratis en combos Premium', 'Tarjetas de cortesía en todas las compras de la semana'], trend: 'Texturas de madera, cuero, papel kraft grueso. Paleta de azules marinos, grises, negro y verde bosque.', managerTip: 'Los regalos del Día del Padre suelen dejarse para último momento. Prepara "Kits Salvavidas" listos para entregar.', keywords: "#DiaDelPadre #RegalosPapa #PapeleriaSobria", platforms: ['Instagram', 'Facebook'] },
+            { m: 6, title: 'Vacaciones de Invierno & Diversión', productIdeas: ['Libros de actividades y colorear para niños', 'Kits de manualidades DIY (Hazlo tú mismo)', 'Stickers resistentes al agua para decorar termos', 'Bitácoras de viaje / Diarios de invierno'], contentIdeas: ['Reel/TikTok: "Qué incluye nuestro kit para vencer el aburrimiento"', 'Carrusel: 3 ideas de manualidades para hacer con niños en casa', 'Story: Freebie (Descargable gratis) para colorear', 'Live: Tarde de manualidades usando los kits'], promoIdeas: ['Descuento "Vacaciones" en la sección infantil', 'Regalo de plancha de stickers en compras de bitácoras', 'Concurso de dibujo en Stories para ganar un kit completo'], trend: 'Personajes divertidos, colores neón vibrantes contrastando con el invierno, ilustraciones doodle.', managerTip: 'Ofrece un "Freebie" (imprimible gratis) a cambio de que se suscriban a tu newsletter o te mencionen en Stories.', keywords: "#InviernoDivertido #ActividadesNiños #KitsDIY", platforms: ['TikTok', 'Instagram', 'Pinterest'] },
+            { m: 7, title: 'Día del Niño & Nostalgia', productIdeas: ['Cajitas sorpresita temáticas "Party Box"', 'Rompecabezas personalizados con fotos', 'Valijitas de cartón para tesoros', 'Papelería temática "Noche de la Nostalgia" (Retro)'], contentIdeas: ['Reel: Montando una Party Box espectacular', 'TikTok: Efecto nostalgia (Ayer vs Hoy en la papelería)', 'Carrusel IG: Por qué regalar experiencias (rompecabezas) es mejor', 'Story: Cuestionario retro musical por la Noche de la Nostalgia'], promoIdeas: ['Combo "Hermanos": Descuento en la segunda unidad infantil', 'Kits decorativos listos para fiestas de la Nostalgia a precio especial', 'Sorteo Día del Niño con influencers locales'], trend: 'Para niños: Súper héroes, magia y full color. Para Nostalgia: Estética de los 80s/90s, neón, casetes y vinilos.', managerTip: 'Aprovecha la Noche de la Nostalgia en Uruguay. Los salones y fiestas privadas necesitan tickets, pulseras y decoración retro.', keywords: "#DiaDelNiño #NocheDeLaNostalgia #PartyBox", platforms: ['Instagram', 'Facebook'] },
+            { m: 8, title: 'Primavera, Color & Eventos', productIdeas: ['Banderines y guirnaldas florales', 'Flores gigantes de papel para vidrieras o eventos', 'Tags plantables (con semillas) o para suculentas', 'Sets de papelería para picnics de primavera'], contentIdeas: ['Reel: Transición (Papelería de invierno a full color primavera)', 'Carrusel: Cómo decorar una mesa de primavera', 'TikTok: Tutorial para hacer flores de papel', 'Story: Unboxing de nuevos papeles y texturas de temporada'], promoIdeas: ['Lanzamiento de temporada con "Early Bird" discount', 'Regalo de Tag Plantable con cada pedido', 'Promoción 3x2 en decoración colgante'], trend: 'Mariposas, flores vibrantes, hojas botánicas, estilo boho-chic, tonos pastel saturados y verde menta.', managerTip: 'La primavera activa la temporada de eventos al aire libre. Enfócate en papelería social (cumpleaños, baby showers).', keywords: "#BienvenidaPrimavera #EventosPrimavera #PapeleriaSocial", platforms: ['Instagram', 'Pinterest', 'TikTok'] },
+            { m: 9, title: 'Halloween & Bodas de Primavera', productIdeas: ['Cajas ataúd o formas divertidas para golosinas', 'Invitaciones interactivas (deslizables) para bodas/15s', 'Toppers terroríficos para cupcakes', 'Máscaras y props imprimibles para fotocabinas'], contentIdeas: ['TikTok: ASMR armando cajitas de Halloween', 'Reel: Tendencias en invitaciones de Boda', 'Carrusel IG: Qué debe incluir una invitación perfecta', 'Story: Votación "Truco o Trato" con descuentos ocultos'], promoIdeas: ['Packaging temático "Monstruoso" para negocios locales (B2B)', 'Envío de muestras gratuitas de invitaciones a Wedding Planners', 'Flash Sale de 24hs por Halloween'], trend: 'Halloween: Naranja, violeta, negro y diseños "spooky-cute". Bodas: Minimalismo, papel vegetal, eucalipto y blanco.', managerTip: 'Es un mes dual. Muestra tu lado divertido para Halloween, pero no descuides el lado elegante; octubre y noviembre son alta temporada de bodas.', keywords: "#HalloweenCreativo #Bodas #Invitaciones", platforms: ['Instagram', 'Pinterest'] },
+            { m: 10, title: 'Black Friday & Prep. Cierre de Año', productIdeas: ['Papelería corporativa para fin de año (Calendarios de escritorio)', 'Números de mesa y menús para eventos de noviembre', 'Lanzamiento: Agendas y Planners del próximo año', 'Etiquetas de agradecimiento para otros emprendedores'], contentIdeas: ['Reel: Alerta Black Friday (Mostrando stock rebajado)', 'TikTok: Cómo preparo mi negocio para el pico de ventas', 'Carrusel IG: Guía de regalos empresariales', 'Story: Sneak Peek (vistazo) de la nueva colección de Agendas'], promoIdeas: ['Campaña Black Friday: Descuentos escalonados (20%, 30%, 50% en Outlet)', 'Preventa exclusiva VIP de Agendas', 'Kits "Agradece a tus clientes" en promoción para emprendedores'], trend: 'Tonos metalizados, contraste oscuro/elegante para ofertas, y comienzo de introducción a estéticas festivas sutiles.', managerTip: 'En Black Friday no compitas solo por precio, compite por valor percibido. Añade cosas extra (stickers, packaging hermoso) en lugar de regalar tu trabajo.', keywords: "#BlackFridayUY #Agendas #PapeleriaCorporativa", platforms: ['Instagram', 'Facebook', 'LinkedIn'] },
+            { m: 11, title: 'Navidad Creativa & Gratitud', productIdeas: ['Esferas personalizadas con foto/vinilo para el arbolito', 'Calendarios de adviento de cartulina', 'Tags con foil y cintas para regalos navideños', 'Tarjetas de "Felices Fiestas" empresariales'], contentIdeas: ['Reel Emotivo: "Gracias por acompañarnos este año" (Humanizando marca)', 'TikTok: Empacando un pedido versión Navidad', 'Carrusel IG: Ideas de último minuto para decorar tu mesa navideña', 'Story: Detrás de escena del caos hermoso de diciembre'], promoIdeas: ['Combos de Etiquetas y Tags listos para usar a precios accesibles', 'Envíos con packaging navideño especial sin costo extra', 'Sorteo "Cesta de Navidad" con tus mejores productos'], trend: 'Verde pino, rojo clásico, tartán (cuadros), mucho glitter, brillo foil dorado/plateado y texturas nevadas.', managerTip: 'Diciembre es agotador. Limita los productos personalizados a los primeros 15 días y luego vende solo "Stock Listo para Entregar".', keywords: "#NavidadCreativa #RegalosNavidad #FinDeAño", platforms: ['Instagram', 'TikTok'] }
         ];
 
         const stationeryNews = [
@@ -463,76 +224,13 @@
             { title: "Plotters de Corte", desc: "Actualización de software.", link: "#" }
         ];
 
-        // =========================================================
-        // DATA DE EQUIPOS DEL MERCADO CON IMÁGENES Y LINKS
-        // =========================================================
         const marketMachines = [
-            { 
-                id: 1, 
-                name: 'Silhouette Cameo 5', 
-                type: 'Plotter de Corte', 
-                desc: 'Más rápida, silenciosa y con mayor precisión. Ideal para stickers, vinilo y cajas.', 
-                price: '~$330 USD', 
-                features: ['Corte ultra preciso', 'Bluetooth integrado', 'Lectura mejorada'],
-                supplier: 'Silhouette Oficial', 
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CAMEO+5', 
-                link: 'https://www.silhouetteamerica.com/' 
-            },
-            { 
-                id: 2, 
-                name: 'Cricut Maker 3', 
-                type: 'Plotter de Corte', 
-                desc: 'Corta más de 300 materiales, desde papel delicado hasta cuero y madera balsa.', 
-                price: '~$400 USD', 
-                features: ['Materiales Smart', 'Corte 2x rápido', 'Fácil uso'], 
-                supplier: 'Cricut Oficial',
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+MAKER+3', 
-                link: 'https://cricut.com/' 
-            },
-            { 
-                id: 3, 
-                name: 'Epson EcoTank L8180', 
-                type: 'Impresora Fotográfica', 
-                desc: 'Impresión A3+ de alta calidad con 6 tintas. Perfecta para papelería social premium.', 
-                price: '~$700 USD', 
-                features: ['Formato A3+', '6 colores', 'Bajo costo'], 
-                supplier: 'Epson Oficial',
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=EPSON+L8180', 
-                link: 'https://epson.com/' 
-            },
-            { 
-                id: 4, 
-                name: 'Siser Juliet', 
-                type: 'Plotter de Corte', 
-                desc: 'Alta definición, táctil y WiFi. Conocida por cortar detalles minúsculos en vinilo.', 
-                price: '~$499 USD', 
-                features: ['Pantalla táctil', 'Ultra silencioso', 'Precisión minuciosa'], 
-                supplier: 'Siser Oficial',
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=SISER+JULIET', 
-                link: 'https://www.siser.com/' 
-            },
-            { 
-                id: 5, 
-                name: 'Brother MFC-T920DW', 
-                type: 'Impresora Multifunción', 
-                desc: 'Inyección de tinta continua rápida y con cómoda bandeja bypass para papeles gruesos.', 
-                price: '~$350 USD', 
-                features: ['Doble faz auto', 'Bandeja bypass', 'Tinta continua'], 
-                supplier: 'Brother Oficial',
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=BROTHER+T920DW', 
-                link: 'https://www.brother.com/' 
-            },
-            { 
-                id: 6, 
-                name: 'Cricut Joy Xtra', 
-                type: 'Plotter Compacto', 
-                desc: 'Perfecta para espacios pequeños. Con sensor de impresión y corte (Print then Cut).', 
-                price: '~$199 USD', 
-                features: ['Tamaño A4', 'Print then Cut', 'Ideal stickers'], 
-                supplier: 'Cricut Oficial',
-                imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+JOY+XTRA', 
-                link: 'https://cricut.com/' 
-            }
+            { id: 1, name: 'Silhouette Cameo 5', type: 'Plotter de Corte', desc: 'Más rápida, silenciosa y con mayor precisión. Ideal para stickers, vinilo y cajas.', price: '~$330 USD', features: ['Corte ultra preciso', 'Bluetooth integrado', 'Lectura mejorada'], supplier: 'Silhouette Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CAMEO+5', link: 'https://www.silhouetteamerica.com/' },
+            { id: 2, name: 'Cricut Maker 3', type: 'Plotter de Corte', desc: 'Corta más de 300 materiales, desde papel delicado hasta cuero y madera balsa.', price: '~$400 USD', features: ['Materiales Smart', 'Corte 2x rápido', 'Fácil uso'], supplier: 'Cricut Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+MAKER+3', link: 'https://cricut.com/' },
+            { id: 3, name: 'Epson EcoTank L8180', type: 'Impresora Fotográfica', desc: 'Impresión A3+ de alta calidad con 6 tintas. Perfecta para papelería social premium.', price: '~$700 USD', features: ['Formato A3+', '6 colores', 'Bajo costo'], supplier: 'Epson Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=EPSON+L8180', link: 'https://epson.com/' },
+            { id: 4, name: 'Siser Juliet', type: 'Plotter de Corte', desc: 'Alta definición, táctil y WiFi. Conocida por cortar detalles minúsculos en vinilo.', price: '~$499 USD', features: ['Pantalla táctil', 'Ultra silencioso', 'Precisión minuciosa'], supplier: 'Siser Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=SISER+JULIET', link: 'https://www.siser.com/' },
+            { id: 5, name: 'Brother MFC-T920DW', type: 'Impresora Multifunción', desc: 'Inyección de tinta continua rápida y con cómoda bandeja bypass para papeles gruesos.', price: '~$350 USD', features: ['Doble faz auto', 'Bandeja bypass', 'Tinta continua'], supplier: 'Brother Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=BROTHER+T920DW', link: 'https://www.brother.com/' },
+            { id: 6, name: 'Cricut Joy Xtra', type: 'Plotter Compacto', desc: 'Perfecta para espacios pequeños. Con sensor de impresión y corte (Print then Cut).', price: '~$199 USD', features: ['Tamaño A4', 'Print then Cut', 'Ideal stickers'], supplier: 'Cricut Oficial', imageUrl: 'https://placehold.co/600x400/f8fafc/e11d48?text=CRICUT+JOY+XTRA', link: 'https://cricut.com/' }
         ];
 
         function usePersistedState(key, defaultValue, uid) {
@@ -621,6 +319,10 @@
             const userEmail = user && user.email ? user.email : 'Usuario Local';
             const userKey = userEmail.replace(/[^a-zA-Z0-9]/g, '_'); 
             
+            // LA REGLA ABSOLUTA DEL ADMINISTRADOR
+            const ADMIN_EMAIL = 'modocreativo2026@gmail.com';
+            const isAdmin = userEmail === ADMIN_EMAIL;
+
             const [contacts, setContacts] = usePersistedState(`mc_contacts_list`, [], uid);
             const [inventory, setInventory] = usePersistedState(`mc_inventory`, [], uid);
             const [tasks, setTasks] = usePersistedState(`mc_tasks`, [], uid);
@@ -636,7 +338,6 @@
             const [usageLog, setUsageLog] = usePersistedState(`mc_material_usage_log`, [], uid);
             const [calc, setCalc] = usePersistedState(`mc_calc_pro`, { selectedMaterialId: '', materialQty: 1, inkPercent: 10, assemblyCost: 0, packagingCost: 0, designHours: 0, cuttingHours: 0, assemblyHours: 0, finishingCost: 0, hourlyRate: 0, opExpenses: 0, maintenanceFund: 0, subscriptions: 0, wastePercent: 10, profitMargin: 50, taxesPercent: 0 }, uid);
 
-            const [adminList, setAdminList] = usePublicSharedState('access_list', ['modocreativo2026@gmail.com']);
             const [digitalProducts, setDigitalProducts] = usePublicSharedState('mc_digital_products', []);
 
             const [activeTab, setActiveTab] = useState('dashboard');
@@ -657,16 +358,13 @@
             const [selectedDay, setSelectedDay] = useState(new Date().getDate());
             const [strategyMonth, setStrategyMonth] = useState(new Date().getMonth());
             const [selectedLabel, setSelectedLabel] = useState(null);
-            const [tourStep, setTourStep] = useState(0); // NUEVO: Estado para el Tour Interactivo
+            const [tourStep, setTourStep] = useState(0); 
 
-            // NUEVO: Estados para el módulo de Clientes con Acceso
+            // Estados para el módulo de Clientes con Acceso
             const [allUsers, setAllUsers] = useState([]);
             const [userStatus, setUserStatus] = useState('Activo');
-
-            const ADMIN_EMAIL = 'modocreativo2026@gmail.com';
-            const isAdmin = userEmail === ADMIN_EMAIL || adminList.includes(userEmail);
             
-            // NUEVO: Efecto para registrar al usuario en Firebase y escuchar su estado de bloqueo
+            // Efecto para registrar al usuario en Firebase y escuchar su estado de bloqueo
             useEffect(() => {
                 if (!user || user.isAnonymous || !window.firebaseModules) return;
                 const { db, appId, doc, setDoc, onSnapshot } = window.firebaseModules;
@@ -690,7 +388,7 @@
                 return () => unsub();
             }, [user]);
 
-            // NUEVO: Efecto para que el admin cargue la lista total de clientes conectados
+            // Efecto para que el admin cargue la lista total de clientes conectados
             useEffect(() => {
                 if (!isAdmin || !window.firebaseModules) return;
                 const { db, appId, collection, onSnapshot } = window.firebaseModules;
@@ -703,7 +401,7 @@
                 return () => unsub();
             }, [isAdmin]);
 
-            // NUEVO: Función auxiliar para actualizar tipo de plan o estado (bloqueo)
+            // Función auxiliar para actualizar tipo de plan o estado (bloqueo)
             const updateAccess = (targetUid, updates) => {
                 if (!window.firebaseModules) return;
                 const { db, appId, doc, setDoc } = window.firebaseModules;
@@ -711,7 +409,7 @@
                 notify("Suscripción actualizada");
             };
 
-            // NUEVO: Función matemática para calcular el próximo vencimiento exacto
+            // Función matemática para calcular el próximo vencimiento exacto
             const calculateNextPayment = (dateString, type) => {
                 if (!dateString) return '-';
                 let nextD = new Date(dateString);
@@ -729,9 +427,6 @@
                 return nextD.toLocaleDateString('es-UY');
             };
 
-            // =========================================================
-            // DATA DEL MANUAL INTERACTIVO
-            // =========================================================
             const tourData = [
                 {
                     id: 'intro', tab: 'dashboard', icon: Icons.Star, title: 'Bienvenida a MC Pro',
@@ -960,7 +655,7 @@
 
             useEffect(() => { const timer = setInterval(() => setCurrentTime(new Date()), 1000); return () => clearInterval(timer); }, []);
 
-            // NUEVO: Pantalla Restrictiva para Usuarios Bloqueados
+            // Pantalla Restrictiva para Usuarios Bloqueados
             if (userStatus === 'Bloqueado') {
                 return (
                     <div className="flex h-screen items-center justify-center bg-slate-900 text-white p-6 relative overflow-hidden font-sans">
@@ -1016,7 +711,6 @@
                     <NavItemComp id="calculator" label="Cotizador" icon={Icons.Calculator} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="store" label="Tienda Digital" icon={Icons.ShoppingBag} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     
-                    {/* NUEVO: PESTAÑA DEL TOUR INTERACTIVO */}
                     <div className="pt-2 mt-2 border-t border-slate-100">
                         <NavItemComp id="tutorial" label="Guía de Uso" icon={Icons.BookOpen} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     </div>
@@ -1045,7 +739,7 @@
                     </div>
                   </header>
 
-                  {/* --- AGREGADO: TOUR INTERACTIVO / MANUAL --- */}
+                  {/* --- TOUR INTERACTIVO / MANUAL --- */}
                   {activeTab === 'tutorial' && (() => {
                       const currentManualData = tourData[tourStep];
                       const IconComponent = currentManualData.icon;
@@ -1053,10 +747,8 @@
                       return (
                           <div className="flex flex-col items-center justify-center min-h-[80vh] animate-in pb-10">
                               <div className="w-full max-w-4xl bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
-                                  {/* Decoración de fondo */}
                                   <div className="absolute -top-12 -right-12 opacity-5 scale-150 rotate-12 pointer-events-none"><IconComponent className="w-64 h-64 text-brand" /></div>
                                   
-                                  {/* Encabezado del Tour */}
                                   <div className="flex flex-col md:flex-row items-center gap-6 mb-10 relative z-10 border-b-2 border-slate-50 pb-8">
                                       <div className="w-24 h-24 bg-brand text-white rounded-[2rem] flex items-center justify-center shadow-xl rotate-3 shrink-0">
                                           <IconComponent className="w-12 h-12" />
@@ -1067,7 +759,6 @@
                                       </div>
                                   </div>
 
-                                  {/* Contenido (Preguntas y Respuestas) */}
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 relative z-10">
                                       <div className="space-y-6">
                                           <div>
@@ -1087,7 +778,6 @@
                                       </div>
                                   </div>
 
-                                  {/* Botones de Navegación y Acción */}
                                   <div className="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10 pt-6 border-t border-slate-100">
                                       <div className="flex gap-2 w-full md:w-auto justify-center">
                                           <button onClick={() => setTourStep(prev => Math.max(0, prev - 1))} disabled={tourStep === 0} className="px-6 py-3 bg-slate-100 text-slate-600 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">← Anterior</button>
@@ -1099,7 +789,6 @@
                                   </div>
                               </div>
 
-                              {/* Paginador Rápido (Puntitos) */}
                               <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-2xl">
                                   {tourData.map((step, idx) => (
                                       <button key={idx} onClick={() => setTourStep(idx)} title={step.title} className={`w-3 h-3 rounded-full transition-all ${tourStep === idx ? 'bg-brand scale-125 shadow-md' : 'bg-slate-300 hover:bg-slate-400'}`}></button>
@@ -1390,7 +1079,7 @@
                                       {(personalEvents[getDayKey(selectedDay)] || []).map((note, idx) => (
                                          <div key={idx} className="group flex justify-between items-center p-3 bg-blue-50 rounded-2xl border border-blue-100 text-blue-900 text-xs font-bold shadow-sm animate-in">
                                             <span className="truncate mr-2">{note}</span>
-                                            <button onClick={() => { const dk = getDayKey(selectedDay); setPersonalEvents({...personalEvents, [dk]: personalEvents[dk].filter((_, ni) => ni !== idx)}); notify("Eliminada"); }}><Icons.Trash2 className="w-3 h-3 text-blue-300 hover:text-red-500 flex-shrink-0"/></button>
+                                            <button onClick={() => { const dk = getDayKey(selectedDay); setPersonalEvents({...personalEvents, [dk]: personalEvents[dk].filter((_, ni) => ni !== idx)}); notify("Eliminada"); }}><Icons.Trash2 className="w-3 h-3 text-blue-300 hover:text-red-50 flex-shrink-0"/></button>
                                          </div>
                                       ))}
                                    </div>
@@ -2068,294 +1757,65 @@
                       </div>
                   )}
 
-                  {/* --- FACTURACIÓN Y PRESUPUESTOS --- */}
-                  {(activeTab === 'presupuestos' || activeTab === 'facturas') && (
-                      <div className="h-full flex flex-col animate-in">
-                          {/* HEADER DE CONTROL */}
-                          <div className="flex justify-between items-center mb-6 no-print">
-                              <h3 className="text-2xl font-black uppercase tracking-tighter">
-                                  {activeTab === 'presupuestos' ? 'Gestor de Presupuestos' : 'Facturación'}
-                              </h3>
-                              <div className="flex gap-2">
-                                  <button onClick={() => { activeTab === 'presupuestos' ? setIsCreatingBudget(false) : setIsCreatingInvoice(false) }} className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold uppercase hover:bg-slate-50">Historial</button>
-                                  <button onClick={() => { activeTab === 'presupuestos' ? setIsCreatingBudget(true) : setIsCreatingInvoice(true) }} className="px-4 py-2 bg-brand text-white rounded-xl text-xs font-bold uppercase shadow-lg hover:scale-105 transition-transform flex gap-2 items-center"><Icons.Plus className="w-4 h-4"/> Nuevo</button>
+                  {/* --- CONTROL DE ACCESOS (SOLO ADMIN) --- */}
+                  {activeTab === 'access_control' && isAdmin && (
+                      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                              <div>
+                                  <h3 className="text-2xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.ShieldCheck className="w-6 h-6 text-brand"/> Clientes con Acceso</h3>
+                                  <p className="text-xs font-bold uppercase text-slate-400 tracking-widest mt-1">Gestión de suscripciones y bloqueos</p>
+                              </div>
+                              <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex gap-4">
+                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Total</p><p className="text-lg font-black text-brand leading-none">{allUsers.length}</p></div>
+                                  <div className="w-px bg-slate-200"></div>
+                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Activos</p><p className="text-lg font-black text-emerald-500 leading-none">{allUsers.filter(u => u.status !== 'Bloqueado').length}</p></div>
                               </div>
                           </div>
-
-                          {/* MODO CREACIÓN / EDICIÓN */}
-                          {((activeTab === 'presupuestos' && isCreatingBudget) || (activeTab === 'facturas' && isCreatingInvoice)) ? (
-                              <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 max-w-4xl mx-auto w-full relative">
-                                  <div className="absolute top-6 right-6 no-print">
-                                      <button onClick={() => window.print()} className="p-3 bg-slate-900 text-white rounded-xl hover:scale-110 transition-transform shadow-lg"><Icons.Printer className="w-5 h-5"/></button>
-                                  </div>
-
-                                  {/* CABECERA DOCUMENTO */}
-                                  <div className="flex justify-between items-start mb-10 pb-10 border-b-2 border-slate-100">
-                                      <div className="flex items-center gap-4 flex-1">
-                                          <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 shrink-0">
-                                              {userProfile.logo ? 
-                                                  <img src={userProfile.logo} className="w-full h-full object-cover" /> : 
-                                                  <span className="text-[9px] uppercase font-bold text-slate-400 text-center p-2 leading-tight">Sin Logo<br/><span className="text-[7px] normal-case">(Ve a Mis Datos)</span></span>
-                                              }
-                                          </div>
-                                          <div className="flex-1 pr-4">
-                                              {userEmail === ADMIN_EMAIL ? (
-                                                  <>
-                                                      <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none">MC PRO</h1>
-                                                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Modo Creativo Design</p>
-                                                  </>
-                                              ) : (
-                                                  <div className="flex flex-col">
-                                                      <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-900 leading-none">
-                                                          {userProfile.brand || 'TU MARCA AQUÍ'}
-                                                      </h1>
-                                                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">
-                                                          {userProfile.owner || 'Tu Nombre o Eslogan'}
-                                                      </p>
-                                                      {(userProfile.phone || userProfile.address || userProfile.email || userProfile.hours) && (
-                                                          <div className="text-[10px] font-bold text-slate-500 mt-3 flex flex-col gap-1">
-                                                              {userProfile.phone && <span className="flex items-center gap-1"><Icons.MessageCircle className="w-3 h-3"/> {userProfile.phone}</span>}
-                                                              {userProfile.email && <span className="flex items-center gap-1"><Icons.Mail className="w-3 h-3"/> {userProfile.email}</span>}
-                                                              {userProfile.address && <span className="flex items-center gap-1"><Icons.Globe className="w-3 h-3"/> {userProfile.address}</span>}
-                                                              {userProfile.hours && <span className="flex items-center gap-1"><Icons.Clock className="w-3 h-3"/> {userProfile.hours}</span>}
-                                                          </div>
-                                                      )}
-                                                  </div>
-                                              )}
-                                          </div>
-                                      </div>
-                                      <div className="text-right">
-                                          <h2 className="text-4xl font-black text-slate-200 uppercase tracking-tighter mb-2">{activeTab === 'presupuestos' ? 'PRESUPUESTO' : 'FACTURA'}</h2>
-                                          <div className="flex flex-col items-end gap-1">
-                                              <input value={activeTab==='presupuestos' ? currentBudget.number : currentInvoice.number} onChange={(e) => activeTab==='presupuestos' ? handleBudgetChange('number', e.target.value) : handleInvoiceChange('number', e.target.value)} placeholder="N° 001" className="text-right font-black text-xl uppercase outline-none w-32 bg-transparent" />
-                                              <input type="date" value={activeTab==='presupuestos' ? currentBudget.date : currentInvoice.date} onChange={(e) => activeTab==='presupuestos' ? handleBudgetChange('date', e.target.value) : handleInvoiceChange('date', e.target.value)} className="text-right text-xs font-bold text-slate-500 outline-none bg-transparent" />
-                                          </div>
-                                      </div>
-                                  </div>
-
-                                  {/* DATOS CLIENTE */}
-                                  <div className="mb-8 p-6 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3">
-                                      <div className="flex justify-between items-center">
-                                          <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block">Cliente</label>
-                                          <select onChange={(e) => {
-                                              const contact = contacts.find(c => c.id.toString() === e.target.value);
-                                              if(contact) {
-                                                  activeTab === 'presupuestos' ? handleBudgetChange('client', contact.name) : handleInvoiceChange('client', contact.name);
-                                              }
-                                              e.target.value = "";
-                                          }} className="text-[9px] font-bold text-brand uppercase outline-none bg-transparent cursor-pointer hover:underline text-right no-print">
-                                              <option value="">+ Cargar desde Contactos</option>
-                                              {contacts.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                          </select>
-                                      </div>
-                                      <input value={activeTab==='presupuestos' ? currentBudget.client : currentInvoice.client} onChange={(e) => activeTab==='presupuestos' ? handleBudgetChange('client', e.target.value) : handleInvoiceChange('client', e.target.value)} placeholder="Nombre del Cliente..." className="w-full bg-transparent text-xl font-bold text-slate-800 outline-none placeholder:text-slate-300" />
-                                  </div>
-
-                                  {/* ITEMS */}
-                                  <div className="mb-8">
-                                      <div className="grid grid-cols-12 gap-4 pb-2 border-b border-slate-200 text-[10px] font-black uppercase text-slate-400 tracking-widest pl-2">
-                                          <div className="col-span-6">Descripción</div>
-                                          <div className="col-span-2 text-center">Cant.</div>
-                                          <div className="col-span-2 text-right">Precio U.</div>
-                                          <div className="col-span-2 text-right">Total</div>
-                                      </div>
-                                      <div className="space-y-2 mt-2">
-                                          {(activeTab==='presupuestos' ? currentBudget.items : currentInvoice.items).map((item, index) => (
-                                              <div key={item.id} className="grid grid-cols-12 gap-4 items-center group">
-                                                  <div className="col-span-6">
-                                                      <input value={item.desc} onChange={(e) => activeTab==='presupuestos' ? updateBudgetItem(item.id, 'desc', e.target.value) : updateInvItem(item.id, 'desc', e.target.value)} placeholder="Item..." className="w-full p-2 rounded-lg hover:bg-slate-50 font-bold text-sm outline-none" />
-                                                  </div>
-                                                  <div className="col-span-2">
-                                                      <input type="number" value={item.qty} onChange={(e) => activeTab==='presupuestos' ? updateBudgetItem(item.id, 'qty', parseInt(e.target.value)||0) : updateInvItem(item.id, 'qty', parseInt(e.target.value)||0)} className="w-full p-2 text-center rounded-lg hover:bg-slate-50 font-bold text-sm outline-none" />
-                                                  </div>
-                                                  <div className="col-span-2 text-right">
-                                                      <input type="number" value={item.price} onChange={(e) => activeTab==='presupuestos' ? updateBudgetItem(item.id, 'price', parseFloat(e.target.value)||0) : updateInvItem(item.id, 'price', parseFloat(e.target.value)||0)} className="w-full p-2 text-right rounded-lg hover:bg-slate-50 font-bold text-sm outline-none" />
-                                                  </div>
-                                                  <div className="col-span-2 text-right font-black text-slate-800 pr-2">
-                                                      ${(item.qty * item.price).toFixed(2)}
-                                                  </div>
-                                              </div>
-                                          ))}
-                                      </div>
-                                      <div className="mt-4 flex gap-2 items-center no-print">
-                                          <button onClick={activeTab==='presupuestos' ? addBudgetItem : addInvItem} className="px-4 py-2 bg-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200">Agregar Ítem Manual</button>
-                                          <select onChange={(e) => {
-                                              const invItem = inventory.find(i => i.id.toString() === e.target.value);
-                                              if(invItem) {
-                                                  const newItem = { id: Date.now(), desc: invItem.name, qty: 1, price: invItem.price };
-                                                  if (activeTab === 'presupuestos') setCurrentBudget(prev => ({ ...prev, items: [...prev.items, newItem] }));
-                                                  else setCurrentInvoice(prev => ({ ...prev, items: [...prev.items, newItem] }));
-                                              }
-                                              e.target.value = "";
-                                          }} className="px-4 py-2 bg-rose-50 text-brand rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 outline-none cursor-pointer">
-                                              <option value="">+ Cargar desde Insumos</option>
-                                              {inventory.map(i => <option key={i.id} value={i.id}>{i.name} (${i.price})</option>)}
-                                          </select>
-                                      </div>
-                                  </div>
-
-                                  {/* TOTALES */}
-                                  <div className="flex justify-end pt-6 border-t-2 border-slate-100">
-                                      <div className="w-64">
-                                          <div className="flex justify-between items-end">
-                                              <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Total Final</span>
-                                              <span className="text-4xl font-black text-slate-900 tracking-tighter">
-                                                  ${(activeTab==='presupuestos' ? currentBudget.items : currentInvoice.items).reduce((a, b) => a + (b.qty * b.price), 0).toFixed(2)}
-                                              </span>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className="mt-12 text-center text-[10px] uppercase font-bold text-slate-300 tracking-[0.3em]">Gracias por su confianza</div>
-                              </div>
-                          ) : (
-                              <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 flex-1 flex flex-col justify-center items-center text-slate-300">
-                                  <Icons.FileText className="w-16 h-16 mb-4 opacity-50"/>
-                                  <p className="font-bold uppercase tracking-widest text-xs">Selecciona "Nuevo" para comenzar</p>
-                              </div>
-                          )}
-                      </div>
-                  )}
-
-                  {/* --- ENVÍOS --- */}
-                  {activeTab === 'shipping' && (
-                      <div className="h-full flex flex-col animate-in relative">
-                          <div className={`bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-full no-print`}>
-                              <div className="flex justify-between items-center mb-6">
-                                  <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.Truck className="w-6 h-6"/> Control de Envíos</h3>
-                              </div>
-                              <div className="flex-1 overflow-y-auto space-y-3 mb-6 pr-2">
-                                  {shipping.map(s => {
-                                      const isExpanded = selectedLabel && selectedLabel.id === s.id;
-                                      return (
-                                      <div key={s.id} onClick={() => setSelectedLabel(isExpanded ? null : s)} className={`p-4 bg-slate-50 rounded-2xl border transition-all cursor-pointer hover:border-brand/50 ${isExpanded ? 'border-brand shadow-md' : 'border-slate-100'}`}>
-                                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                              <div>
-                                                  <h4 className="font-black uppercase text-sm text-slate-800">{s.name}</h4>
-                                                  <div className="flex flex-wrap gap-2 mt-1 text-[10px] font-bold text-slate-500 uppercase">
-                                                      <span className="bg-white px-2 py-1 rounded shadow-sm border border-slate-100">📞 {s.phone || 'S/D'}</span>
-                                                      <span className="bg-white px-2 py-1 rounded shadow-sm border border-slate-100">📍 {s.address || 'S/D'}, {s.department || 'S/D'}</span>
-                                                  </div>
-                                                  <div className="flex gap-4 mt-2 text-xs">
-                                                      <p className="font-bold text-slate-500 uppercase tracking-wide">{s.agency || 'Agencia S/D'}</p>
-                                                      <p className="font-bold text-slate-500 uppercase">Tracking: <span className="font-mono bg-white px-2 py-0.5 rounded border border-slate-200 select-all">{s.track}</span></p>
-                                                  </div>
-                                              </div>
-                                              <div className="flex items-center gap-3">
-                                                  <button onClick={(e) => { e.stopPropagation(); setSelectedLabel(isExpanded ? null : s); }} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-transform shadow-sm flex items-center gap-2 ${isExpanded ? 'bg-slate-900 text-white' : 'bg-brand text-white hover:scale-105'}`}>
-                                                      <Icons.Printer className="w-3 h-3"/> {isExpanded ? 'Ocultar' : 'Etiqueta'}
-                                                  </button>
-                                                  <a href={`https://www.google.com/search?q=${s.track}`} target="_blank" onClick={(e) => e.stopPropagation()} className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-colors">Rastrear</a>
-                                                  <button onClick={(e)=>{ e.stopPropagation(); deleteItem(s.id, setShipping, 'Envío'); }} className="p-2 text-slate-300 hover:text-red-500"><Icons.Trash2 className="w-4 h-4"/></button>
-                                              </div>
-                                          </div>
-                                          
-                                          {/* Despliegue de Etiqueta (Preview) */}
-                                          {isExpanded && (
-                                              <div className="mt-6 pt-6 border-t border-slate-200 animate-in slide-in-from-top-2" onClick={(e) => e.stopPropagation()}>
-                                                  <div className="bg-white border-[4px] border-slate-900 rounded-3xl p-6 shadow-sm max-w-md mx-auto">
-                                                      <div className="flex justify-between items-center border-b-[4px] border-slate-900 pb-4 mb-4">
-                                                          <div>
-                                                              <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">{userProfile.brand || 'MC PRO'}</h1>
-                                                              <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mt-1">Etiqueta de Envío</p>
-                                                          </div>
-                                                          {userProfile.logo ? <img src={userProfile.logo} className="w-12 h-12 object-cover rounded-lg border-2 border-slate-200 grayscale" /> : <Icons.Package className="w-10 h-10 text-slate-400" />}
+                          
+                          <div className="flex-1 overflow-y-auto border border-slate-100 rounded-3xl p-2 bg-slate-50/50">
+                              <table className="w-full text-left text-xs table-fixed min-w-[600px]">
+                                  <thead className="text-[10px] uppercase font-black text-slate-400 tracking-widest border-b border-slate-100">
+                                      <tr>
+                                          <th className="pb-4 pl-4 w-[30%]">Usuario / Email</th>
+                                          <th className="pb-4 w-[15%]">Fecha Inicio</th>
+                                          <th className="pb-4 w-[20%]">Tipo de Plan</th>
+                                          <th className="pb-4 w-[15%] text-center">Próximo Pago</th>
+                                          <th className="pb-4 w-[20%] pr-4 text-right">Estado (Bloqueo)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody className="text-slate-700 font-bold">
+                                      {allUsers.map(u => {
+                                          const nextPay = calculateNextPayment(u.firstLogin, u.subscriptionType);
+                                          return (
+                                              <tr key={u.uid} className="border-b border-slate-50 hover:bg-white transition-colors group">
+                                                  <td className="py-4 pl-4 rounded-l-2xl">
+                                                      <div className="flex items-center gap-3">
+                                                          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"><Icons.User className="w-4 h-4"/></div>
+                                                          <span className="truncate" title={u.email}>{u.email}</span>
                                                       </div>
-                                                      <div className="space-y-4">
-                                                          <div>
-                                                              <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Destinatario</p>
-                                                              <p className="text-2xl font-black uppercase leading-none">{selectedLabel.name}</p>
-                                                          </div>
-                                                          <div className="grid grid-cols-2 gap-4">
-                                                              <div>
-                                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Teléfono</p>
-                                                                  <p className="text-base font-bold leading-none">{selectedLabel.phone}</p>
-                                                              </div>
-                                                              <div>
-                                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Departamento</p>
-                                                                  <p className="text-base font-bold uppercase leading-none">{selectedLabel.department}</p>
-                                                              </div>
-                                                          </div>
-                                                          <div>
-                                                              <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Dirección</p>
-                                                              <p className="text-base font-bold leading-tight">{selectedLabel.address}</p>
-                                                          </div>
-                                                          <div className="border-t-[4px] border-slate-900 pt-4 grid grid-cols-2 gap-4">
-                                                              <div>
-                                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Agencia / Courier</p>
-                                                                  <p className="text-xl font-black uppercase leading-none">{selectedLabel.agency}</p>
-                                                              </div>
-                                                              <div>
-                                                                  <p className="text-[9px] font-black uppercase text-slate-500 tracking-widest mb-1">Tracking N°</p>
-                                                                  <p className="text-xl font-black uppercase leading-none">{selectedLabel.track}</p>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <div className="mt-6 flex justify-center">
-                                                      <button onClick={() => window.print()} className="px-8 py-4 bg-brand text-white rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform flex items-center gap-3"><Icons.Printer className="w-5 h-5"/> Imprimir Esta Etiqueta</button>
-                                                  </div>
-                                              </div>
-                                          )}
-                                      </div>
-                                  )})}
-                                  {shipping.length === 0 && <p className="text-center py-10 text-slate-400 font-medium">No hay envíos pendientes.</p>}
-                              </div>
-                              <form onSubmit={(e)=>saveEntity(e, setShipping, 'Envío')} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex flex-col gap-4">
-                                  
-                                  <div className="bg-white p-3 rounded-xl border border-brand/20 shadow-sm flex items-center gap-3">
-                                      <Icons.User className="w-4 h-4 text-brand shrink-0" />
-                                      <div className="flex-1">
-                                          <label className="text-[9px] font-black uppercase text-brand tracking-widest block mb-1">Cargar datos desde Contactos</label>
-                                          <select onChange={(e) => {
-                                              const contact = contacts.find(c => c.id.toString() === e.target.value);
-                                              if(contact) {
-                                                  const form = e.target.closest('form');
-                                                  if(form.elements['name']) form.elements['name'].value = contact.name || '';
-                                                  if(form.elements['phone']) form.elements['phone'].value = contact.phone || '';
-                                                  if(form.elements['address']) form.elements['address'].value = contact.address || '';
-                                                  if(form.elements['department']) form.elements['department'].value = contact.department || '';
-                                              }
-                                              e.target.value = ""; 
-                                          }} className="w-full text-xs font-bold text-slate-700 outline-none bg-transparent cursor-pointer">
-                                              <option value="">-- Seleccionar un contacto registrado --</option>
-                                              {contacts.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>)}
-                                          </select>
-                                      </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Destinatario</label>
-                                          <input name="name" required placeholder="Nombre..." className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1"/>
-                                      </div>
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Teléfono</label>
-                                          <input name="phone" required placeholder="Celular..." className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1"/>
-                                      </div>
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Dirección</label>
-                                          <input name="address" required placeholder="Calle y N°..." className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1"/>
-                                      </div>
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Departamento</label>
-                                          <input name="department" required placeholder="Ej: Montevideo..." className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1"/>
-                                      </div>
-                                  </div>
-                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Agencia / Courier</label>
-                                          <select name="agency" required className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1 bg-white">
-                                              <option value="">Seleccionar...</option>
-                                              {COURIERS.map(c => <option key={c} value={c}>{c}</option>)}
-                                          </select>
-                                      </div>
-                                      <div>
-                                          <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Tracking</label>
-                                          <input name="track" required placeholder="N°..." className="w-full p-3 rounded-xl shadow-sm text-xs font-bold outline-none mt-1"/>
-                                      </div>
-                                      <button className="w-full p-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform">Despachado</button>
-                                  </div>
-                              </form>
+                                                  </td>
+                                                  <td className="py-4 text-slate-500">{new Date(u.firstLogin).toLocaleDateString('es-UY')}</td>
+                                                  <td className="py-4">
+                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
+                                                          <option value="Mensual">Mensual</option>
+                                                          <option value="Anual">Anual</option>
+                                                      </select>
+                                                  </td>
+                                                  <td className="py-4 text-center">
+                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{nextPay}</span>
+                                                  </td>
+                                                  <td className="py-4 pr-4 rounded-r-2xl text-right">
+                                                      <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value })} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
+                                                          <option value="Activo">🟢 Activo</option>
+                                                          <option value="Bloqueado">🔴 Bloqueado</option>
+                                                      </select>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })}
+                                      {allUsers.length === 0 && <tr><td colSpan="5" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
+                                  </tbody>
+                              </table>
                           </div>
                       </div>
                   )}
@@ -2371,7 +1831,6 @@
                               </div>
                           </div>
 
-                          {/* NUEVO: FOTO DE LOGO */}
                           <div className="mb-6 flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                               <div className="w-20 h-20 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 relative shrink-0 shadow-sm">
                                   {userProfile.logo ? 
@@ -2432,69 +1891,6 @@
                               <div className="pt-4">
                                   <button onClick={() => notify("Datos guardados automáticamente")} className="w-full py-3 bg-brand text-white rounded-xl font-black uppercase text-xs tracking-widest shadow-lg hover:scale-[1.02] transition-transform">Guardar Cambios</button>
                               </div>
-                          </div>
-                      </div>
-                  )}
-
-                  {/* --- CONTROL DE ACCESOS (SOLO ADMIN) --- */}
-                  {activeTab === 'access_control' && isAdmin && (
-                      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
-                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                              <div>
-                                  <h3 className="text-2xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.ShieldCheck className="w-6 h-6 text-brand"/> Clientes con Acceso</h3>
-                                  <p className="text-xs font-bold uppercase text-slate-400 tracking-widest mt-1">Gestión de suscripciones y bloqueos</p>
-                              </div>
-                              <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex gap-4">
-                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Total</p><p className="text-lg font-black text-brand leading-none">{allUsers.length}</p></div>
-                                  <div className="w-px bg-slate-200"></div>
-                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Activos</p><p className="text-lg font-black text-emerald-500 leading-none">{allUsers.filter(u => u.status !== 'Bloqueado').length}</p></div>
-                              </div>
-                          </div>
-                          
-                          <div className="flex-1 overflow-y-auto border border-slate-100 rounded-3xl p-2 bg-slate-50/50">
-                              <table className="w-full text-left text-xs table-fixed min-w-[600px]">
-                                  <thead className="text-[10px] uppercase font-black text-slate-400 tracking-widest border-b border-slate-100">
-                                      <tr>
-                                          <th className="pb-4 pl-4 w-[30%]">Usuario / Email</th>
-                                          <th className="pb-4 w-[15%]">Fecha Inicio</th>
-                                          <th className="pb-4 w-[20%]">Tipo de Plan</th>
-                                          <th className="pb-4 w-[15%] text-center">Próximo Pago</th>
-                                          <th className="pb-4 w-[20%] pr-4 text-right">Estado (Bloqueo)</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody className="text-slate-700 font-bold">
-                                      {allUsers.map(u => {
-                                          const nextPay = calculateNextPayment(u.firstLogin, u.subscriptionType);
-                                          return (
-                                              <tr key={u.uid} className="border-b border-slate-50 hover:bg-white transition-colors group">
-                                                  <td className="py-4 pl-4 rounded-l-2xl">
-                                                      <div className="flex items-center gap-3">
-                                                          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"><Icons.User className="w-4 h-4"/></div>
-                                                          <span className="truncate" title={u.email}>{u.email}</span>
-                                                      </div>
-                                                  </td>
-                                                  <td className="py-4 text-slate-500">{new Date(u.firstLogin).toLocaleDateString('es-UY')}</td>
-                                                  <td className="py-4">
-                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
-                                                          <option value="Mensual">Mensual</option>
-                                                          <option value="Anual">Anual</option>
-                                                      </select>
-                                                  </td>
-                                                  <td className="py-4 text-center">
-                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{nextPay}</span>
-                                                  </td>
-                                                  <td className="py-4 pr-4 rounded-r-2xl text-right">
-                                                      <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value })} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
-                                                          <option value="Activo">🟢 Activo</option>
-                                                          <option value="Bloqueado">🔴 Bloqueado</option>
-                                                      </select>
-                                                  </td>
-                                              </tr>
-                                          );
-                                      })}
-                                      {allUsers.length === 0 && <tr><td colSpan="5" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
-                                  </tbody>
-                              </table>
                           </div>
                       </div>
                   )}
