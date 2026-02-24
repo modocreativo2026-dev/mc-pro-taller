@@ -39,7 +39,7 @@
         // =====================================================================
         
         const manualConfig = {
-            apiKey: "AIzaSyB_K5650wKOYZVXYRXj1gV2NdiPm3sNFKU",
+            apiKey: "AIzaSyC_VJZeiRLmDiUzTGz2rX-4p7S9FhqPtic",
             authDomain: "mc-pro-sistema.firebaseapp.com",
             projectId: "mc-pro-sistema",
             storageBucket: "mc-pro-sistema.firebasestorage.app",
@@ -659,9 +659,76 @@
             const [selectedLabel, setSelectedLabel] = useState(null);
             const [tourStep, setTourStep] = useState(0); // NUEVO: Estado para el Tour Interactivo
 
+            // NUEVO: Estados para el módulo de Clientes con Acceso
+            const [allUsers, setAllUsers] = useState([]);
+            const [userStatus, setUserStatus] = useState('Activo');
+
             const ADMIN_EMAIL = 'modocreativo2026@gmail.com';
             const isAdmin = userEmail === ADMIN_EMAIL || adminList.includes(userEmail);
             
+            // NUEVO: Efecto para registrar al usuario en Firebase y escuchar su estado de bloqueo
+            useEffect(() => {
+                if (!user || user.isAnonymous || !window.firebaseModules) return;
+                const { db, appId, doc, setDoc, onSnapshot } = window.firebaseModules;
+                const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', user.uid);
+                
+                const unsub = onSnapshot(userRef, (snap) => {
+                    if (!snap.exists()) {
+                        // Es la primera vez que se loguea en el sistema
+                        setDoc(userRef, {
+                            uid: user.uid,
+                            email: user.email,
+                            firstLogin: new Date().toISOString(),
+                            subscriptionType: 'Mensual',
+                            status: 'Activo'
+                        });
+                    } else {
+                        // Actualiza su estado interno si el admin lo bloqueó/desbloqueó
+                        setUserStatus(snap.data().status || 'Activo');
+                    }
+                });
+                return () => unsub();
+            }, [user]);
+
+            // NUEVO: Efecto para que el admin cargue la lista total de clientes conectados
+            useEffect(() => {
+                if (!isAdmin || !window.firebaseModules) return;
+                const { db, appId, collection, onSnapshot } = window.firebaseModules;
+                const usersRef = collection(db, 'artifacts', appId, 'public', 'data', 'mc_users');
+                const unsub = onSnapshot(usersRef, (snap) => {
+                    const arr = [];
+                    snap.forEach(d => arr.push(d.data()));
+                    setAllUsers(arr);
+                });
+                return () => unsub();
+            }, [isAdmin]);
+
+            // NUEVO: Función auxiliar para actualizar tipo de plan o estado (bloqueo)
+            const updateAccess = (targetUid, updates) => {
+                if (!window.firebaseModules) return;
+                const { db, appId, doc, setDoc } = window.firebaseModules;
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', targetUid), updates, { merge: true });
+                notify("Suscripción actualizada");
+            };
+
+            // NUEVO: Función matemática para calcular el próximo vencimiento exacto
+            const calculateNextPayment = (dateString, type) => {
+                if (!dateString) return '-';
+                let nextD = new Date(dateString);
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                nextD.setHours(0,0,0,0);
+                
+                while (nextD <= today) {
+                    if (type === 'Anual') {
+                        nextD.setFullYear(nextD.getFullYear() + 1);
+                    } else {
+                        nextD.setMonth(nextD.getMonth() + 1);
+                    }
+                }
+                return nextD.toLocaleDateString('es-UY');
+            };
+
             // =========================================================
             // DATA DEL MANUAL INTERACTIVO
             // =========================================================
@@ -893,6 +960,28 @@
 
             useEffect(() => { const timer = setInterval(() => setCurrentTime(new Date()), 1000); return () => clearInterval(timer); }, []);
 
+            // NUEVO: Pantalla Restrictiva para Usuarios Bloqueados
+            if (userStatus === 'Bloqueado') {
+                return (
+                    <div className="flex h-screen items-center justify-center bg-slate-900 text-white p-6 relative overflow-hidden font-sans">
+                        <div className="absolute top-0 right-0 p-10 opacity-5"><Icons.Lock className="w-64 h-64" /></div>
+                        <div className="max-w-md text-center relative z-10 animate-in">
+                            <div className="w-24 h-24 bg-rose-500/20 text-rose-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner border border-rose-500/50">
+                                <Icons.Lock className="w-10 h-10 animate-pulse" />
+                            </div>
+                            <h1 className="text-3xl font-black uppercase tracking-tighter mb-4 text-white">Acceso Suspendido</h1>
+                            <p className="text-slate-400 mb-8 font-bold text-sm leading-relaxed bg-slate-800 p-6 rounded-3xl border border-slate-700">Tu cuenta ha sido bloqueada temporalmente por falta de pago o fin de suscripción. Por favor, regulariza tu situación para continuar utilizando MC Pro.</p>
+                            <a href="https://wa.me/59892617525" target="_blank" className="inline-flex items-center justify-center gap-2 py-4 px-8 bg-brand text-white rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-transform mb-6 w-full">
+                                <Icons.MessageCircle className="w-5 h-5"/> Contactar a Soporte
+                            </a>
+                            <button onClick={onLogout} className="block w-full py-4 text-xs text-slate-500 hover:text-white uppercase font-bold tracking-widest transition-colors rounded-2xl hover:bg-slate-800">
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
             return (
               <div className="flex h-screen overflow-hidden bg-[#fcfcfc] text-slate-800 font-sans">
                 <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-slate-100 flex flex-col shrink-0 shadow-2xl z-50 transition-transform duration-300 no-print ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
@@ -932,7 +1021,7 @@
                         <NavItemComp id="tutorial" label="Guía de Uso" icon={Icons.BookOpen} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     </div>
 
-                    {isAdmin && <NavItemComp id="access_control" label="Usuarios" icon={Icons.ShieldCheck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />}
+                    {isAdmin && <NavItemComp id="access_control" label="Clientes Acceso" icon={Icons.ShieldCheck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />}
                     <NavItemComp id="profile" label="Mis Datos" icon={Icons.User} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                   </nav>
                   <div className="p-4 border-t border-slate-50 space-y-2">
@@ -947,7 +1036,7 @@
                   <header className="flex justify-between items-center mb-6 no-print">
                     <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-brand"><Icons.Menu className="w-6 h-6" /></button>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800 leading-none">
-                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : activeTab === 'tutorial' ? 'Guía y Tour Interactivo' : 'Mis Datos'}
+                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : activeTab === 'tutorial' ? 'Guía y Tour Interactivo' : activeTab === 'access_control' ? 'Control de Accesos' : 'Mis Datos'}
                     </h2>
                     <div className="hidden md:flex items-center gap-3 bg-white p-2 pr-4 rounded-xl border border-slate-100 shadow-sm font-bold">
                       <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Icons.Globe className="w-4 h-4 text-slate-400" /><span className="text-xs uppercase leading-none">{userCountry}</span></div>
@@ -2347,6 +2436,69 @@
                       </div>
                   )}
 
+                  {/* --- CONTROL DE ACCESOS (SOLO ADMIN) --- */}
+                  {activeTab === 'access_control' && isAdmin && (
+                      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                              <div>
+                                  <h3 className="text-2xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.ShieldCheck className="w-6 h-6 text-brand"/> Clientes con Acceso</h3>
+                                  <p className="text-xs font-bold uppercase text-slate-400 tracking-widest mt-1">Gestión de suscripciones y bloqueos</p>
+                              </div>
+                              <div className="bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm flex gap-4">
+                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Total</p><p className="text-lg font-black text-brand leading-none">{allUsers.length}</p></div>
+                                  <div className="w-px bg-slate-200"></div>
+                                  <div className="text-center"><p className="text-[10px] font-black uppercase text-slate-400">Activos</p><p className="text-lg font-black text-emerald-500 leading-none">{allUsers.filter(u => u.status !== 'Bloqueado').length}</p></div>
+                              </div>
+                          </div>
+                          
+                          <div className="flex-1 overflow-y-auto border border-slate-100 rounded-3xl p-2 bg-slate-50/50">
+                              <table className="w-full text-left text-xs table-fixed min-w-[600px]">
+                                  <thead className="text-[10px] uppercase font-black text-slate-400 tracking-widest border-b border-slate-100">
+                                      <tr>
+                                          <th className="pb-4 pl-4 w-[30%]">Usuario / Email</th>
+                                          <th className="pb-4 w-[15%]">Fecha Inicio</th>
+                                          <th className="pb-4 w-[20%]">Tipo de Plan</th>
+                                          <th className="pb-4 w-[15%] text-center">Próximo Pago</th>
+                                          <th className="pb-4 w-[20%] pr-4 text-right">Estado (Bloqueo)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody className="text-slate-700 font-bold">
+                                      {allUsers.map(u => {
+                                          const nextPay = calculateNextPayment(u.firstLogin, u.subscriptionType);
+                                          return (
+                                              <tr key={u.uid} className="border-b border-slate-50 hover:bg-white transition-colors group">
+                                                  <td className="py-4 pl-4 rounded-l-2xl">
+                                                      <div className="flex items-center gap-3">
+                                                          <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 shrink-0"><Icons.User className="w-4 h-4"/></div>
+                                                          <span className="truncate" title={u.email}>{u.email}</span>
+                                                      </div>
+                                                  </td>
+                                                  <td className="py-4 text-slate-500">{new Date(u.firstLogin).toLocaleDateString('es-UY')}</td>
+                                                  <td className="py-4">
+                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
+                                                          <option value="Mensual">Mensual</option>
+                                                          <option value="Anual">Anual</option>
+                                                      </select>
+                                                  </td>
+                                                  <td className="py-4 text-center">
+                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{nextPay}</span>
+                                                  </td>
+                                                  <td className="py-4 pr-4 rounded-r-2xl text-right">
+                                                      <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value })} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
+                                                          <option value="Activo">🟢 Activo</option>
+                                                          <option value="Bloqueado">🔴 Bloqueado</option>
+                                                      </select>
+                                                  </td>
+                                              </tr>
+                                          );
+                                      })}
+                                      {allUsers.length === 0 && <tr><td colSpan="5" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  )}
+
                 </main>
 
                 {/* MODAL RECORDATORIOS DIARIOS */}
@@ -2404,8 +2556,7 @@
             const [user, setUser] = useState(null);
             const [authLoaded, setAuthLoaded] = useState(false);
             
-            // Estados para el Formulario de Login/Registro
-            const [isRegisterMode, setIsRegisterMode] = useState(false);
+            // Estados para el Formulario de Login
             const [emailInput, setEmailInput] = useState('');
             const [passwordInput, setPasswordInput] = useState('');
             const [authError, setAuthError] = useState('');
@@ -2434,13 +2585,8 @@
                 e.preventDefault();
                 setAuthError('');
                 try {
-                    if (isRegisterMode) {
-                        await window.firebaseModules.createUserWithEmailAndPassword(window.firebaseModules.auth, emailInput, passwordInput);
-                        notify("Cuenta creada y sesión iniciada.");
-                    } else {
-                        await window.firebaseModules.signInWithEmailAndPassword(window.firebaseModules.auth, emailInput, passwordInput);
-                        notify("Sesión iniciada.");
-                    }
+                    await window.firebaseModules.signInWithEmailAndPassword(window.firebaseModules.auth, emailInput, passwordInput);
+                    notify("Sesión iniciada.");
                 } catch (err) {
                     let msg = err.message;
                     if(err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found') msg = "Usuario o contraseña incorrectos.";
@@ -2468,7 +2614,7 @@
                     <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 relative">
                         <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
                         <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2 leading-none text-center">MC Pro</h1>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10 leading-none text-center">{isRegisterMode ? 'Crear Cuenta Nueva' : 'Acceso a Miembros'}</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10 leading-none text-center">Acceso a Miembros</p>
                         
                         <form onSubmit={handleAuth} className="space-y-4">
                             <div className="bg-slate-50 p-3 rounded-2xl flex items-center border border-slate-100 relative">
@@ -2483,10 +2629,16 @@
                             {authError && <p className="text-xs font-bold text-red-500 leading-tight bg-red-50 p-2 rounded-lg text-center">{authError}</p>}
                             
                             <button className="w-full py-4 bg-dark text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg flex justify-center items-center text-center">
-                                {isRegisterMode ? 'Registrarme' : 'Ingresar al Sistema'}
+                                Ingresar al Sistema
                             </button>
 
-                            <div className="text-center pt-4 border-t border-slate-100 mt-4">
+                            <div className="text-center pt-4 mt-2">
+                                <button type="button" onClick={() => setShowContactModal(true)} className="text-[11px] font-bold uppercase tracking-widest text-brand hover:text-rose-600 transition-colors text-center w-full">
+                                    Solicitar mi acceso
+                                </button>
+                            </div>
+
+                            <div className="text-center pt-4 border-t border-slate-100 mt-2">
                                 <button type="button" onClick={() => setShowContactModal(true)} className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand transition-colors text-center w-full">
                                     ¿Problemas para ingresar? Contacta a soporte
                                 </button>
