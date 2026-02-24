@@ -47,7 +47,8 @@
             appId: "1:593304120965:web:36d43fc72a9c85c76dc3ec"
         };
 
-        const firebaseConfig = manualConfig || (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null);
+        // MAGIA: Si estamos en Gemini (Canvas), usamos el entorno de Gemini. Si estamos en Donweb, usamos tu manualConfig.
+        const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : manualConfig;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'mc-pro-app';
         const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
@@ -161,7 +162,9 @@
             PlayCircle: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>' />,
             ShoppingBag: (p) => <Icon {...p} path='<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>' />,
             Bell: (p) => <Icon {...p} path='<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>' />,
-            Monitor: (p) => <Icon {...p} path='<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>' />
+            Monitor: (p) => <Icon {...p} path='<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>' />,
+            Clock: (p) => <Icon {...p} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />,
+            BookOpen: (p) => <Icon {...p} path='<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' />
         };
 
         const translations = {
@@ -629,7 +632,7 @@
             const [presupuestos, setPresupuestos] = usePersistedState(`mc_presupuestos`, [], uid);
             const [facturas, setFacturas] = usePersistedState(`mc_facturas`, [], uid);
             const [materialDb, setMaterialDb] = usePersistedState(`mc_material_db`, [], uid);
-            const [userProfile, setUserProfile] = usePersistedState(`mc_user_profile`, { brand: '', phone: '', address: '', owner: '', logo: '' }, uid);
+            const [userProfile, setUserProfile] = usePersistedState(`mc_user_profile`, { brand: '', phone: '', address: '', owner: '', logo: '', email: '', hours: '' }, uid);
             const [usageLog, setUsageLog] = usePersistedState(`mc_material_usage_log`, [], uid);
             const [calc, setCalc] = usePersistedState(`mc_calc_pro`, { selectedMaterialId: '', materialQty: 1, inkPercent: 10, assemblyCost: 0, packagingCost: 0, designHours: 0, cuttingHours: 0, assemblyHours: 0, finishingCost: 0, hourlyRate: 0, opExpenses: 0, maintenanceFund: 0, subscriptions: 0, wastePercent: 10, profitMargin: 50, taxesPercent: 0 }, uid);
 
@@ -654,9 +657,100 @@
             const [selectedDay, setSelectedDay] = useState(new Date().getDate());
             const [strategyMonth, setStrategyMonth] = useState(new Date().getMonth());
             const [selectedLabel, setSelectedLabel] = useState(null);
+            const [tourStep, setTourStep] = useState(0); // NUEVO: Estado para el Tour Interactivo
 
             const ADMIN_EMAIL = 'modocreativo2026@gmail.com';
             const isAdmin = userEmail === ADMIN_EMAIL || adminList.includes(userEmail);
+            
+            // =========================================================
+            // DATA DEL MANUAL INTERACTIVO
+            // =========================================================
+            const tourData = [
+                {
+                    id: 'intro', tab: 'dashboard', icon: Icons.Star, title: 'Bienvenida a MC Pro',
+                    q1: 'Tu Nuevo Asistente Virtual', a1: 'MC Pro no es solo una agenda digital; es el cerebro financiero, logístico y creativo de tu emprendimiento de papelería.',
+                    q2: 'El Objetivo', a2: 'Hemos diseñado esta herramienta específicamente para eliminar tus bloqueos creativos, automatizar tus finanzas y enseñarte a cobrar exactamente lo que vale tu trabajo.',
+                    q3: '¿Cómo funciona este tour?', a3: 'Usa las flechas para navegar por el manual. Si quieres probar un módulo, toca el botón rosa de "Probar módulo" y el sistema te llevará allí automáticamente.'
+                },
+                {
+                    id: 'dashboard', tab: 'dashboard', icon: Icons.Layout, title: '1. Escritorio (Dashboard)',
+                    q1: '¿Qué es?', a1: 'Es tu "Centro de Comando" y lo primero que ves al iniciar sesión. Te da una radiografía instantánea de cómo está tu negocio hoy.',
+                    q2: '¿Qué contiene?', a2: 'Botones rápidos a tus herramientas clave, la efeméride del día, noticias creativas y tu panel de balance general (Ingresos vs Gastos).',
+                    q3: '¿Para qué sirve?', a3: 'Para ahorrarte 30 minutos de revisión cada mañana. En un vistazo sabes cuánto dinero tienes y si hay fechas clave.'
+                },
+                {
+                    id: 'strategies', tab: 'strategies', icon: Icons.Lightbulb, title: '2. Estrategias Mensuales',
+                    q1: '¿Qué es?', a1: 'Tu director de marketing personal. Un planificador que abarca los 12 meses del año con contenido pre-masticado.',
+                    q2: '¿Cómo se usa?', a2: 'Selecciona el mes en la barra superior. El panel te mostrará la paleta de colores de temporada y columnas con ideas de productos, redes sociales y promociones.',
+                    q3: '¿Para qué sirve?', a3: 'Destruye el bloqueo creativo. Te dice exactamente qué fabricar y cómo venderlo anticipadamente para eventos clave.'
+                },
+                {
+                    id: 'finances', tab: 'finances', icon: Icons.Wallet, title: '3. Finanzas',
+                    q1: '¿Qué es?', a1: 'El libro contable de tu emprendimiento para controlar la rentabilidad mensual.',
+                    q2: '¿Cómo se usa?', a2: 'Registra tus gastos (ej. "Tinta", "Luz") y tus ingresos extra. El balance se calcula solo cruzando esta info con tus Ventas.',
+                    q3: '¿Para qué sirve?', a3: 'Para descubrir tus fugas de dinero y saber cuál es tu ganancia neta real a fin de mes.'
+                },
+                {
+                    id: 'contacts', tab: 'contacts', icon: Icons.UserCheck, title: '4. Contactos',
+                    q1: '¿Qué es?', a1: 'Tu agenda inteligente y centralizada de clientes. Es el corazón del sistema logístico.',
+                    q2: '¿Cómo se usa?', a2: 'Cada vez que un nuevo cliente te consulte, regístralo aquí con su nombre, teléfono y dirección.',
+                    q3: '💡 El Gran Beneficio', a3: 'Todo lo que guardes aquí nutrirá automáticamente a Ventas, Envíos y Presupuestos. ¡Nunca más tipearás una dirección dos veces!'
+                },
+                {
+                    id: 'clients', tab: 'clients', icon: Icons.DollarSign, title: '5. Ventas',
+                    q1: '¿Qué es?', a1: 'El módulo de seguimiento financiero de pedidos.',
+                    q2: '¿Cómo se usa?', a2: 'Selecciona tu cliente desde la lista desplegable, ingresa el monto total y marca si está "Pendiente" (seña), "Hecho" o "No Cobrado".',
+                    q3: '¿Para qué sirve?', a3: 'Para tener control exacto de la morosidad. Sabrás cuántos miles de pesos tienes estancados en pedidos Pendientes.'
+                },
+                {
+                    id: 'presupuestos', tab: 'presupuestos', icon: Icons.FileText, title: '6. Presupuestos y Facturación',
+                    q1: '¿Qué es?', a1: 'Generador de documentos PDF corporativos y elegantes.',
+                    q2: '¿Cómo se usa?', a2: 'Tu Logo, Email y Datos se absorben solos desde "Mis Datos". Solo carga el cliente desde el desplegable, agrega los ítems y toca la Impresora para generar el PDF.',
+                    q3: '¿Para qué sirve?', a3: 'Mandar precios por audio da una imagen amateur. Mandar un PDF con tu logo justifica cobrar un precio Premium.'
+                },
+                {
+                    id: 'shipping', tab: 'shipping', icon: Icons.Truck, title: '7. Envíos y Etiquetas',
+                    q1: '¿Qué es?', a1: 'Panel de control logístico que genera etiquetas listas para imprimir y pegar en tus cajas.',
+                    q2: '¿Cómo se usa?', a2: 'Selecciona tu contacto para autocompletar la dirección. Al guardar, toca el botón rosa "Etiqueta" para generar una vista gigante lista para imprimir.',
+                    q3: '¿Para qué sirve?', a3: 'Elimina errores al escribir direcciones a mano y le da una presentación súper profesional a tus paquetes.'
+                },
+                {
+                    id: 'planner', tab: 'planner', icon: Icons.Calendar, title: '8. Calendario Inteligente',
+                    q1: '¿Qué es?', a1: 'El corazón de tu planificación y recordatorios con un almanaque interactivo.',
+                    q2: '¿Cómo se usa?', a2: 'Toca un número para ver qué efeméride se celebra, y escribe "Citas Personales" (ej. entregas) en el cuadro inferior.',
+                    q3: '🚨 Alertas Automáticas', a3: 'Si cargas entregas importantes, el día de la entrega saltará una alarma gigante avisándote apenas abras el sistema.'
+                },
+                {
+                    id: 'inventory', tab: 'inventory', icon: Icons.Package, title: '9. Insumos y Stock',
+                    q1: '¿Qué es?', a1: 'Sistema de inventario que saca cálculos matemáticos por ti.',
+                    q2: '¿Cómo se usa?', a2: 'Dile cuánto pagaste por un paquete (ej. $500 por 100 argollas) y calculará el costo exacto por porción ($5) guardándolo en tu stock.',
+                    q3: '¿Para qué sirve?', a3: 'Para no quebrar stock. Su cálculo unitario es vital para el Cotizador. Incluye accesos directos a proveedores locales.'
+                },
+                {
+                    id: 'machines', tab: 'machines', icon: Icons.Monitor, title: '10. Equipos del Mercado',
+                    q1: '¿Qué es?', a1: 'Una vitrina informativa interactiva con las mejores máquinas recomendadas para el rubro.',
+                    q2: '¿Cómo se usa?', a2: 'Encontrarás tarjetas visuales de Plotters de Corte e Impresoras. Toca cualquier tarjeta para ser redirigido a la tienda oficial.',
+                    q3: '¿Para qué sirve?', a3: 'Para mantenerte actualizada sobre las herramientas que necesitas para llevar tu producción al siguiente nivel.'
+                },
+                {
+                    id: 'checklist', tab: 'checklist', icon: Icons.ClipboardList, title: '11. Taller de Producción',
+                    q1: '¿Qué es?', a1: 'Un tablero visual estilo Kanban para tu flujo de trabajo diario.',
+                    q2: '¿Cómo se usa?', a2: 'Agrega pedidos a la lista "En Proceso". Cuando los termines físicamente, toca el check verde para pasarlos a "Finalizado".',
+                    q3: '¿Para qué sirve?', a3: 'Organiza el caos mental y reemplaza los cuadernos rayados. El sistema analiza tu ritmo y calcula tu promedio de producción semanal.'
+                },
+                {
+                    id: 'calculator', tab: 'calculator', icon: Icons.Calculator, title: '12. Cotizador Pro 💎',
+                    q1: 'La Joya del Sistema', a1: 'El módulo que asegura que nunca más pierdas dinero trabajando.',
+                    q2: '¿Cómo se usa?', a2: 'Configura el valor de tu hora y porcentaje de ganancia. Selecciona tu material, pon horas de diseño/corte, y el panel hará la matemática compleja por ti.',
+                    q3: '¿Para qué sirve?', a3: 'Te arroja el Costo Real y el Precio de Venta Sugerido asegurando que esté cobrada la luz, tu desgaste de máquina y tu sueldo.'
+                },
+                {
+                    id: 'profile', tab: 'profile', icon: Icons.User, title: '13. Mis Datos (¡Vital!)',
+                    q1: '¿Qué es?', a1: 'El núcleo de la identidad de tu marca en MC Pro.',
+                    q2: '¿Cómo se usa?', a2: 'Sube tu Logo (máximo 800KB). Completa tu Nombre de Empresa, Teléfono, Dirección, Correo y Horarios.',
+                    q3: '¿Por qué es obligatorio?', a3: 'Porque toda esta información es la que el sistema utilizará automáticamente para armar el membrete de tus Facturas y Etiquetas de Envío.'
+                }
+            ];
 
             const notify = (msg) => { setNotification(msg); setTimeout(() => setNotification(null), 2500); };
             const deleteItem = (id, setter, name) => { setter(p => p.filter(i => i.id !== id)); notify(`${name} eliminado`); };
@@ -832,6 +926,13 @@
                     <NavItemComp id="checklist" label="Taller" icon={Icons.ClipboardList} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="calculator" label="Cotizador" icon={Icons.Calculator} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="store" label="Tienda Digital" icon={Icons.ShoppingBag} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                    
+                    {/* NUEVO: PESTAÑA DEL TOUR INTERACTIVO */}
+                    <div className="pt-2 mt-2 border-t border-slate-100">
+                        <NavItemComp id="tutorial" label="Guía de Uso" icon={Icons.BookOpen} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
+                    </div>
+
+                    {isAdmin && <NavItemComp id="access_control" label="Usuarios" icon={Icons.ShieldCheck} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />}
                     <NavItemComp id="profile" label="Mis Datos" icon={Icons.User} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                   </nav>
                   <div className="p-4 border-t border-slate-50 space-y-2">
@@ -846,7 +947,7 @@
                   <header className="flex justify-between items-center mb-6 no-print">
                     <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-brand"><Icons.Menu className="w-6 h-6" /></button>
                     <h2 className="text-2xl md:text-3xl font-black tracking-tighter uppercase text-slate-800 leading-none">
-                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : 'Mis Datos'}
+                      {activeTab === 'dashboard' ? 'Escritorio' : activeTab === 'strategies' ? 'Estrategias' : activeTab === 'finances' ? 'Finanzas' : activeTab === 'contacts' ? 'Contactos' : activeTab === 'clients' ? 'Ventas' : activeTab === 'presupuestos' ? 'Presupuestos' : activeTab === 'facturas' ? 'Facturación' : activeTab === 'shipping' ? 'Envíos' : activeTab === 'planner' ? 'Calendario' : activeTab === 'inventory' ? 'Insumos' : activeTab === 'machines' ? 'Equipos y Plotters' : activeTab === 'checklist' ? 'Taller' : activeTab === 'calculator' ? 'Cotizador' : activeTab === 'store' ? 'Tienda Digital' : activeTab === 'tutorial' ? 'Guía y Tour Interactivo' : 'Mis Datos'}
                     </h2>
                     <div className="hidden md:flex items-center gap-3 bg-white p-2 pr-4 rounded-xl border border-slate-100 shadow-sm font-bold">
                       <div className="flex items-center gap-2 px-3 border-r border-slate-100"><Icons.Globe className="w-4 h-4 text-slate-400" /><span className="text-xs uppercase leading-none">{userCountry}</span></div>
@@ -854,6 +955,70 @@
                       <p className="text-xs leading-none">{currentTime.toLocaleTimeString('es-UY', {hour:'2-digit',minute:'2-digit'})}</p>
                     </div>
                   </header>
+
+                  {/* --- AGREGADO: TOUR INTERACTIVO / MANUAL --- */}
+                  {activeTab === 'tutorial' && (() => {
+                      const currentManualData = tourData[tourStep];
+                      const IconComponent = currentManualData.icon;
+                      
+                      return (
+                          <div className="flex flex-col items-center justify-center min-h-[80vh] animate-in pb-10">
+                              <div className="w-full max-w-4xl bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
+                                  {/* Decoración de fondo */}
+                                  <div className="absolute -top-12 -right-12 opacity-5 scale-150 rotate-12 pointer-events-none"><IconComponent className="w-64 h-64 text-brand" /></div>
+                                  
+                                  {/* Encabezado del Tour */}
+                                  <div className="flex flex-col md:flex-row items-center gap-6 mb-10 relative z-10 border-b-2 border-slate-50 pb-8">
+                                      <div className="w-24 h-24 bg-brand text-white rounded-[2rem] flex items-center justify-center shadow-xl rotate-3 shrink-0">
+                                          <IconComponent className="w-12 h-12" />
+                                      </div>
+                                      <div className="text-center md:text-left">
+                                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-brand mb-2">Paso {tourStep + 1} de {tourData.length}</p>
+                                          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-800 leading-none">{currentManualData.title}</h2>
+                                      </div>
+                                  </div>
+
+                                  {/* Contenido (Preguntas y Respuestas) */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 relative z-10">
+                                      <div className="space-y-6">
+                                          <div>
+                                              <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">{currentManualData.q1}</h4>
+                                              <p className="text-sm font-bold text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm">{currentManualData.a1}</p>
+                                          </div>
+                                          <div>
+                                              <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">{currentManualData.q2}</h4>
+                                              <p className="text-sm font-bold text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm">{currentManualData.a2}</p>
+                                          </div>
+                                      </div>
+                                      <div className="flex flex-col justify-center">
+                                          <div className="bg-rose-50 p-6 rounded-[2rem] border border-rose-100 h-full flex flex-col justify-center">
+                                              <h4 className="text-[11px] font-black uppercase tracking-widest text-brand mb-3">{currentManualData.q3}</h4>
+                                              <p className="text-sm font-bold text-slate-800 leading-relaxed">{currentManualData.a3}</p>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  {/* Botones de Navegación y Acción */}
+                                  <div className="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10 pt-6 border-t border-slate-100">
+                                      <div className="flex gap-2 w-full md:w-auto justify-center">
+                                          <button onClick={() => setTourStep(prev => Math.max(0, prev - 1))} disabled={tourStep === 0} className="px-6 py-3 bg-slate-100 text-slate-600 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">← Anterior</button>
+                                          <button onClick={() => setTourStep(prev => Math.min(tourData.length - 1, prev + 1))} disabled={tourStep === tourData.length - 1} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-black uppercase text-xs tracking-widest hover:bg-slate-800 transition-colors shadow-md disabled:opacity-30 disabled:cursor-not-allowed">Siguiente →</button>
+                                      </div>
+                                      <button onClick={() => setActiveTab(currentManualData.tab)} className="w-full md:w-auto px-8 py-4 bg-brand text-white rounded-2xl font-black uppercase text-sm tracking-widest shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2">
+                                          <Icons.PlayCircle className="w-5 h-5"/> ¡Probar este Módulo!
+                                      </button>
+                                  </div>
+                              </div>
+
+                              {/* Paginador Rápido (Puntitos) */}
+                              <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-2xl">
+                                  {tourData.map((step, idx) => (
+                                      <button key={idx} onClick={() => setTourStep(idx)} title={step.title} className={`w-3 h-3 rounded-full transition-all ${tourStep === idx ? 'bg-brand scale-125 shadow-md' : 'bg-slate-300 hover:bg-slate-400'}`}></button>
+                                  ))}
+                              </div>
+                          </div>
+                      );
+                  })()}
 
                   {/* --- DASHBOARD --- */}
                   {activeTab === 'dashboard' && (
@@ -1835,7 +2000,7 @@
                                       <button onClick={() => window.print()} className="p-3 bg-slate-900 text-white rounded-xl hover:scale-110 transition-transform shadow-lg"><Icons.Printer className="w-5 h-5"/></button>
                                   </div>
 
-                                  {/* CABECERA DOCUMENTO (Sincronizada con Mis Datos) */}
+                                  {/* CABECERA DOCUMENTO */}
                                   <div className="flex justify-between items-start mb-10 pb-10 border-b-2 border-slate-100">
                                       <div className="flex items-center gap-4 flex-1">
                                           <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center overflow-hidden border border-slate-200 shrink-0">
@@ -1858,10 +2023,12 @@
                                                       <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">
                                                           {userProfile.owner || 'Tu Nombre o Eslogan'}
                                                       </p>
-                                                      {(userProfile.phone || userProfile.address) && (
+                                                      {(userProfile.phone || userProfile.address || userProfile.email || userProfile.hours) && (
                                                           <div className="text-[10px] font-bold text-slate-500 mt-3 flex flex-col gap-1">
                                                               {userProfile.phone && <span className="flex items-center gap-1"><Icons.MessageCircle className="w-3 h-3"/> {userProfile.phone}</span>}
+                                                              {userProfile.email && <span className="flex items-center gap-1"><Icons.Mail className="w-3 h-3"/> {userProfile.email}</span>}
                                                               {userProfile.address && <span className="flex items-center gap-1"><Icons.Globe className="w-3 h-3"/> {userProfile.address}</span>}
+                                                              {userProfile.hours && <span className="flex items-center gap-1"><Icons.Clock className="w-3 h-3"/> {userProfile.hours}</span>}
                                                           </div>
                                                       )}
                                                   </div>
@@ -2153,16 +2320,24 @@
                               </div>
                               <div>
                                   <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Nombre Responsable</label>
-                                  <input value={userProfile.owner} onChange={(e) => setUserProfile({...userProfile, owner: e.target.value})} placeholder="Tu Nombre" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
+                                  <input value={userProfile.owner || ''} onChange={(e) => setUserProfile({...userProfile, owner: e.target.value})} placeholder="Tu Nombre" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
                               </div>
-                              <div className="grid grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <div>
                                       <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Teléfono</label>
-                                      <input value={userProfile.phone} onChange={(e) => setUserProfile({...userProfile, phone: e.target.value})} placeholder="+598..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
+                                      <input value={userProfile.phone || ''} onChange={(e) => setUserProfile({...userProfile, phone: e.target.value})} placeholder="+598..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
                                   </div>
                                   <div>
                                       <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Dirección / Ubicación</label>
-                                      <input value={userProfile.address} onChange={(e) => setUserProfile({...userProfile, address: e.target.value})} placeholder="Montevideo..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
+                                      <input value={userProfile.address || ''} onChange={(e) => setUserProfile({...userProfile, address: e.target.value})} placeholder="Montevideo..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
+                                  </div>
+                                  <div>
+                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Correo de Contacto</label>
+                                      <input value={userProfile.email || ''} onChange={(e) => setUserProfile({...userProfile, email: e.target.value})} placeholder="hola@tumarca.com" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
+                                  </div>
+                                  <div>
+                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Horario de Atención</label>
+                                      <input value={userProfile.hours || ''} onChange={(e) => setUserProfile({...userProfile, hours: e.target.value})} placeholder="Lun a Vie - 9 a 18hs" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
                                   </div>
                               </div>
                               <div className="pt-4">
