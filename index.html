@@ -917,6 +917,94 @@
                       </div>
                   )}
 
+                  {/* --- PRESUPUESTOS --- */}
+                  {activeTab === 'presupuestos' && (
+                      <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
+                          <div className="flex justify-between items-center mb-6">
+                              <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.FileText className="w-6 h-6 text-brand"/> Gestor de Presupuestos</h3>
+                          </div>
+                          <div className="flex-1 overflow-y-auto mb-6 pr-2 space-y-3">
+                              {presupuestos.map(p => (
+                                  <div key={p.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                                      <div>
+                                          <h4 className="font-black text-sm text-slate-800 uppercase">{p.clientName}</h4>
+                                          <p className="text-[10px] font-bold text-slate-500 mt-1">Monto: ${p.amount} | Fecha: {p.date}</p>
+                                      </div>
+                                      <button onClick={() => deleteItem(p.id, setPresupuestos, 'Presupuesto')} className="p-2 text-slate-300 hover:text-red-500 bg-white rounded-xl shadow-sm"><Icons.Trash2 className="w-4 h-4"/></button>
+                                  </div>
+                              ))}
+                              {presupuestos.length === 0 && <p className="text-center py-10 text-slate-400 font-medium text-sm">No hay presupuestos generados.</p>}
+                          </div>
+                          <form onSubmit={(e) => saveEntity(e, setPresupuestos, 'Presupuesto')} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                              <div className="md:col-span-2"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Cliente *</label><input name="clientName" required placeholder="Nombre..." className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Monto Estimado *</label><input name="amount" type="number" required placeholder="$" className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1 flex justify-end"><button className="w-full py-3 bg-brand text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"><Icons.Plus className="w-4 h-4"/> Generar</button></div>
+                          </form>
+                      </div>
+                  )}
+
+                  {/* --- FACTURACIÓN --- */}
+                  {activeTab === 'facturas' && (
+                      <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
+                          <div className="flex justify-between items-center mb-6">
+                              <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.CreditCard className="w-6 h-6 text-brand"/> Facturación</h3>
+                          </div>
+                          <div className="flex-1 overflow-y-auto mb-6 pr-2 space-y-3">
+                              {facturas.map(f => (
+                                  <div key={f.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                                      <div>
+                                          <h4 className="font-black text-sm text-slate-800 uppercase">{f.clientName}</h4>
+                                          <p className="text-[10px] font-bold text-slate-500 mt-1">Monto: ${f.amount} | Fecha: {f.date}</p>
+                                      </div>
+                                      <button onClick={() => deleteItem(f.id, setFacturas, 'Factura')} className="p-2 text-slate-300 hover:text-red-500 bg-white rounded-xl shadow-sm"><Icons.Trash2 className="w-4 h-4"/></button>
+                                  </div>
+                              ))}
+                              {facturas.length === 0 && <p className="text-center py-10 text-slate-400 font-medium text-sm">No hay facturas registradas.</p>}
+                          </div>
+                          <form onSubmit={(e) => saveEntity(e, setFacturas, 'Factura')} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                              <div className="md:col-span-2"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Cliente *</label><input name="clientName" required placeholder="Nombre..." className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Monto Facturado *</label><input name="amount" type="number" required placeholder="$" className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1 flex justify-end"><button className="w-full py-3 bg-brand text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"><Icons.Plus className="w-4 h-4"/> Facturar</button></div>
+                          </form>
+                      </div>
+                  )}
+
+                  {/* --- ENVÍOS --- */}
+                  {activeTab === 'shipping' && (
+                      <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in h-full flex flex-col">
+                          <div className="flex justify-between items-center mb-6">
+                              <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2"><Icons.Truck className="w-6 h-6 text-brand"/> Logística de Envíos</h3>
+                          </div>
+                          <div className="flex-1 overflow-y-auto mb-6 pr-2 space-y-3">
+                              {shipping.map(s => (
+                                  <div key={s.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+                                      <div>
+                                          <h4 className="font-black text-sm text-slate-800 uppercase">{s.clientName}</h4>
+                                          <p className="text-[10px] font-bold text-slate-500 mt-1">{s.address} | Tracking: {s.tracking || 'Pendiente'}</p>
+                                      </div>
+                                      <button onClick={() => deleteItem(s.id, setShipping, 'Envío')} className="p-2 text-slate-300 hover:text-red-500 bg-white rounded-xl shadow-sm"><Icons.Trash2 className="w-4 h-4"/></button>
+                                  </div>
+                              ))}
+                              {shipping.length === 0 && <p className="text-center py-10 text-slate-400 font-medium text-sm">No hay envíos registrados.</p>}
+                          </div>
+                          <form onSubmit={(e) => {
+                              e.preventDefault();
+                              const f = new FormData(e.target);
+                              const clientName = f.get('clientName');
+                              const address = f.get('address');
+                              const tracking = f.get('tracking');
+                              setShipping([...shipping, { id: Date.now(), clientName, address, tracking, date: new Date().toISOString() }]);
+                              e.target.reset();
+                              notify("Envío guardado");
+                          }} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                              <div className="md:col-span-1"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Cliente *</label><input name="clientName" required placeholder="Destinatario..." className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Dirección *</label><input name="address" required placeholder="Destino..." className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1"><label className="text-[9px] font-black uppercase text-slate-400 ml-2">Tracking (Opcional)</label><input name="tracking" placeholder="Ej: DAC123..." className="w-full p-3 rounded-xl mt-1 text-xs font-bold shadow-sm outline-none" /></div>
+                              <div className="md:col-span-1 flex justify-end"><button className="w-full py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"><Icons.Plus className="w-4 h-4"/> Despachar</button></div>
+                          </form>
+                      </div>
+                  )}
+
                   {/* --- ESTRATEGIAS --- */}
                   {activeTab === 'strategies' && (
                     <div className="space-y-6 animate-in pb-10">
