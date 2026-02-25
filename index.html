@@ -8,17 +8,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 
-                        sans: ['Nunito', 'sans-serif'],
-                        title: ['Fredoka', 'sans-serif']
-                    },
-                    colors: { brand: '#E11D48', dark: '#0f172a' }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Nunito', 'sans-serif'], title: ['Fredoka', 'sans-serif'] }, colors: { brand: '#E11D48', dark: '#0f172a' } } } }
     </script>
     
     <!-- React & ReactDOM -->
@@ -28,36 +18,33 @@
     <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- FIREBASE SDK (Configuración de Producción) -->
+    <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Tus credenciales oficiales
+        // =========================================================
+        // ⚠️ PEGA AQUÍ TU NUEVA CONFIGURACIÓN DE FIREBASE ⚠️
+        // =========================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyC_VJZeiRLmDiUzTGz2rX-4p7S9FhqPtic",
-            authDomain: "mc-pro-sistema.firebaseapp.com",
-            projectId: "mc-pro-sistema",
-            storageBucket: "mc-pro-sistema.firebasestorage.app",
-            messagingSenderId: "593304120965",
-            appId: "1:593304120965:web:36d43fc72a9c85c76dc3ec"
+            apiKey: "AIzaSyCOfi3HEwSPODDvqj1lWwfwXJWzwvHIB3s",
+            authDomain: "mc-pro-sistema-v2-f97d3.firebaseapp.com",
+            projectId: "mc-pro-sistema-v2-f97d3",
+            storageBucket: "mc-pro-sistema-v2-f97d3.firebasestorage.app",
+            messagingSenderId: "239267591180",
+            appId: "1:239267591180:web:30a803f61c957aced12a29"
         };
+        // =========================================================
+
         const appId = 'mc-pro-app';
 
         try {
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
             const db = getFirestore(app);
-            
-            // Exponemos los módulos a React
-            window.firebaseModules = { 
-                auth, db, appId, doc, setDoc, onSnapshot, collection, 
-                onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
-            };
-        } catch (e) { 
-            console.error("Error inicializando Firebase:", e); 
-        }
+            window.firebaseModules = { auth, db, appId, doc, setDoc, onSnapshot, collection, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut };
+        } catch (e) { console.error("Error inicializando Firebase:", e); }
     </script>
 
     <style>
