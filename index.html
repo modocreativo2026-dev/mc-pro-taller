@@ -387,7 +387,12 @@
             }, [isAdmin, user]);
 
             // Función auxiliar para actualizar tipo de plan o estado (bloqueo)
-            const updateAccess = (targetUid, updates) => {
+            const updateAccess = (targetUid, updates, targetEmail) => {
+                // DOBLE SEGURIDAD: El admin no se puede auto-bloquear
+                if (targetEmail === ADMIN_EMAIL && updates.status === 'Bloqueado') {
+                    return notify("❌ Intocable: No puedes bloquear a la cuenta Administradora");
+                }
+
                 if (!window.firebaseModules) return;
                 const { db, appId, doc, setDoc } = window.firebaseModules;
                 setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', targetUid), updates, { merge: true })
@@ -688,12 +693,18 @@
                     <h1 className="font-black text-xl uppercase text-slate-800 tracking-tighter leading-none">MC Pro</h1>
                     <p className="text-[9px] font-bold text-brand uppercase tracking-[0.4em] mt-2 leading-none">Modo Creativo</p>
                   </div>
+                  
+                  {/* SECCIÓN DE PERFIL EN SIDEBAR - CON MEDALLA DE ADMIN */}
                   <div className="px-4 py-2 mb-2">
-                      <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-center shadow-inner">
-                          <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center justify-center gap-1"><Icons.ShieldCheck className="w-3 h-3 text-emerald-500"/> Activo</p>
+                      <div className={`p-3 rounded-xl border text-center shadow-inner relative overflow-hidden ${isAdmin ? 'bg-indigo-50 border-indigo-100' : 'bg-slate-50 border-slate-100'}`}>
+                          {isAdmin && <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>}
+                          <p className={`text-[9px] font-black uppercase tracking-widest mb-1 flex items-center justify-center gap-1 ${isAdmin ? 'text-indigo-600' : 'text-slate-400'}`}>
+                              {isAdmin ? <><Icons.ShieldCheck className="w-3 h-3 text-indigo-500"/> Super Admin</> : <><Icons.ShieldCheck className="w-3 h-3 text-emerald-500"/> Cliente Activo</>}
+                          </p>
                           <p className="text-xs font-bold text-slate-700 truncate">{userEmail}</p>
                       </div>
                   </div>
+
                   <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                     <NavItemComp id="dashboard" label="Escritorio" icon={Icons.Layout} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
                     <NavItemComp id="strategies" label="Estrategias" icon={Icons.Lightbulb} activeTab={activeTab} setActiveTab={setActiveTab} setIsSidebarOpen={setIsSidebarOpen} />
@@ -1888,14 +1899,15 @@
                           </div>
                           
                           <div className="flex-1 overflow-y-auto border border-slate-100 rounded-3xl p-2 bg-slate-50/50">
-                              <table className="w-full text-left text-xs table-fixed min-w-[600px]">
+                              <table className="w-full text-left text-xs table-fixed min-w-[700px]">
                                   <thead className="text-[10px] uppercase font-black text-slate-400 tracking-widest border-b border-slate-100">
                                       <tr>
-                                          <th className="pb-4 pl-4 w-[30%]">Usuario / Email</th>
+                                          <th className="pb-4 pl-4 w-[25%]">Usuario / Email</th>
                                           <th className="pb-4 w-[15%]">Fecha Inicio</th>
-                                          <th className="pb-4 w-[20%]">Tipo de Plan</th>
+                                          <th className="pb-4 w-[15%]">Tipo de Plan</th>
+                                          <th className="pb-4 w-[15%]">Monto a Cobrar</th>
                                           <th className="pb-4 w-[15%] text-center">Próximo Pago</th>
-                                          <th className="pb-4 w-[20%] pr-4 text-right">Estado (Bloqueo)</th>
+                                          <th className="pb-4 w-[15%] pr-4 text-right">Estado (Bloqueo)</th>
                                       </tr>
                                   </thead>
                                   <tbody className="text-slate-700 font-bold">
@@ -1911,24 +1923,48 @@
                                                   </td>
                                                   <td className="py-4 text-slate-500">{new Date(u.firstLogin).toLocaleDateString('es-UY')}</td>
                                                   <td className="py-4">
-                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
-                                                          <option value="Mensual">Mensual</option>
-                                                          <option value="Anual">Anual</option>
-                                                      </select>
+                                                      {u.email === ADMIN_EMAIL ? (
+                                                          <span className="text-xs font-black text-slate-400">Vitalicio</span>
+                                                      ) : (
+                                                          <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value }, u.email)} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
+                                                              <option value="Mensual">Mensual</option>
+                                                              <option value="Anual">Anual</option>
+                                                          </select>
+                                                      )}
+                                                  </td>
+                                                  <td className="py-4">
+                                                      {u.email === ADMIN_EMAIL ? (
+                                                          <span className="text-xs font-black text-slate-400">-</span>
+                                                      ) : (
+                                                          <div className="flex items-center gap-1 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 focus-within:border-brand shadow-sm w-[90%] transition-colors">
+                                                              <span className="text-slate-400 text-xs font-black">$</span>
+                                                              <input
+                                                                  type="number"
+                                                                  defaultValue={u.monto || ''}
+                                                                  onBlur={(e) => updateAccess(u.uid, { monto: Number(e.target.value) }, u.email)}
+                                                                  className="bg-transparent outline-none w-full text-xs font-black text-slate-700 placeholder-slate-300"
+                                                                  placeholder="0"
+                                                              />
+                                                          </div>
+                                                      )}
                                                   </td>
                                                   <td className="py-4 text-center">
-                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{nextPay}</span>
+                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{u.email === ADMIN_EMAIL ? '∞' : nextPay}</span>
                                                   </td>
                                                   <td className="py-4 pr-4 rounded-r-2xl text-right">
-                                                      <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value })} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
-                                                          <option value="Activo">🟢 Activo</option>
-                                                          <option value="Bloqueado">🔴 Bloqueado</option>
-                                                      </select>
+                                                      {u.email === ADMIN_EMAIL ? (
+                                                          <span className="text-[10px] font-black uppercase text-indigo-500 bg-indigo-50 px-3 py-2 rounded-xl border border-indigo-100 shadow-sm inline-block">👑 Admin Intocable</span>
+                                                      ) : (
+                                                          <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value }, u.email)} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
+                                                              <option value="Activo">🟢 Activo</option>
+                                                              <option value="Bloqueado">🔴 Bloqueado</option>
+                                                          </select>
+                                                      )}
                                                   </td>
                                               </tr>
                                           );
                                       })}
-                                      {allUsers.length === 0 && <tr><td colSpan="5" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
+                                      {allUsers.length === 0 && <tr><td colSpan="6" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
                                   </tbody>
                               </table>
                           </div>
