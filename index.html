@@ -28,17 +28,14 @@
     <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- FIREBASE SDK -->
+    <!-- FIREBASE SDK (Configuración de Producción) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // =====================================================================
-        // CONFIGURACIÓN DE FIREBASE
-        // =====================================================================
-        
-        const manualConfig = {
+        // Tus credenciales oficiales
+        const firebaseConfig = {
             apiKey: "AIzaSyC_VJZeiRLmDiUzTGz2rX-4p7S9FhqPtic",
             authDomain: "mc-pro-sistema.firebaseapp.com",
             projectId: "mc-pro-sistema",
@@ -46,33 +43,20 @@
             messagingSenderId: "593304120965",
             appId: "1:593304120965:web:36d43fc72a9c85c76dc3ec"
         };
+        const appId = 'mc-pro-app';
 
-        const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : manualConfig;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'mc-pro-app';
-        const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        if (firebaseConfig) {
-            try {
-                const app = initializeApp(firebaseConfig);
-                const auth = getAuth(app);
-                const db = getFirestore(app);
-                
-                window.firebaseModules = { 
-                    auth, db, appId, doc, setDoc, onSnapshot, collection, 
-                    signInWithCustomToken, signInAnonymously, onAuthStateChanged,
-                    signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
-                };
-                
-                const initAuth = async (retries = 0) => {
-                    try {
-                        if (initialToken) await signInWithCustomToken(auth, initialToken);
-                        else await signInAnonymously(auth); 
-                    } catch (error) {
-                        if (retries < 5) setTimeout(() => initAuth(retries + 1), Math.pow(2, retries) * 1000);
-                    }
-                };
-                initAuth();
-            } catch (e) { console.error("Error Firebase:", e); }
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            
+            // Exponemos los módulos a React
+            window.firebaseModules = { 
+                auth, db, appId, doc, setDoc, onSnapshot, collection, 
+                onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
+            };
+        } catch (e) { 
+            console.error("Error inicializando Firebase:", e); 
         }
     </script>
 
@@ -204,18 +188,18 @@
         ];
 
         const creativeStrategies = [
-            { m: 0, title: 'Planificación & Vuelta a Clases', productIdeas: ['Kits escolares personalizados (etiquetas, reglas, libretas)', 'Agendas y Planners anuales', 'Cuadernos corporativos para inicio de año', 'Stickers resistentes al agua para botellas'], contentIdeas: ['Reel: "Empaca un mega pedido escolar conmigo" (ASMR)', 'Carrusel IG: Tips para organizar tu escritorio este año', 'TikTok: Mostrando el proceso de plastificado de etiquetas', 'Story: Encuestas de paletas de colores favoritas para agendas'], promoIdeas: ['Preventa escolar exclusiva con 15% OFF (hasta el 15/Ene)', 'Envío gratis en compras de "Combos Escolares completos"', 'Regalo sorpresa (ej. un marcapáginas) con cada agenda'], trend: 'Colores primarios fuertes, tipografías bold estilo college, pop art y minimalismo funcional.', managerTip: 'La anticipación es clave. Los padres previsores compran en enero. Lanza tu campaña fuerte a mediados de mes.', keywords: "#VueltaAlCole #Organizacion #PapeleriaCreativa", platforms: ['Instagram', 'TikTok', 'Pinterest'] },
-            { m: 1, title: 'Amor, Amistad & Carnaval', productIdeas: ['Cajas sorpresa (Explosion Box) con fotos', 'Tarjetas pop-up interactivas / Shaker Cards', 'Cuponeras del amor/amistad troqueladas', 'Packaging especial romántico para emprendedores'], contentIdeas: ['Reel: Storytime de historias de amor de tus clientes (con permiso)', 'Tutorial TikTok: Cómo hacer una tarjeta fácil en casa (atrae tráfico)', 'Carrusel: 3 ideas de regalos que no son chocolates', 'Live: Armado en vivo de kits de San Valentín'], promoIdeas: ['Promoción "Doble Amor": 2x1 en tarjetas personalizadas', 'Descuento especial por el Día del Soltero (13 Feb)', 'Sorteo "Etiqueta a tu media naranja" para ganar un kit'], trend: 'Rojos intensos, rosa pastel, foil dorado, técnica de layering (capas de papel) y estética coquette.', managerTip: 'No te centres solo en parejas; el amor propio y la amistad (Galentine\'s Day) venden muchísimo en papelería.', keywords: "#SanValentin #RegalosPersonalizados #AmorYAmistad", platforms: ['Instagram', 'TikTok'] },
-            { m: 2, title: 'Poder Femenino & Cambio de Temporada', productIdeas: ['Agendas y bitácoras para mujeres emprendedoras', 'Libretas pocket con frases de empoderamiento', 'Marcapáginas magnéticos florales', 'Kits de regalo corporativo para el Día de la Mujer'], contentIdeas: ['Reel: Detrás de escena siendo mujer emprendedora', 'Carrusel IG: Frases motivacionales que inspiran nuestra papelería', 'Colaboración: Entrevista corta a otra creadora uruguaya', 'Story: Moodboard inspiracional de Otoño'], promoIdeas: ['Cajas corporativas con descuento por volumen para empresas', 'Regalo de lámina con frase empoderadora con cada compra el 8M', 'Sorteo cruzado con otra marca liderada por mujeres'], trend: 'Acuarelas, motivos florales otoñales, tonos lila, morado y ocre. Tipografías script elegantes.', managerTip: 'Ofrece soluciones para empresas locales que buscan regalos rápidos y bonitos para el 8 de marzo.', keywords: "#DiaDeLaMujer #MujerEmprendedora #PapeleriaOtoño", platforms: ['Instagram', 'LinkedIn', 'Pinterest'] },
-            { m: 3, title: 'Magia de Pascuas & Otoño', productIdeas: ['Cajas con visor transparente para huevos de Pascua', 'Toppers y tags temáticos para roscas (para pastelerías)', 'Bolsitas kraft con forma de conejo', 'Kits imprimibles para "Búsqueda del tesoro" infantil'], contentIdeas: ['TikTok: Ideas de cómo rellenar las cajitas de Pascua (No solo chocolate)', 'Reel: Armado rápido de packaging para pastelerías (B2B)', 'Carrusel: Plantillas de regalo (Freebies) para los niños', 'Story: Cuenta regresiva para Semana Santa/Turismo'], promoIdeas: ['Descuento por preventa temprana de packaging para pasteleros', 'Kit "Búsqueda del Tesoro" a mitad de precio llevando la caja', 'Cupón de descuento escondido en un "huevo de pascua" digital en Stories'], trend: 'Tonos pastel (celeste, verde agua, amarillo), texturas rústicas (kraft, hilo sisal) y minimalismo tierno.', managerTip: 'Enfoca tu estrategia B2B (venta a otras empresas) a principios de mes para captar reposteros y pastelerías.', keywords: "#PascuaCreativa #PackagingPascuas #SemanaTurismo", platforms: ['Instagram', 'Pinterest'] },
-            { m: 4, title: 'Día de la Madre & Momentos', productIdeas: ['Álbumes de fotos estilo Scrapbook', 'Bandejas de desayuno decoradas con papelería', 'Tarjetas pop-up 3D premium', 'Cuadros de profundidad con flores de papel'], contentIdeas: ['Reel Emotivo: Preparando regalos para mamás (Música nostálgica)', 'Carrusel IG: Guía de regalos según el tipo de mamá', 'TikTok: Cómo personalizar tu álbum de fotos', 'Story: Preguntas sobre los mejores recuerdos de la infancia'], promoIdeas: ['Envío exprés gratis la semana previa al Día de la Madre', 'Descuento especial "Regala a la abuela también"', 'Kits listos para regalar (Papelería + Chocolate en alianza con otra marca)'], trend: 'Estampados florales vintage, tonos cálidos, rosa viejo, dorado y tipografías script tipo caligrafía.', managerTip: 'El formato "Guía de Regalos" en Pinterest e Instagram Carousels atrae mucho tráfico orgánico de gente indecisa.', keywords: "#DiaDeLaMadreUY #RegalosMama #Scrapbooking", platforms: ['Instagram', 'Facebook', 'Pinterest'] },
-            { m: 5, title: 'Día del Padre & Sobriedad', productIdeas: ['Cajas para vinos/cervezas grabadas o personalizadas', 'Tarjetas con diseño de camisa/herramientas', 'Organizadores de escritorio minimalistas', 'Etiquetas personalizadas para regalos caseros'], contentIdeas: ['Carrusel IG: "Regalos para el papá que dice que no quiere nada"', 'Reel: Mostrando texturas premium y sobrias', 'TikTok: Armado de un kit cervecero/vinitero', 'Story: Dinámica "Qué frase típica de padre pondrías en una taza/tarjeta"'], promoIdeas: ['Promo "Padre e Hijo": Descuento al llevar 2 organizadores', 'Envío gratis en combos Premium', 'Tarjetas de cortesía en todas las compras de la semana'], trend: 'Texturas de madera, cuero, papel kraft grueso. Paleta de azules marinos, grises, negro y verde bosque.', managerTip: 'Los regalos del Día del Padre suelen dejarse para último momento. Prepara "Kits Salvavidas" listos para entregar.', keywords: "#DiaDelPadre #RegalosPapa #PapeleriaSobria", platforms: ['Instagram', 'Facebook'] },
-            { m: 6, title: 'Vacaciones de Invierno & Diversión', productIdeas: ['Libros de actividades y colorear para niños', 'Kits de manualidades DIY (Hazlo tú mismo)', 'Stickers resistentes al agua para decorar termos', 'Bitácoras de viaje / Diarios de invierno'], contentIdeas: ['Reel/TikTok: "Qué incluye nuestro kit para vencer el aburrimiento"', 'Carrusel: 3 ideas de manualidades para hacer con niños en casa', 'Story: Freebie (Descargable gratis) para colorear', 'Live: Tarde de manualidades usando los kits'], promoIdeas: ['Descuento "Vacaciones" en la sección infantil', 'Regalo de plancha de stickers en compras de bitácoras', 'Concurso de dibujo en Stories para ganar un kit completo'], trend: 'Personajes divertidos, colores neón vibrantes contrastando con el invierno, ilustraciones doodle.', managerTip: 'Ofrece un "Freebie" (imprimible gratis) a cambio de que se suscriban a tu newsletter o te mencionen en Stories.', keywords: "#InviernoDivertido #ActividadesNiños #KitsDIY", platforms: ['TikTok', 'Instagram', 'Pinterest'] },
-            { m: 7, title: 'Día del Niño & Nostalgia', productIdeas: ['Cajitas sorpresita temáticas "Party Box"', 'Rompecabezas personalizados con fotos', 'Valijitas de cartón para tesoros', 'Papelería temática "Noche de la Nostalgia" (Retro)'], contentIdeas: ['Reel: Montando una Party Box espectacular', 'TikTok: Efecto nostalgia (Ayer vs Hoy en la papelería)', 'Carrusel IG: Por qué regalar experiencias (rompecabezas) es mejor', 'Story: Cuestionario retro musical por la Noche de la Nostalgia'], promoIdeas: ['Combo "Hermanos": Descuento en la segunda unidad infantil', 'Kits decorativos listos para fiestas de la Nostalgia a precio especial', 'Sorteo Día del Niño con influencers locales'], trend: 'Para niños: Súper héroes, magia y full color. Para Nostalgia: Estética de los 80s/90s, neón, casetes y vinilos.', managerTip: 'Aprovecha la Noche de la Nostalgia en Uruguay. Los salones y fiestas privadas necesitan tickets, pulseras y decoración retro.', keywords: "#DiaDelNiño #NocheDeLaNostalgia #PartyBox", platforms: ['Instagram', 'Facebook'] },
-            { m: 8, title: 'Primavera, Color & Eventos', productIdeas: ['Banderines y guirnaldas florales', 'Flores gigantes de papel para vidrieras o eventos', 'Tags plantables (con semillas) o para suculentas', 'Sets de papelería para picnics de primavera'], contentIdeas: ['Reel: Transición (Papelería de invierno a full color primavera)', 'Carrusel: Cómo decorar una mesa de primavera', 'TikTok: Tutorial para hacer flores de papel', 'Story: Unboxing de nuevos papeles y texturas de temporada'], promoIdeas: ['Lanzamiento de temporada con "Early Bird" discount', 'Regalo de Tag Plantable con cada pedido', 'Promoción 3x2 en decoración colgante'], trend: 'Mariposas, flores vibrantes, hojas botánicas, estilo boho-chic, tonos pastel saturados y verde menta.', managerTip: 'La primavera activa la temporada de eventos al aire libre. Enfócate en papelería social (cumpleaños, baby showers).', keywords: "#BienvenidaPrimavera #EventosPrimavera #PapeleriaSocial", platforms: ['Instagram', 'Pinterest', 'TikTok'] },
-            { m: 9, title: 'Halloween & Bodas de Primavera', productIdeas: ['Cajas ataúd o formas divertidas para golosinas', 'Invitaciones interactivas (deslizables) para bodas/15s', 'Toppers terroríficos para cupcakes', 'Máscaras y props imprimibles para fotocabinas'], contentIdeas: ['TikTok: ASMR armando cajitas de Halloween', 'Reel: Tendencias en invitaciones de Boda', 'Carrusel IG: Qué debe incluir una invitación perfecta', 'Story: Votación "Truco o Trato" con descuentos ocultos'], promoIdeas: ['Packaging temático "Monstruoso" para negocios locales (B2B)', 'Envío de muestras gratuitas de invitaciones a Wedding Planners', 'Flash Sale de 24hs por Halloween'], trend: 'Halloween: Naranja, violeta, negro y diseños "spooky-cute". Bodas: Minimalismo, papel vegetal, eucalipto y blanco.', managerTip: 'Es un mes dual. Muestra tu lado divertido para Halloween, pero no descuides el lado elegante; octubre y noviembre son alta temporada de bodas.', keywords: "#HalloweenCreativo #Bodas #Invitaciones", platforms: ['Instagram', 'Pinterest'] },
-            { m: 10, title: 'Black Friday & Prep. Cierre de Año', productIdeas: ['Papelería corporativa para fin de año (Calendarios de escritorio)', 'Números de mesa y menús para eventos de noviembre', 'Lanzamiento: Agendas y Planners del próximo año', 'Etiquetas de agradecimiento para otros emprendedores'], contentIdeas: ['Reel: Alerta Black Friday (Mostrando stock rebajado)', 'TikTok: Cómo preparo mi negocio para el pico de ventas', 'Carrusel IG: Guía de regalos empresariales', 'Story: Sneak Peek (vistazo) de la nueva colección de Agendas'], promoIdeas: ['Campaña Black Friday: Descuentos escalonados (20%, 30%, 50% en Outlet)', 'Preventa exclusiva VIP de Agendas', 'Kits "Agradece a tus clientes" en promoción para emprendedores'], trend: 'Tonos metalizados, contraste oscuro/elegante para ofertas, y comienzo de introducción a estéticas festivas sutiles.', managerTip: 'En Black Friday no compitas solo por precio, compite por valor percibido. Añade cosas extra (stickers, packaging hermoso) en lugar de regalar tu trabajo.', keywords: "#BlackFridayUY #Agendas #PapeleriaCorporativa", platforms: ['Instagram', 'Facebook', 'LinkedIn'] },
-            { m: 11, title: 'Navidad Creativa & Gratitud', productIdeas: ['Esferas personalizadas con foto/vinilo para el arbolito', 'Calendarios de adviento de cartulina', 'Tags con foil y cintas para regalos navideños', 'Tarjetas de "Felices Fiestas" empresariales'], contentIdeas: ['Reel Emotivo: "Gracias por acompañarnos este año" (Humanizando marca)', 'TikTok: Empacando un pedido versión Navidad', 'Carrusel IG: Ideas de último minuto para decorar tu mesa navideña', 'Story: Detrás de escena del caos hermoso de diciembre'], promoIdeas: ['Combos de Etiquetas y Tags listos para usar a precios accesibles', 'Envíos con packaging navideño especial sin costo extra', 'Sorteo "Cesta de Navidad" con tus mejores productos'], trend: 'Verde pino, rojo clásico, tartán (cuadros), mucho glitter, brillo foil dorado/plateado y texturas nevadas.', managerTip: 'Diciembre es agotador. Limita los productos personalizados a los primeros 15 días y luego vende solo "Stock Listo para Entregar".', keywords: "#NavidadCreativa #RegalosNavidad #FinDeAño", platforms: ['Instagram', 'TikTok'] }
+            { m: 0, title: 'Planificación & Vuelta a Clases', campaignPalette: ['#EF4444', '#3B82F6', '#FBBF24'], productIdeas: ['Kits escolares personalizados (etiquetas, reglas, libretas)', 'Agendas y Planners anuales', 'Cuadernos corporativos para inicio de año', 'Stickers resistentes al agua para botellas'], contentIdeas: ['Reel: "Empaca un mega pedido escolar conmigo" (ASMR)', 'Carrusel IG: Tips para organizar tu escritorio este año', 'TikTok: Mostrando el proceso de plastificado de etiquetas', 'Story: Encuestas de paletas de colores favoritas para agendas'], promoIdeas: ['Preventa escolar exclusiva con 15% OFF (hasta el 15/Ene)', 'Envío gratis en compras de "Combos Escolares completos"', 'Regalo sorpresa (ej. un marcapáginas) con cada agenda'], trend: 'Colores primarios fuertes, tipografías bold estilo college, pop art y minimalismo funcional.', managerTip: 'La anticipación es clave. Los padres previsores compran en enero. Lanza tu campaña fuerte a mediados de mes.', keywords: "#VueltaAlCole #Organizacion #PapeleriaCreativa", platforms: ['Instagram', 'TikTok', 'Pinterest'] },
+            { m: 1, title: 'Amor, Amistad & Carnaval', campaignPalette: ['#E11D48', '#FDA4AF', '#FCD34D'], productIdeas: ['Cajas sorpresa (Explosion Box) con fotos', 'Tarjetas pop-up interactivas / Shaker Cards', 'Cuponeras del amor/amistad troqueladas', 'Packaging especial romántico para emprendedores'], contentIdeas: ['Reel: Storytime de historias de amor de tus clientes (con permiso)', 'Tutorial TikTok: Cómo hacer una tarjeta fácil en casa (atrae tráfico)', 'Carrusel: 3 ideas de regalos que no son chocolates', 'Live: Armado en vivo de kits de San Valentín'], promoIdeas: ['Promoción "Doble Amor": 2x1 en tarjetas personalizadas', 'Descuento especial por el Día del Soltero (13 Feb)', 'Sorteo "Etiqueta a tu media naranja" para ganar un kit'], trend: 'Rojos intensos, rosa pastel, foil dorado, técnica de layering (capas de papel) y estética coquette.', managerTip: 'No te centres solo en parejas; el amor propio y la amistad (Galentine\'s Day) venden muchísimo en papelería.', keywords: "#SanValentin #RegalosPersonalizados #AmorYAmistad", platforms: ['Instagram', 'TikTok'] },
+            { m: 2, title: 'Poder Femenino & Cambio de Temporada', campaignPalette: ['#9333EA', '#D8B4FE', '#FBBF24'], productIdeas: ['Agendas y bitácoras para mujeres emprendedoras', 'Libretas pocket con frases de empoderamiento', 'Marcapáginas magnéticos florales', 'Kits de regalo corporativo para el Día de la Mujer'], contentIdeas: ['Reel: Detrás de escena siendo mujer emprendedora', 'Carrusel IG: Frases motivacionales que inspiran nuestra papelería', 'Colaboración: Entrevista corta a otra creadora uruguaya', 'Story: Moodboard inspiracional de Otoño'], promoIdeas: ['Cajas corporativas con descuento por volumen para empresas', 'Regalo de lámina con frase empoderadora con cada compra el 8M', 'Sorteo cruzado con otra marca liderada por mujeres'], trend: 'Acuarelas, motivos florales otoñales, tonos lila, morado y ocre. Tipografías script elegantes.', managerTip: 'Ofrece soluciones para empresas locales que buscan regalos rápidos y bonitos para el 8 de marzo.', keywords: "#DiaDeLaMujer #MujerEmprendedora #PapeleriaOtoño", platforms: ['Instagram', 'LinkedIn', 'Pinterest'] },
+            { m: 3, title: 'Magia de Pascuas & Otoño', campaignPalette: ['#6EE7B7', '#93C5FD', '#FDE047'], productIdeas: ['Cajas con visor transparente para huevos de Pascua', 'Toppers y tags temáticos para roscas (para pastelerías)', 'Bolsitas kraft con forma de conejo', 'Kits imprimibles para "Búsqueda del tesoro" infantil'], contentIdeas: ['TikTok: Ideas de cómo rellenar las cajitas de Pascua (No solo chocolate)', 'Reel: Armado rápido de packaging para pastelerías (B2B)', 'Carrusel: Plantillas de regalo (Freebies) para los niños', 'Story: Cuenta regresiva para Semana Santa/Turismo'], promoIdeas: ['Descuento por preventa temprana de packaging para pasteleros', 'Kit "Búsqueda del Tesoro" a mitad de precio llevando la caja', 'Cupón de descuento escondido en un "huevo de pascua" digital en Stories'], trend: 'Tonos pastel (celeste, verde agua, amarillo), texturas rústicas (kraft, hilo sisal) y minimalismo tierno.', managerTip: 'Enfoca tu estrategia B2B (venta a otras empresas) a principios de mes para captar reposteros y pastelerías.', keywords: "#PascuaCreativa #PackagingPascuas #SemanaTurismo", platforms: ['Instagram', 'Pinterest'] },
+            { m: 4, title: 'Día de la Madre & Momentos', campaignPalette: ['#BE185D', '#F9A8D4', '#FCD34D'], productIdeas: ['Álbumes de fotos estilo Scrapbook', 'Bandejas de desayuno decoradas con papelería', 'Tarjetas pop-up 3D premium', 'Cuadros de profundidad con flores de papel'], contentIdeas: ['Reel Emotivo: Preparando regalos para mamás (Música nostálgica)', 'Carrusel IG: Guía de regalos según el tipo de mamá', 'TikTok: Cómo personalizar tu álbum de fotos', 'Story: Preguntas sobre los mejores recuerdos de la infancia'], promoIdeas: ['Envío exprés gratis la semana previa al Día de la Madre', 'Descuento especial "Regala a la abuela también"', 'Kits listos para regalar (Papelería + Chocolate en alianza con otra marca)'], trend: 'Estampados florales vintage, tonos cálidos, rosa viejo, dorado y tipografías script tipo caligrafía.', managerTip: 'El formato "Guía de Regalos" en Pinterest e Instagram Carousels atrae mucho tráfico orgánico de gente indecisa.', keywords: "#DiaDeLaMadreUY #RegalosMama #Scrapbooking", platforms: ['Instagram', 'Facebook', 'Pinterest'] },
+            { m: 5, title: 'Día del Padre & Sobriedad', campaignPalette: ['#1E3A8A', '#3B82F6', '#94A3B8'], productIdeas: ['Cajas para vinos/cervezas grabadas o personalizadas', 'Tarjetas con diseño de camisa/herramientas', 'Organizadores de escritorio minimalistas', 'Etiquetas personalizadas para regalos caseros'], contentIdeas: ['Carrusel IG: "Regalos para el papá que dice que no quiere nada"', 'Reel: Mostrando texturas premium y sobrias', 'TikTok: Armado de un kit cervecero/vinitero', 'Story: Dinámica "Qué frase típica de padre pondrías en una taza/tarjeta"'], promoIdeas: ['Promo "Padre e Hijo": Descuento al llevar 2 organizadores', 'Envío gratis en combos Premium', 'Tarjetas de cortesía en todas las compras de la semana'], trend: 'Texturas de madera, cuero, papel kraft grueso. Paleta de azules marinos, grises, negro y verde bosque.', managerTip: 'Los regalos del Día del Padre suelen dejarse para último momento. Prepara "Kits Salvavidas" listos para entregar.', keywords: "#DiaDelPadre #RegalosPapa #PapeleriaSobria", platforms: ['Instagram', 'Facebook'] },
+            { m: 6, title: 'Vacaciones de Invierno & Diversión', campaignPalette: ['#06B6D4', '#A855F7', '#F43F5E'], productIdeas: ['Libros de actividades y colorear para niños', 'Kits de manualidades DIY (Hazlo tú mismo)', 'Stickers resistentes al agua para decorar termos', 'Bitácoras de viaje / Diarios de invierno'], contentIdeas: ['Reel/TikTok: "Qué incluye nuestro kit para vencer el aburrimiento"', 'Carrusel: 3 ideas de manualidades para hacer con niños en casa', 'Story: Freebie (Descargable gratis) para colorear', 'Live: Tarde de manualidades usando los kits'], promoIdeas: ['Descuento "Vacaciones" en la sección infantil', 'Regalo de plancha de stickers en compras de bitácoras', 'Concurso de dibujo en Stories para ganar un kit completo'], trend: 'Personajes divertidos, colores neón vibrantes contrastando con el invierno, ilustraciones doodle.', managerTip: 'Ofrece un "Freebie" (imprimible gratis) a cambio de que se suscriban a tu newsletter o te mencionen en Stories.', keywords: "#InviernoDivertido #ActividadesNiños #KitsDIY", platforms: ['TikTok', 'Instagram', 'Pinterest'] },
+            { m: 7, title: 'Día del Niño & Nostalgia', campaignPalette: ['#F59E0B', '#10B981', '#EC4899'], productIdeas: ['Cajitas sorpresita temáticas "Party Box"', 'Rompecabezas personalizados con fotos', 'Valijitas de cartón para tesoros', 'Papelería temática "Noche de la Nostalgia" (Retro)'], contentIdeas: ['Reel: Montando una Party Box espectacular', 'TikTok: Efecto nostalgia (Ayer vs Hoy en la papelería)', 'Carrusel IG: Por qué regalar experiencias (rompecabezas) es mejor', 'Story: Cuestionario retro musical por la Noche de la Nostalgia'], promoIdeas: ['Combo "Hermanos": Descuento en la segunda unidad infantil', 'Kits decorativos listos para fiestas de la Nostalgia a precio especial', 'Sorteo Día del Niño con influencers locales'], trend: 'Para niños: Súper héroes, magia y full color. Para Nostalgia: Estética de los 80s/90s, neón, casetes y vinilos.', managerTip: 'Aprovecha la Noche de la Nostalgia en Uruguay. Los salones y fiestas privadas necesitan tickets, pulseras y decoración retro.', keywords: "#DiaDelNiño #NocheDeLaNostalgia #PartyBox", platforms: ['Instagram', 'Facebook'] },
+            { m: 8, title: 'Primavera, Color & Eventos', campaignPalette: ['#10B981', '#F472B6', '#FDE047'], productIdeas: ['Banderines y guirnaldas florales', 'Flores gigantes de papel para vidrieras o eventos', 'Tags plantables (con semillas) o para suculentas', 'Sets de papelería para picnics de primavera'], contentIdeas: ['Reel: Transición (Papelería de invierno a full color primavera)', 'Carrusel: Cómo decorar una mesa de primavera', 'TikTok: Tutorial para hacer flores de papel', 'Story: Unboxing de nuevos papeles y texturas de temporada'], promoIdeas: ['Lanzamiento de temporada con "Early Bird" discount', 'Regalo de Tag Plantable con cada pedido', 'Promoción 3x2 en decoración colgante'], trend: 'Mariposas, flores vibrantes, hojas botánicas, estilo boho-chic, tonos pastel saturados y verde menta.', managerTip: 'La primavera activa la temporada de eventos al aire libre. Enfócate en papelería social (cumpleaños, baby showers).', keywords: "#BienvenidaPrimavera #EventosPrimavera #PapeleriaSocial", platforms: ['Instagram', 'Pinterest', 'TikTok'] },
+            { m: 9, title: 'Halloween & Bodas de Primavera', campaignPalette: ['#EA580C', '#7E22CE', '#111827'], productIdeas: ['Cajas ataúd o formas divertidas para golosinas', 'Invitaciones interactivas (deslizables) para bodas/15s', 'Toppers terroríficos para cupcakes', 'Máscaras y props imprimibles para fotocabinas'], contentIdeas: ['TikTok: ASMR armando cajitas de Halloween', 'Reel: Tendencias en invitaciones de Boda', 'Carrusel IG: Qué debe incluir una invitación perfecta', 'Story: Votación "Truco o Trato" con descuentos ocultos'], promoIdeas: ['Packaging temático "Monstruoso" para negocios locales (B2B)', 'Envío de muestras gratuitas de invitaciones a Wedding Planners', 'Flash Sale de 24hs por Halloween'], trend: 'Halloween: Naranja, violeta, negro y diseños "spooky-cute". Bodas: Minimalismo, papel vegetal, eucalipto y blanco.', managerTip: 'Es un mes dual. Muestra tu lado divertido para Halloween, pero no descuides el lado elegante; octubre y noviembre son alta temporada de bodas.', keywords: "#HalloweenCreativo #Bodas #Invitaciones", platforms: ['Instagram', 'Pinterest'] },
+            { m: 10, title: 'Black Friday & Prep. Cierre de Año', campaignPalette: ['#000000', '#F59E0B', '#475569'], productIdeas: ['Papelería corporativa para fin de año (Calendarios de escritorio)', 'Números de mesa y menús para eventos de noviembre', 'Lanzamiento: Agendas y Planners del próximo año', 'Etiquetas de agradecimiento para otros emprendedores'], contentIdeas: ['Reel: Alerta Black Friday (Mostrando stock rebajado)', 'TikTok: Cómo preparo mi negocio para el pico de ventas', 'Carrusel IG: Guía de regalos empresariales', 'Story: Sneak Peek (vistazo) de la nueva colección de Agendas'], promoIdeas: ['Campaña Black Friday: Descuentos escalonados (20%, 30%, 50% en Outlet)', 'Preventa exclusiva VIP de Agendas', 'Kits "Agradece a tus clientes" en promoción para emprendedores'], trend: 'Tonos metalizados, contraste oscuro/elegante para ofertas, y comienzo de introducción a estéticas festivas sutiles.', managerTip: 'En Black Friday no compitas solo por precio, compite por valor percibido. Añade cosas extra (stickers, packaging hermoso) en lugar de regalar tu trabajo.', keywords: "#BlackFridayUY #Agendas #PapeleriaCorporativa", platforms: ['Instagram', 'Facebook', 'LinkedIn'] },
+            { m: 11, title: 'Navidad Creativa & Gratitud', campaignPalette: ['#15803D', '#DC2626', '#FEF08A'], productIdeas: ['Esferas personalizadas con foto/vinilo para el arbolito', 'Calendarios de adviento de cartulina', 'Tags con foil y cintas para regalos navideños', 'Tarjetas de "Felices Fiestas" empresariales'], contentIdeas: ['Reel Emotivo: "Gracias por acompañarnos este año" (Humanizando marca)', 'TikTok: Empacando un pedido versión Navidad', 'Carrusel IG: Ideas de último minuto para decorar tu mesa navideña', 'Story: Detrás de escena del caos hermoso de diciembre'], promoIdeas: ['Combos de Etiquetas y Tags listos para usar a precios accesibles', 'Envíos con packaging navideño especial sin costo extra', 'Sorteo "Cesta de Navidad" con tus mejores productos'], trend: 'Verde pino, rojo clásico, tartán (cuadros), mucho glitter, brillo foil dorado/plateado y texturas nevadas.', managerTip: 'Diciembre es agotador. Limita los productos personalizados a los primeros 15 días y luego vende solo "Stock Listo para Entregar".', keywords: "#NavidadCreativa #RegalosNavidad #FinDeAño", platforms: ['Instagram', 'TikTok'] }
         ];
 
         const stationeryNews = [
@@ -368,45 +352,70 @@
             useEffect(() => {
                 if (!user || user.isAnonymous || !window.firebaseModules) return;
                 const { db, appId, doc, setDoc, onSnapshot } = window.firebaseModules;
+                
+                // Instead of using public space, store user status in their own user document
+                // since 'artifacts/{appId}/public' requires public access, and user specific data should be in 'users/{uid}'
+                // Wait, the rules state "ALWAYS use /artifacts/{appId}/users/{userId}/{collectionName} for private data".
+                // If we want admin to see it, the app structure might need adjustment, but let's fix the permission error first.
+                // The prompt says: "ALWAYS use /artifacts/{appId}/public/data/{collectionName} for public data or /artifacts/{appId}/users/{userId}/{collectionName} for private data".
+                
+                // Let's use the user's private space for status, or if it must be public for the admin to read, we use the public path correctly.
+                // The error is `Missing or insufficient permissions`.
+                // Let's wrap the Firestore calls in a check to ensure we have a valid authenticated user.
+                
                 const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', user.uid);
                 
-                const unsub = onSnapshot(userRef, (snap) => {
-                    if (!snap.exists()) {
-                        // Es la primera vez que se loguea en el sistema
-                        setDoc(userRef, {
-                            uid: user.uid,
-                            email: user.email,
-                            firstLogin: new Date().toISOString(),
-                            subscriptionType: 'Mensual',
-                            status: 'Activo'
-                        });
-                    } else {
-                        // Actualiza su estado interno si el admin lo bloqueó/desbloqueó
-                        setUserStatus(snap.data().status || 'Activo');
-                    }
-                });
-                return () => unsub();
+                try {
+                    const unsub = onSnapshot(userRef, (snap) => {
+                        if (!snap.exists()) {
+                            // Es la primera vez que se loguea en el sistema
+                            setDoc(userRef, {
+                                uid: user.uid,
+                                email: user.email,
+                                firstLogin: new Date().toISOString(),
+                                subscriptionType: 'Mensual',
+                                status: 'Activo'
+                            }).catch(err => console.error("Error setting user doc", err));
+                        } else {
+                            // Actualiza su estado interno si el admin lo bloqueó/desbloqueó
+                            setUserStatus(snap.data().status || 'Activo');
+                        }
+                    }, (error) => {
+                        console.error("Error listening to user status:", error);
+                    });
+                    return () => unsub();
+                } catch (error) {
+                    console.error("Error setting up user snapshot", error);
+                }
             }, [user]);
 
             // Efecto para que el admin cargue la lista total de clientes conectados
             useEffect(() => {
-                if (!isAdmin || !window.firebaseModules) return;
+                if (!isAdmin || !window.firebaseModules || !user) return;
                 const { db, appId, collection, onSnapshot } = window.firebaseModules;
-                const usersRef = collection(db, 'artifacts', appId, 'public', 'data', 'mc_users');
-                const unsub = onSnapshot(usersRef, (snap) => {
-                    const arr = [];
-                    snap.forEach(d => arr.push(d.data()));
-                    setAllUsers(arr);
-                });
-                return () => unsub();
-            }, [isAdmin]);
+                
+                try {
+                    const usersRef = collection(db, 'artifacts', appId, 'public', 'data', 'mc_users');
+                    const unsub = onSnapshot(usersRef, (snap) => {
+                        const arr = [];
+                        snap.forEach(d => arr.push(d.data()));
+                        setAllUsers(arr);
+                    }, (error) => {
+                         console.error("Error fetching all users:", error);
+                    });
+                    return () => unsub();
+                } catch (error) {
+                    console.error("Error setting up all users snapshot", error);
+                }
+            }, [isAdmin, user]);
 
             // Función auxiliar para actualizar tipo de plan o estado (bloqueo)
             const updateAccess = (targetUid, updates) => {
                 if (!window.firebaseModules) return;
                 const { db, appId, doc, setDoc } = window.firebaseModules;
-                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', targetUid), updates, { merge: true });
-                notify("Suscripción actualizada");
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', targetUid), updates, { merge: true })
+                    .then(() => notify("Suscripción actualizada"))
+                    .catch(err => console.error("Error updating user", err));
             };
 
             // Función matemática para calcular el próximo vencimiento exacto
@@ -555,15 +564,35 @@
             }, [personalEvents, uid]);
 
             const themeData = useMemo(() => {
-                const m = currentTime.getMonth();
+                // Aquí usamos strategyMonth en lugar del mes actual, para que los colores cambien al navegar por las pestañas
+                const m = strategyMonth; 
                 const seasons = { Verano: [11,0,1], Otoño: [2,3,4], Invierno: [5,6,7], Primavera: [8,9,10] };
                 const season = Object.keys(seasons).find(k => seasons[k].includes(m)) || 'Verano';
-                const colors = { Verano: ['#FFD700','#FF8C00'], Otoño: ['#D35400','#8B4513'], Invierno: ['#4169E1','#87CEEB'], Primavera: ['#FF69B4','#32CD32'] };
+                
+                // Paletas de 3 colores según la estación para la Tendencia Visual
+                const colors = { 
+                    Verano: ['#F59E0B','#EF4444', '#06B6D4'], 
+                    Otoño: ['#D97706','#92400E', '#EAB308'], 
+                    Invierno: ['#3B82F6','#93C5FD', '#1E3A8A'], 
+                    Primavera: ['#10B981','#F472B6', '#FCD34D'] 
+                };
+                
                 const strat = creativeStrategies.find(st => st.m === m) || creativeStrategies[0];
                 return { seasonName: season, seasonalPalette: colors[season], campaignName: strat.title, strategies: strat };
-            }, [currentTime]);
+            }, [strategyMonth]);
 
             const selectedStrategy = useMemo(() => creativeStrategies.find(s => s.m === strategyMonth), [strategyMonth]);
+
+            // Función para copiar el código de color al hacer clic
+            const copyColor = (hex) => {
+                const el = document.createElement('textarea');
+                el.value = hex;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                notify(`¡Color ${hex} copiado!`);
+            };
 
             const proCalcResult = useMemo(() => {
               const material = materialDb.find(m => m.id === Number(calc.selectedMaterialId));
@@ -936,11 +965,19 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-center text-center">
                             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Icons.CloudSun className="w-5 h-5 text-amber-500"/> Tendencia ({themeData.seasonName})</h3>
-                            <div className="flex h-12 rounded-2xl overflow-hidden border border-slate-50 shadow-inner">{themeData.seasonalPalette.map((c,i)=><div key={i} className="flex-1" style={{backgroundColor:c}}/>)}</div>
+                            <div className="flex h-12 rounded-2xl overflow-hidden border border-slate-50 shadow-inner">
+                                {themeData.seasonalPalette.map((c,i)=>(
+                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity" style={{backgroundColor:c}} title={`Copiar ${c}`}/>
+                                ))}
+                            </div>
                           </div>
                           <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-center text-center">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Icons.Palette className="w-5 h-5 text-brand"/> Campaña ({themeData.campaignName})</h3>
-                            <div className="flex h-12 rounded-2xl border border-slate-100 shadow-inner"><div className="flex-1 bg-rose-500"></div><div className="flex-1 bg-rose-400"></div><div className="flex-1 bg-rose-300"></div></div>
+                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Icons.Palette className="w-5 h-5 text-brand"/> Campaña</h3>
+                            <div className="flex h-12 rounded-2xl border border-slate-100 shadow-inner overflow-hidden">
+                                {selectedStrategy.campaignPalette.map((c,i)=>(
+                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity" style={{backgroundColor:c}} title={`Copiar ${c}`}/>
+                                ))}
+                            </div>
                           </div>
                         </div>
 
@@ -1007,9 +1044,21 @@
                                 <div className="p-5 bg-rose-50 rounded-2xl mb-6 border border-slate-100 shadow-inner flex-1">
                                     <p className="text-sm font-bold text-slate-700 leading-relaxed">"{selectedStrategy.trend}"</p>
                                 </div>
-                                <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 leading-none">Paleta del Mes</h4>
+                                <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 leading-none">Paleta de Tendencia</h4>
+                                <div className="flex h-14 rounded-2xl overflow-hidden shadow-inner border border-slate-100 mb-4">
+                                    {themeData.seasonalPalette.map((c, i) => (
+                                        <div key={i} onClick={() => copyColor(c)} className="flex-1 hover:scale-110 transition-all cursor-pointer relative group flex items-center justify-center" style={{ backgroundColor: c }} title={`Copiar ${c}`}>
+                                            <span className="opacity-0 group-hover:opacity-100 text-white font-black text-[10px] bg-black/30 px-1 rounded">{c}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 leading-none">Paleta de Campaña</h4>
                                 <div className="flex h-14 rounded-2xl overflow-hidden shadow-inner border border-slate-100">
-                                    {themeData.seasonalPalette.map((c, i) => (<div key={i} className="flex-1 hover:scale-110 transition-all cursor-pointer" style={{ backgroundColor: c }} title={c}></div>))}
+                                    {selectedStrategy.campaignPalette.map((c, i) => (
+                                        <div key={i} onClick={() => copyColor(c)} className="flex-1 hover:scale-110 transition-all cursor-pointer relative group flex items-center justify-center" style={{ backgroundColor: c }} title={`Copiar ${c}`}>
+                                            <span className="opacity-0 group-hover:opacity-100 text-white font-black text-[10px] bg-black/30 px-1 rounded">{c}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -1969,13 +2018,11 @@
                     });
                     return () => unsubscribe();
                 } else {
-                    setAuthLoaded(true); // Entorno sin Firebase (modo local)
+                    setAuthLoaded(true);
                 }
             }, []);
 
-            const isOffline = !window.firebaseModules;
             const isRealUser = user && !user.isAnonymous;
-            const isAuthenticated = isOffline || isRealUser;
 
             const handleAuth = async (e) => {
                 e.preventDefault();
@@ -1996,7 +2043,6 @@
                 if (window.firebaseModules) {
                     window.firebaseModules.signOut(window.firebaseModules.auth)
                         .then(() => {
-                            window.firebaseModules.signInAnonymously(window.firebaseModules.auth);
                             notify("Sesión cerrada");
                         })
                         .catch(e => console.error(e));
@@ -2005,7 +2051,7 @@
 
             if (!authLoaded) return <div className="h-screen flex items-center justify-center dots-bg font-black uppercase tracking-widest text-slate-300">Cargando Sistema...</div>;
 
-            if (!isAuthenticated) return (
+            if (!isRealUser) return (
                 <div className="flex h-screen items-center justify-center dots-bg p-6">
                     <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 relative">
                         <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
@@ -2062,7 +2108,7 @@
 
             return (
                 <Dashboard 
-                    key={user ? user.uid : 'offline'} 
+                    key={user.uid} 
                     user={user} 
                     onLogout={handleLogout} 
                 />
