@@ -353,16 +353,6 @@
                 if (!user || user.isAnonymous || !window.firebaseModules) return;
                 const { db, appId, doc, setDoc, onSnapshot } = window.firebaseModules;
                 
-                // Instead of using public space, store user status in their own user document
-                // since 'artifacts/{appId}/public' requires public access, and user specific data should be in 'users/{uid}'
-                // Wait, the rules state "ALWAYS use /artifacts/{appId}/users/{userId}/{collectionName} for private data".
-                // If we want admin to see it, the app structure might need adjustment, but let's fix the permission error first.
-                // The prompt says: "ALWAYS use /artifacts/{appId}/public/data/{collectionName} for public data or /artifacts/{appId}/users/{userId}/{collectionName} for private data".
-                
-                // Let's use the user's private space for status, or if it must be public for the admin to read, we use the public path correctly.
-                // The error is `Missing or insufficient permissions`.
-                // Let's wrap the Firestore calls in a check to ensure we have a valid authenticated user.
-                
                 const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'mc_users', user.uid);
                 
                 try {
@@ -967,7 +957,9 @@
                             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Icons.CloudSun className="w-5 h-5 text-amber-500"/> Tendencia ({themeData.seasonName})</h3>
                             <div className="flex h-12 rounded-2xl overflow-hidden border border-slate-50 shadow-inner">
                                 {themeData.seasonalPalette.map((c,i)=>(
-                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity" style={{backgroundColor:c}} title={`Copiar ${c}`}/>
+                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center group" style={{backgroundColor:c}} title={`Copiar ${c}`}>
+                                        <span className="opacity-0 group-hover:opacity-100 text-white font-black text-[9px] bg-black/30 px-1 rounded transition-opacity">{c}</span>
+                                    </div>
                                 ))}
                             </div>
                           </div>
@@ -975,7 +967,9 @@
                             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-center gap-2"><Icons.Palette className="w-5 h-5 text-brand"/> Campaña</h3>
                             <div className="flex h-12 rounded-2xl border border-slate-100 shadow-inner overflow-hidden">
                                 {selectedStrategy.campaignPalette.map((c,i)=>(
-                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity" style={{backgroundColor:c}} title={`Copiar ${c}`}/>
+                                    <div key={i} onClick={() => copyColor(c)} className="flex-1 cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center group" style={{backgroundColor:c}} title={`Copiar ${c}`}>
+                                        <span className="opacity-0 group-hover:opacity-100 text-white font-black text-[9px] bg-black/30 px-1 rounded transition-opacity">{c}</span>
+                                    </div>
                                 ))}
                             </div>
                           </div>
@@ -1845,278 +1839,4 @@
                                                   </td>
                                                   <td className="py-4 text-slate-500">{new Date(u.firstLogin).toLocaleDateString('es-UY')}</td>
                                                   <td className="py-4">
-                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate-200 outline-none w-[90%] text-xs font-black uppercase text-slate-600 focus:border-brand cursor-pointer transition-colors shadow-sm">
-                                                          <option value="Mensual">Mensual</option>
-                                                          <option value="Anual">Anual</option>
-                                                      </select>
-                                                  </td>
-                                                  <td className="py-4 text-center">
-                                                      <span className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">{nextPay}</span>
-                                                  </td>
-                                                  <td className="py-4 pr-4 rounded-r-2xl text-right">
-                                                      <select value={u.status || 'Activo'} onChange={(e) => updateAccess(u.uid, { status: e.target.value })} className={`p-2 rounded-xl outline-none w-[90%] text-xs font-black uppercase shadow-sm cursor-pointer border ${u.status === 'Bloqueado' ? 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100'}`}>
-                                                          <option value="Activo">🟢 Activo</option>
-                                                          <option value="Bloqueado">🔴 Bloqueado</option>
-                                                      </select>
-                                                  </td>
-                                              </tr>
-                                          );
-                                      })}
-                                      {allUsers.length === 0 && <tr><td colSpan="5" className="text-center py-10 text-slate-400">No hay clientes registrados aún.</td></tr>}
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                  )}
-
-                  {/* --- PERFIL DE USUARIO --- */}
-                  {activeTab === 'profile' && (
-                      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl max-w-2xl mx-auto animate-in">
-                          <div className="flex items-center gap-4 mb-8">
-                              <div className="p-4 bg-brand text-white rounded-2xl shadow-lg"><Icons.User className="w-8 h-8"/></div>
-                              <div>
-                                  <h3 className="text-2xl font-black uppercase tracking-tighter">Mis Datos</h3>
-                                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Información de tu marca</p>
-                              </div>
-                          </div>
-
-                          <div className="mb-6 flex items-center gap-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                              <div className="w-20 h-20 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-200 relative shrink-0 shadow-sm">
-                                  {userProfile.logo ? 
-                                      <img src={userProfile.logo} className="w-full h-full object-cover" /> : 
-                                      <Icons.Image className="w-8 h-8 text-slate-300" />
-                                  }
-                              </div>
-                              <div className="flex-1">
-                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest block mb-1">Logo de tu Empresa</label>
-                                  <p className="text-[9px] font-bold text-slate-400 mb-2 leading-tight">Formatos aceptados: JPG, PNG. Tamaño recomendado: 500x500px.<br/>⚠️ <span className="text-rose-500">Límite máximo de peso: 800KB.</span></p>
-                                  <input type="file" accept="image/png, image/jpeg, image/jpg" onChange={(e) => {
-                                      const file = e.target.files[0];
-                                      if (file) {
-                                          if (file.size > 800 * 1024) {
-                                              notify("❌ Error: La imagen supera el límite de 800KB. Usa una imagen más liviana.");
-                                              e.target.value = "";
-                                              return;
-                                          }
-                                          const reader = new FileReader();
-                                          reader.onloadend = () => setUserProfile(p => ({...p, logo: reader.result}));
-                                          reader.readAsDataURL(file);
-                                      }
-                                  }} className="text-xs font-bold text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-brand file:text-white hover:file:bg-rose-600 cursor-pointer w-full" />
-                              </div>
-                          </div>
-
-                          <div className="space-y-4">
-                              <div>
-                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Email (Cuenta vinculada)</label>
-                                  <div className="p-3 bg-slate-100 rounded-xl text-xs font-bold text-slate-500 border border-slate-200 mt-1">{userEmail}</div>
-                              </div>
-                              <div>
-                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Nombre de Marca / Emprendimiento</label>
-                                  <input value={userProfile.brand} onChange={(e) => setUserProfile({...userProfile, brand: e.target.value})} placeholder="Tu Marca" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                              </div>
-                              <div>
-                                  <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Nombre Responsable</label>
-                                  <input value={userProfile.owner || ''} onChange={(e) => setUserProfile({...userProfile, owner: e.target.value})} placeholder="Tu Nombre" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  <div>
-                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Teléfono</label>
-                                      <input value={userProfile.phone || ''} onChange={(e) => setUserProfile({...userProfile, phone: e.target.value})} placeholder="+598..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                                  </div>
-                                  <div>
-                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Dirección / Ubicación</label>
-                                      <input value={userProfile.address || ''} onChange={(e) => setUserProfile({...userProfile, address: e.target.value})} placeholder="Montevideo..." className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                                  </div>
-                                  <div>
-                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Correo de Contacto</label>
-                                      <input value={userProfile.email || ''} onChange={(e) => setUserProfile({...userProfile, email: e.target.value})} placeholder="hola@tumarca.com" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                                  </div>
-                                  <div>
-                                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Horario de Atención</label>
-                                      <input value={userProfile.hours || ''} onChange={(e) => setUserProfile({...userProfile, hours: e.target.value})} placeholder="Lun a Vie - 9 a 18hs" className="w-full p-3 rounded-xl bg-slate-50 text-xs font-bold mt-1 outline-none focus:ring-2 ring-brand/20 transition-all border border-slate-100" />
-                                  </div>
-                              </div>
-                              <div className="pt-4">
-                                  <button onClick={() => notify("Datos guardados automáticamente")} className="w-full py-3 bg-brand text-white rounded-xl font-black uppercase text-xs tracking-widest shadow-lg hover:scale-[1.02] transition-transform">Guardar Cambios</button>
-                              </div>
-                          </div>
-                      </div>
-                  )}
-
-                </main>
-
-                {/* MODAL RECORDATORIOS DIARIOS */}
-                {showReminder && (
-                    <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[300] flex items-center justify-center p-6 animate-in zoom-in duration-300 text-slate-800 text-center no-print">
-                        <div className="bg-white max-w-sm w-full rounded-[3rem] p-10 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-2 bg-amber-400"></div>
-                            <div className="w-20 h-20 bg-amber-50 text-amber-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
-                                <Icons.Bell className="w-10 h-10 animate-bounce" />
-                            </div>
-                            <h3 className="text-2xl font-black uppercase mb-2 tracking-tighter leading-tight">Avisos de Hoy</h3>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{new Date().toLocaleDateString('es-UY', { day: 'numeric', month: 'long' })}</p>
-                            
-                            <div className="space-y-3 mb-8 text-left max-h-[40vh] overflow-y-auto pr-2">
-                                {FULL_EVENTS.filter(e => e.d === new Date().getDate() && e.m === new Date().getMonth()).map((ev, i) => (
-                                    <div key={`s-${i}`} className="p-3 bg-rose-50 rounded-xl border border-rose-100 flex items-center gap-3">
-                                        <div className="w-2 h-2 rounded-full bg-brand shrink-0"></div>
-                                        <span className="font-bold text-xs text-rose-800 uppercase">{ev.t}</span>
-                                    </div>
-                                ))}
-                                {(personalEvents[`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`] || []).map((note, i) => (
-                                    <div key={`p-${i}`} className="p-3 bg-blue-50 rounded-xl border border-blue-100 flex items-center gap-3">
-                                        <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></div>
-                                        <span className="font-bold text-xs text-blue-900">{note}</span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button onClick={() => setShowReminder(false)} className="w-full py-4 bg-slate-900 text-white rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:scale-105 transition-transform">
-                                ¡Entendido!
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* MODAL SOPORTE */}
-                {showContactModal && (
-                  <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[200] flex items-center justify-center p-6 animate-in zoom-in duration-300 text-slate-800 text-center no-print">
-                     <div className="bg-white max-w-sm w-full rounded-[3rem] p-10 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-2 bg-brand"></div>
-                        <div className="w-20 h-20 bg-rose-50 text-brand rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner"><Icons.UserCheck className="w-10 h-10" /></div>
-                        <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight mb-4">Soporte MC Pro</h3>
-                        <div className="space-y-3">
-                          <a href="https://wa.me/59892617525" target="_blank" className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl transition-all hover:scale-105"><Icons.MessageCircle className="w-4 h-4" /> WhatsApp</a>
-                          <button onClick={() => setShowContactModal(false)} className="block w-full py-3 text-slate-300 font-bold uppercase text-[9px] tracking-widest hover:text-brand transition-colors leading-none">Cerrar</button>
-                        </div>
-                     </div>
-                  </div>
-                )}
-              </div>
-            );
-        }
-
-        function App() {
-            const [user, setUser] = useState(null);
-            const [authLoaded, setAuthLoaded] = useState(false);
-            
-            // Estados para el Formulario de Login
-            const [emailInput, setEmailInput] = useState('');
-            const [passwordInput, setPasswordInput] = useState('');
-            const [authError, setAuthError] = useState('');
-            const [notification, setNotification] = useState(null);
-            const [showContactModal, setShowContactModal] = useState(false);
-            
-            const notify = (msg) => { setNotification(msg); setTimeout(() => setNotification(null), 2500); };
-
-            useEffect(() => {
-                if (window.firebaseModules) {
-                    const unsubscribe = window.firebaseModules.onAuthStateChanged(window.firebaseModules.auth, (u) => {
-                        setUser(u);
-                        setAuthLoaded(true);
-                    });
-                    return () => unsubscribe();
-                } else {
-                    setAuthLoaded(true);
-                }
-            }, []);
-
-            const isRealUser = user && !user.isAnonymous;
-
-            const handleAuth = async (e) => {
-                e.preventDefault();
-                setAuthError('');
-                try {
-                    await window.firebaseModules.signInWithEmailAndPassword(window.firebaseModules.auth, emailInput, passwordInput);
-                    notify("Sesión iniciada.");
-                } catch (err) {
-                    let msg = err.message;
-                    if(err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found') msg = "Usuario o contraseña incorrectos.";
-                    if(err.code === 'auth/email-already-in-use') msg = "Este correo ya está registrado.";
-                    if(err.code === 'auth/weak-password') msg = "La contraseña debe tener al menos 6 caracteres.";
-                    setAuthError(msg);
-                }
-            };
-
-            const handleLogout = () => {
-                if (window.firebaseModules) {
-                    window.firebaseModules.signOut(window.firebaseModules.auth)
-                        .then(() => {
-                            notify("Sesión cerrada");
-                        })
-                        .catch(e => console.error(e));
-                }
-            };
-
-            if (!authLoaded) return <div className="h-screen flex items-center justify-center dots-bg font-black uppercase tracking-widest text-slate-300">Cargando Sistema...</div>;
-
-            if (!isRealUser) return (
-                <div className="flex h-screen items-center justify-center dots-bg p-6">
-                    <div className="w-full max-w-sm text-center animate-in bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 relative">
-                        <div className="inline-block p-4 rounded-3xl bg-brand text-white shadow-xl mb-6 rotate-3"><Icons.Star className="w-8 h-8 fill-current" /></div>
-                        <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-2 leading-none text-center">MC Pro</h1>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mb-10 leading-none text-center">Acceso a Miembros</p>
-                        
-                        <form onSubmit={handleAuth} className="space-y-4">
-                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center border border-slate-100 relative">
-                                <Icons.Mail className="w-5 h-5 text-slate-400 absolute left-4" />
-                                <input type="email" required placeholder="Tu correo electrónico" className="bg-transparent outline-none w-full font-bold text-slate-700 text-center px-10" value={emailInput} onChange={e => setEmailInput(e.target.value)} />
-                            </div>
-                            <div className="bg-slate-50 p-3 rounded-2xl flex items-center border border-slate-100 relative">
-                                <Icons.Key className="w-5 h-5 text-slate-400 absolute left-4" />
-                                <input type="password" required placeholder="Tu contraseña" minLength="6" className="bg-transparent outline-none w-full font-bold text-slate-700 text-center px-10" value={passwordInput} onChange={e => setPasswordInput(e.target.value)} />
-                            </div>
-                            
-                            {authError && <p className="text-xs font-bold text-red-500 leading-tight bg-red-50 p-2 rounded-lg text-center">{authError}</p>}
-                            
-                            <button className="w-full py-4 bg-dark text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg flex justify-center items-center text-center">
-                                Ingresar al Sistema
-                            </button>
-
-                            <div className="text-center pt-4 mt-2">
-                                <button type="button" onClick={() => setShowContactModal(true)} className="text-[11px] font-bold uppercase tracking-widest text-brand hover:text-rose-600 transition-colors text-center w-full">
-                                    Solicitar mi acceso
-                                </button>
-                            </div>
-
-                            <div className="text-center pt-4 border-t border-slate-100 mt-2">
-                                <button type="button" onClick={() => setShowContactModal(true)} className="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand transition-colors text-center w-full">
-                                    ¿Problemas para ingresar? Contacta a soporte
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    {showContactModal && (
-                      <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-xl z-[200] flex items-center justify-center p-6 animate-in zoom-in duration-300 text-slate-800 text-center no-print">
-                         <div className="bg-white max-w-sm w-full rounded-[3rem] p-10 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-full h-2 bg-brand"></div>
-                            <div className="w-20 h-20 bg-rose-50 text-brand rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner"><Icons.UserCheck className="w-10 h-10" /></div>
-                            <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight mb-4">Soporte MC Pro</h3>
-                            <div className="space-y-3">
-                              <a href="https://wa.me/59892617525" target="_blank" className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white rounded-3xl font-black uppercase text-[10px] tracking-widest shadow-xl transition-all hover:scale-105"><Icons.MessageCircle className="w-4 h-4" /> WhatsApp</a>
-                              <button onClick={() => setShowContactModal(false)} className="block w-full py-3 text-slate-300 font-bold uppercase text-[9px] tracking-widest hover:text-brand transition-colors leading-none">Cerrar</button>
-                            </div>
-                         </div>
-                      </div>
-                    )}
-
-                    {notification && <div className="fixed top-6 right-6 bg-dark text-white px-6 py-3 rounded-xl font-bold text-xs uppercase shadow-2xl z-[100] animate-in">{notification}</div>}
-                </div>
-            );
-
-            return (
-                <Dashboard 
-                    key={user.uid} 
-                    user={user} 
-                    onLogout={handleLogout} 
-                />
-            );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+                                                      <select value={u.subscriptionType || 'Mensual'} onChange={(e) => updateAccess(u.uid, { subscriptionType: e.target.value })} className="p-2 rounded-xl bg-slate-100 border border-slate
