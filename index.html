@@ -2019,15 +2019,32 @@
                                       </div>
                                   </div>
                                   
-                                  <div className="mt-8 pt-8 border-t border-white/10 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                  <div className="mt-8 pt-8 border-t border-white/10 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
                                       <div>
                                           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400 mb-1">Monto a Pagar</p>
                                           <p className="text-4xl font-black">${monto}</p>
                                       </div>
-                                      <a href={`https://wa.me/59892617525?text=Hola!%20Me%20comunico%20para%20renovar/pagar%20mi%20suscripci%C3%B3n%20a%20MC%20Pro.%20Mi%20correo%20es:%20${currentUserData.email}`} target="_blank" rel="noopener noreferrer" className="w-full md:w-auto px-8 py-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-2xl font-black uppercase tracking-widest shadow-xl transition-transform hover:scale-105 flex items-center justify-center gap-3">
-                                          <Icons.MessageCircle className="w-5 h-5" /> Pagar por WhatsApp
-                                      </a>
+                                      <div className="text-left md:text-right">
+                                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest max-w-[250px]">Elige la opción que deseas realizar para contactarte con soporte mediante WhatsApp.</p>
+                                      </div>
                                   </div>
+                                  
+                                  {currentUserData.email !== ADMIN_EMAIL && (
+                                      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                          <a href={`https://wa.me/59892617525?text=${encodeURIComponent('Hola! Quiero renovar la suscripción mensual. Mi correo es: ' + currentUserData.email)}`} target="_blank" className="p-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-md transition-transform hover:scale-105 flex items-center justify-center gap-2">
+                                              <Icons.MessageCircle className="w-4 h-4" /> Renovar Mensual
+                                          </a>
+                                          <a href={`https://wa.me/59892617525?text=${encodeURIComponent('Hola! Quiero renovar la suscripción anual. Mi correo es: ' + currentUserData.email)}`} target="_blank" className="p-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-black uppercase text-[10px] tracking-widest shadow-md transition-transform hover:scale-105 flex items-center justify-center gap-2">
+                                              <Icons.MessageCircle className="w-4 h-4" /> Renovar Anual
+                                          </a>
+                                          <a href={`https://wa.me/59892617525?text=${encodeURIComponent('Hola! Quiero darle de baja a la suscripción mensual. Mi correo es: ' + currentUserData.email)}`} target="_blank" className="p-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 font-black uppercase text-[10px] tracking-widest transition-transform hover:scale-105 flex items-center justify-center gap-2">
+                                              <Icons.X className="w-4 h-4" /> Baja Mensual
+                                          </a>
+                                          <a href={`https://wa.me/59892617525?text=${encodeURIComponent('Hola! Quiero dar de baja a la suscripción anual. Mi correo es: ' + currentUserData.email)}`} target="_blank" className="p-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 font-black uppercase text-[10px] tracking-widest transition-transform hover:scale-105 flex items-center justify-center gap-2">
+                                              <Icons.X className="w-4 h-4" /> Baja Anual
+                                          </a>
+                                      </div>
+                                  )}
                               </div>
                               
                               <div className="text-center">
